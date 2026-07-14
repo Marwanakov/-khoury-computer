@@ -1,10 +1,12 @@
 package com.khourycomputer.persistence.repository;
 
 import com.khourycomputer.application.repository.ProductRepository;
+import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
 import com.khourycomputer.domain.model.Product;
 import com.khourycomputer.persistence.mapper.ProductMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -65,6 +67,36 @@ public class ProductRepositoryImpl implements ProductRepository {
         return StreamSupport.stream(springDataProductRepository.findAllById(productIds).spliterator(), false)
                 .map(productMapper::toDomain)
                 .toList();
+    }
+
+    // Brand filter returns product IDs first, then loads complete Product aggregates with tags.
+    @Override
+    public List<Product> findByBrand(String brand) {
+    List<Long> productIds = springDataProductRepository.findIdsByBrand(brand);
+
+    return StreamSupport.stream(springDataProductRepository.findAllById(productIds).spliterator(), false)
+            .map(productMapper::toDomain)
+            .toList();
+    }
+
+    // Availability filter returns product IDs first, then loads complete Product aggregates with tags.
+    @Override
+    public List<Product> findByAvailabilityStatus(ProductAvailabilityStatus availabilityStatus) {
+    List<Long> productIds = springDataProductRepository.findIdsByAvailabilityStatus(availabilityStatus);
+
+    return StreamSupport.stream(springDataProductRepository.findAllById(productIds).spliterator(), false)
+            .map(productMapper::toDomain)
+            .toList();
+    }
+
+    // Price filter returns product IDs first, then loads complete Product aggregates with tags.
+    @Override
+    public List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
+    List<Long> productIds = springDataProductRepository.findIdsByPriceBetween(minPrice, maxPrice);
+
+    return StreamSupport.stream(springDataProductRepository.findAllById(productIds).spliterator(), false)
+            .map(productMapper::toDomain)
+            .toList();
     }
 
     @Override

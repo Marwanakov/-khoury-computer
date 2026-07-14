@@ -10,6 +10,7 @@ import com.khourycomputer.domain.model.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -123,6 +124,38 @@ public class ProductApplicationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listProductsByBrand(String brand) {
+        String cleanedBrand = brand == null ? "" : brand.trim();
+
+        return productRepository.findByBrand(cleanedBrand)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listProductsByAvailability(ProductAvailabilityStatus availabilityStatus) {
+    if (availabilityStatus == null) {
+        throw new IllegalArgumentException("Availability status cannot be null.");
+    }
+
+    return productRepository.findByAvailabilityStatus(availabilityStatus)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
+    validatePriceRange(minPrice, maxPrice);
+
+    return productRepository.findByPriceBetween(minPrice, maxPrice)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+    }
+
     @Transactional
     public void deleteProduct(Long productId) {
         if (!productRepository.existsById(productId)) {
@@ -136,6 +169,20 @@ public class ProductApplicationService {
         if (categoryId == null || !categoryRepository.existsById(categoryId)) {
             throw new IllegalArgumentException("Category not found.");
         }
+    }
+
+    private void validatePriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
+    if (minPrice == null || maxPrice == null) {
+        throw new IllegalArgumentException("Price range cannot be empty.");
+    }
+
+    if (minPrice.compareTo(BigDecimal.ZERO) < 0 || maxPrice.compareTo(BigDecimal.ZERO) < 0) {
+        throw new IllegalArgumentException("Price range cannot be negative.");
+    }
+
+    if (minPrice.compareTo(maxPrice) > 0) {
+        throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
+    }
     }
 
     private ProductAvailabilityStatus calculateAvailabilityStatus(int stockQuantity) {
