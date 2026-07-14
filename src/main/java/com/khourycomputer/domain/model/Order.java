@@ -20,10 +20,7 @@ public class Order {
     public Order(
             Long id,
             Long userId,
-            String customerName,
-            String customerEmail,
-            String customerPhoneNumber,
-            Address deliveryAddress,
+            CustomerInfo customerInfo,
             List<OrderItem> items,
             OrderStatus status,
             LocalDateTime createdAt
