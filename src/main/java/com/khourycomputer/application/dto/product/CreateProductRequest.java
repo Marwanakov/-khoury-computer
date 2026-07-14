@@ -1,0 +1,16 @@
+package com.khourycomputer.application.dto.product;
+
+import java.math.BigDecimal;
+import java.util.Set;
+
+public record CreateProductRequest(
+        String name,
+        String description,
+        BigDecimal price,
+        String brand,
+        int stockQuantity,
+        String imageUrl,
+        Long categoryId,
+        Set<String> tags
+) {
+}

@@ -1,0 +1,178 @@
+package com.khourycomputer.application.service;
+
+import com.khourycomputer.application.dto.product.CreateProductRequest;
+import com.khourycomputer.application.dto.product.ProductResponse;
+import com.khourycomputer.application.dto.product.UpdateProductRequest;
+import com.khourycomputer.application.repository.CategoryRepository;
+import com.khourycomputer.application.repository.ProductRepository;
+import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
+import com.khourycomputer.domain.model.Product;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+public class ProductApplicationService {
+
+    private static final int LOW_STOCK_LIMIT = 5;
+
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+
+    public ProductApplicationService(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository
+    ) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
+
+    @Transactional
+    public ProductResponse createProduct(CreateProductRequest request) {
+        validateCategoryExists(request.categoryId());
+
+        Product product = new Product(
+                null,
+                request.name(),
+                request.description(),
+                request.price(),
+                request.brand(),
+                request.stockQuantity(),
+                calculateAvailabilityStatus(request.stockQuantity()),
+                request.imageUrl(),
+                request.categoryId(),
+                cleanTags(request.tags())
+        );
+
+        Product savedProduct = productRepository.save(product);
+
+        return toResponse(savedProduct);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(Long productId, UpdateProductRequest request) {
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found."));
+
+        validateCategoryExists(request.categoryId());
+
+        Product updatedProduct = new Product(
+                existingProduct.getId(),
+                request.name(),
+                request.description(),
+                request.price(),
+                request.brand(),
+                request.stockQuantity(),
+                calculateAvailabilityStatus(request.stockQuantity()),
+                request.imageUrl(),
+                request.categoryId(),
+                cleanTags(request.tags())
+        );
+
+        Product savedProduct = productRepository.save(updatedProduct);
+
+        return toResponse(savedProduct);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found."));
+
+        return toResponse(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listProductsByCategory(Long categoryId) {
+        validateCategoryExists(categoryId);
+
+        return productRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> searchProductsByName(String keyword) {
+        String cleanedKeyword = keyword == null ? "" : keyword.trim();
+
+        return productRepository.findByNameContaining(cleanedKeyword)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listProductsByTag(String tag) {
+        String cleanedTag = tag == null ? "" : tag.trim().toLowerCase();
+
+        return productRepository.findByTag(cleanedTag)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public void deleteProduct(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException("Product not found.");
+        }
+
+        productRepository.deleteById(productId);
+    }
+
+    private void validateCategoryExists(Long categoryId) {
+        if (categoryId == null || !categoryRepository.existsById(categoryId)) {
+            throw new IllegalArgumentException("Category not found.");
+        }
+    }
+
+    private ProductAvailabilityStatus calculateAvailabilityStatus(int stockQuantity) {
+        if (stockQuantity == 0) {
+            return ProductAvailabilityStatus.SOLD_OUT;
+        }
+
+        if (stockQuantity <= LOW_STOCK_LIMIT) {
+            return ProductAvailabilityStatus.LOW_STOCK;
+        }
+
+        return ProductAvailabilityStatus.AVAILABLE;
+    }
+
+    private Set<String> cleanTags(Set<String> tags) {
+        if (tags == null) {
+            return Set.of();
+        }
+
+        return tags.stream()
+                .filter(tag -> tag != null && !tag.isBlank())
+                .map(tag -> tag.trim().toLowerCase())
+                .collect(Collectors.toSet());
+    }
+
+    private ProductResponse toResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getBrand(),
+                product.getStockQuantity(),
+                product.getAvailabilityStatus(),
+                product.getImageUrl(),
+                product.getCategoryId(),
+                product.getTags()
+        );
+    }
+}
