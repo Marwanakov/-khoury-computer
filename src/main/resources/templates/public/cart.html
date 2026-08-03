@@ -1,0 +1,214 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head th:replace="~{fragments/head :: head('Cart', '/css/pages/cart.css')}"></head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main>
+      <section class="cart-hero">
+        <div class="container">
+          <div class="row align-items-end g-4">
+            <div class="col-lg-7">
+              <span class="badge hero-label rounded-pill px-3 py-2 mb-3">
+                Shopping cart
+              </span>
+
+              <h1 class="cart-title mb-3">Review your selected products.</h1>
+
+              <p class="cart-subtitle mb-0">
+                Check quantities, remove products, and review the total price
+                before submitting your order request.
+              </p>
+            </div>
+
+            <div class="col-lg-5">
+              <div class="cart-summary-card">
+                <span class="text-muted">Total</span>
+                <strong>
+                  <span class="money-amount">
+                    <span class="money-symbol">₪</span>
+                    <span
+                      th:text="${#numbers.formatDecimal(cart.totalPrice(), 0, 0)}"
+                      >0</span
+                    >
+                  </span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container py-5">
+        <div
+          th:if="${successMessage}"
+          class="alert alert-success rounded-4 mb-4"
+          th:text="${successMessage}"
+        >
+          Success message
+        </div>
+
+        <div th:if="${#lists.isEmpty(cart.items())}" class="empty-cart-card">
+          <div class="empty-products-icon">!</div>
+
+          <h3 class="fw-bold mb-2">Your cart is empty</h3>
+
+          <p class="text-muted mb-4">
+            Browse products and add items to your cart before submitting an
+            order request.
+          </p>
+
+          <a class="btn btn-khoury" th:href="@{/products}"> Browse Products </a>
+        </div>
+
+        <div
+          th:if="${!#lists.isEmpty(cart.items())}"
+          class="row g-4 align-items-start"
+        >
+          <div class="col-lg-8">
+            <div class="d-flex flex-column gap-3">
+              <div class="cart-item-card" th:each="item : ${cart.items()}">
+                <div class="cart-item-image-placeholder">Product</div>
+
+                <div class="cart-item-content">
+                  <h5 class="cart-item-title" th:text="${item.productName()}">
+                    Product name
+                  </h5>
+
+                  <div class="cart-unit-price mb-3">
+                    <span class="cart-price-label">Unit price</span>
+
+                    <strong class="money-amount">
+                      <span class="money-symbol">₪</span>
+                      <span
+                        th:text="${#numbers.formatDecimal(item.unitPrice(), 0, 0)}"
+                        >0</span
+                      >
+                    </strong>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <form
+                      th:action="@{/cart/items/update}"
+                      method="post"
+                      class="cart-quantity-form"
+                    >
+                      <input
+                        type="hidden"
+                        name="productId"
+                        th:value="${item.productId()}"
+                      />
+
+                      <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        class="form-control cart-quantity-input"
+                        th:value="${item.quantity()}"
+                      />
+
+                      <button
+                        type="submit"
+                        class="btn btn-outline-primary rounded-pill px-3"
+                      >
+                        Update
+                      </button>
+                    </form>
+
+                    <form th:action="@{/cart/items/remove}" method="post">
+                      <input
+                        type="hidden"
+                        name="productId"
+                        th:value="${item.productId()}"
+                      />
+
+                      <button
+                        type="submit"
+                        class="btn btn-outline-danger rounded-pill px-3"
+                      >
+                        Remove
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                <div class="cart-item-subtotal">
+                  <span>Subtotal</span>
+                  <strong class="money-amount">
+                    <span class="money-symbol">₪</span>
+                    <span
+                      th:text="${#numbers.formatDecimal(item.subtotal(), 0, 0)}"
+                      >0</span
+                    >
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="col-lg-4">
+            <div class="cart-order-summary">
+              <h5 class="fw-bold mb-4">Order summary</h5>
+
+              <div class="summary-row">
+                <span>Total price</span>
+                <strong>
+                  <span class="money-amount">
+                    <span class="money-symbol">₪</span>
+                    <span
+                      th:text="${#numbers.formatDecimal(cart.totalPrice(), 0, 0)}"
+                      >0</span
+                    >
+                  </span>
+                </strong>
+              </div>
+
+              <hr />
+
+              <div class="summary-total">
+                <span>Total</span>
+                <strong>
+                  <span class="money-amount">
+                    <span class="money-symbol">₪</span>
+                    <span
+                      th:text="${#numbers.formatDecimal(cart.totalPrice(), 0, 0)}"
+                      >0</span
+                    >
+                  </span>
+                </strong>
+              </div>
+
+              <button type="button" class="btn btn-khoury w-100 mt-4" disabled>
+                Submit Order Request
+              </button>
+
+              <p class="text-muted small mt-3 mb-0">
+                Order submission will be connected in the next phase.
+              </p>
+
+              <form th:action="@{/cart/clear}" method="post" class="mt-3">
+                <button
+                  type="submit"
+                  class="btn btn-outline-secondary w-100 rounded-pill"
+                >
+                  Clear Cart
+                </button>
+              </form>
+
+              <a
+                class="btn btn-link w-100 mt-2 text-decoration-none"
+                th:href="@{/products}"
+              >
+                Continue Shopping
+              </a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+  </body>
+</html>
