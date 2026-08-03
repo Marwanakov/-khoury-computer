@@ -1,0 +1,50 @@
+/* =========================
+   Buttons
+========================= */
+
+.btn-khoury {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.7rem 1.25rem;
+    border-radius: 999px;
+}
+
+.btn-khoury:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #ffffff;
+}
+
+/* =========================
+   Soft card
+========================= */
+
+.soft-card {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================
+   Money amount
+========================= */
+
+.money-amount {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.16rem;
+    direction: ltr;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+    color: #0f172a;
+    font-weight: 900;
+}
+
+.money-symbol {
+    color: #2563eb;
+    font-size: 0.9em;
+    font-weight: 900;
+    line-height: 1;
+}

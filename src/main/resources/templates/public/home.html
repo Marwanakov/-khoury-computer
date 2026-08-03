@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Home', '/css/pages/home.css')}"></head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+
+    <!-- Hero Section -->
+    <section class="home-hero">
+        <div class="container">
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6">
+                    <span class="badge hero-label rounded-pill px-3 py-2 mb-3">
+                        Local computer shop & repair support
+                    </span>
+
+                    <h1 class="hero-title mb-3">
+                        Computers, accessories, and repair support in one place.
+                    </h1>
+
+                    <p class="hero-text mb-4">
+                        Browse laptops, screens, accessories, chargers, USB devices, networking products,
+                        and gaming devices from Khoury Computer.
+                    </p>
+
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        <a class="btn btn-khoury btn-lg" th:href="@{/products}">
+                            Shop Products
+                        </a>
+
+                        <a class="btn btn-outline-dark btn-lg rounded-pill px-4" th:href="@{/contact}">
+                            Repair Support
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="hero-visual-card">
+                        <div class="hero-device-card hero-device-main">
+                            <div class="hero-device-screen"></div>
+                            <div class="hero-device-line w-75"></div>
+                            <div class="hero-device-line w-50"></div>
+                        </div>
+
+                        <div class="hero-floating-card hero-floating-top">
+                            <span class="fw-bold">Laptops</span>
+                            <small class="text-muted">Work, study, gaming</small>
+                        </div>
+
+                        <div class="hero-floating-card hero-floating-bottom">
+                            <span class="fw-bold">Repair</span>
+                            <small class="text-muted">Contact the shop</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Badges -->
+    <section class="container mt-4">
+        <div class="service-strip">
+            <div class="service-item">
+                <div class="service-icon">01</div>
+                <div>
+                    <h6>Local Support</h6>
+                    <p>Contact the shop directly.</p>
+                </div>
+            </div>
+
+            <div class="service-item">
+                <div class="service-icon">02</div>
+                <div>
+                    <h6>Repair Services</h6>
+                    <p>Laptop and computer support.</p>
+                </div>
+            </div>
+
+            <div class="service-item">
+                <div class="service-icon">03</div>
+                <div>
+                    <h6>Order Requests</h6>
+                    <p>Submit online, confirm later.</p>
+                </div>
+            </div>
+
+            <div class="service-item">
+                <div class="service-icon">04</div>
+                <div>
+                    <h6>Product Help</h6>
+                    <p>Ask before you buy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop By Category -->
+    <section class="container py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+            <div>
+                <h2 class="section-title mb-2">Shop by category</h2>
+                <p class="text-muted mb-0">
+                    Quickly browse the main product and service categories.
+                </p>
+            </div>
+
+            <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/products}">
+                View all products
+            </a>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=1)}">
+                    <div class="category-card-icon">LP</div>
+                    <h5>Laptops</h5>
+                    <p>Portable devices for work, study, and gaming.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=2)}">
+                    <div class="category-card-icon">SC</div>
+                    <h5>Screens</h5>
+                    <p>Monitors and displays for every setup.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=3)}">
+                    <div class="category-card-icon">AC</div>
+                    <h5>Accessories</h5>
+                    <p>Keyboards, mice, headsets, and more.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=4)}">
+                    <div class="category-card-icon">CH</div>
+                    <h5>Chargers</h5>
+                    <p>Chargers and power accessories.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=5)}">
+                    <div class="category-card-icon">USB</div>
+                    <h5>USB Devices</h5>
+                    <p>Flash drives, hubs, adapters, and cables.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=6)}">
+                    <div class="category-card-icon">GM</div>
+                    <h5>Gaming Consoles</h5>
+                    <p>Gaming devices and related accessories.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/products(categoryId=7)}">
+                    <div class="category-card-icon">NW</div>
+                    <h5>Networking</h5>
+                    <p>Routers, network devices, and connectivity.</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-3">
+                <a class="category-card" th:href="@{/contact}">
+                    <div class="category-card-icon">RS</div>
+                    <h5>Repair Services</h5>
+                    <p>Contact us for laptop and computer repair.</p>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Featured products placeholder for later -->
+    <section class="container pb-5">
+        <div class="coming-section">
+            <div>
+                <h2 class="section-title mb-2">Featured products</h2>
+                <p class="text-muted mb-0">
+                    This section will show real products from the database later.
+                </p>
+            </div>
+
+            <a class="btn btn-khoury" th:href="@{/products}">
+                Browse Products
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<footer th:fragment="footer" class="site-footer mt-auto">
+    <div class="container">
+
+        <div class="footer-main">
+            <div class="row g-4">
+
+                <div class="col-lg-4">
+                    <a class="footer-brand text-decoration-none" th:href="@{/}">
+                        <div class="footer-logo-placeholder">
+                            Logo
+                        </div>
+
+                        <div>
+                            <div class="footer-brand-name">Khoury Computer</div>
+                            <div class="footer-brand-subtitle">Computer shop & repair support</div>
+                        </div>
+                    </a>
+
+                    <p class="footer-description mt-3">
+                        Computers, accessories, and repair support in one place.
+                        Browse products online and contact the shop for questions,
+                        availability, or repair services.
+                    </p>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="footer-title">Pages</h6>
+
+                    <div class="footer-links">
+                        <a th:href="@{/}">Home</a>
+                        <a th:href="@{/products}">Products</a>
+                        <a th:href="@{/cart}">Cart</a>
+                        <a th:href="@{/contact}">Contact</a>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <h6 class="footer-title">Categories</h6>
+
+                    <div class="footer-links">
+                        <a th:href="@{/products(categoryId=1)}">Laptops</a>
+                        <a th:href="@{/products(categoryId=2)}">Screens</a>
+                        <a th:href="@{/products(categoryId=3)}">Accessories</a>
+                        <a th:href="@{/products(categoryId=4)}">Chargers</a>
+                        <a th:href="@{/products(categoryId=5)}">USB Devices</a>
+                        <a th:href="@{/contact}">Repair Services</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="footer-contact-card">
+                        <h6 class="footer-title">Need help?</h6>
+
+                        <p class="footer-description mb-3">
+                            Contact the store for product advice, availability,
+                            or computer repair support.
+                        </p>
+
+                        <a class="btn btn-light rounded-pill px-4" th:href="@{/contact}">
+                            Contact the Store
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <small>
+                &copy; 2026 Khoury Computer. All rights reserved.
+            </small>
+
+            <small>
+                Built for local computer shopping and repair services.
+            </small>
+        </div>
+
+    </div>
+</footer>
+
+<script th:fragment="bootstrapScript"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
