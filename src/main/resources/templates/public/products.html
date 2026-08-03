@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Products', '/css/pages/products.css')}"></head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+
+    <section class="products-hero">
+        <div class="container">
+            <div class="row align-items-end g-4">
+                <div class="col-lg-7">
+                    <span class="badge hero-label rounded-pill px-3 py-2 mb-3">
+                        Browse products
+                    </span>
+
+                    <h1 class="products-title mb-3">
+                        Find the right tech for your setup.
+                    </h1>
+
+                    <p class="products-subtitle mb-0">
+                        Search laptops, screens, accessories, chargers, USB devices,
+                        gaming products, and networking tools available from Khoury Computer.
+                    </p>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="products-summary-card">
+                        <span class="text-muted">Showing</span>
+                        <strong th:text="${products.size()}">0</strong>
+                        <span class="text-muted">products</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5">
+
+        <!-- Search stays at the top center -->
+        <div class="products-search-panel mb-4">
+            <form th:action="@{/products}" method="get" class="row g-3 align-items-center">
+                <div class="col-lg-9">
+                    <input name="keyword"
+                           type="text"
+                           class="form-control form-control-lg"
+                           placeholder="Search by product name, brand, or tag..."
+                           th:value="${keyword}">
+                </div>
+
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-khoury btn-lg w-100">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row g-4 align-items-start">
+
+            <!-- Left filter sidebar -->
+            <aside class="col-lg-3">
+                <div class="products-sidebar">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="sidebar-title mb-0">Filters</h5>
+                        <a class="small fw-bold text-decoration-none" th:href="@{/products}">
+                            Reset
+                        </a>
+                    </div>
+
+                    <form th:action="@{/products}" method="get">
+
+                        <input type="hidden" name="keyword" th:value="${keyword}">
+
+                        <div class="filter-group">
+                            <label for="categoryId" class="filter-title">Category</label>
+
+                            <select id="categoryId" name="categoryId" class="form-select">
+                                <option value="">All categories</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id()}"
+                                        th:text="${category.name()}"
+                                        th:selected="${selectedCategoryId != null and selectedCategoryId == category.id()}">
+                                    Category
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="brand" class="filter-title">Brand</label>
+
+                            <input id="brand"
+                                   name="brand"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Example: HP"
+                                   th:value="${brand}">
+                        </div>
+
+                        <div class="filter-group">
+                            <p class="filter-title mb-2">Availability</p>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="status"
+                                       id="statusAny"
+                                       value=""
+                                       th:checked="${selectedStatus == null}">
+                                <label class="form-check-label" for="statusAny">
+                                    Any status
+                                </label>
+                            </div>
+
+                            <div class="form-check mb-2" th:each="availabilityStatus : ${availabilityStatuses}">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="status"
+                                       th:id="${'status-' + availabilityStatus.name()}"
+                                       th:value="${availabilityStatus}"
+                                       th:checked="${selectedStatus != null and selectedStatus == availabilityStatus}">
+
+                                <label class="form-check-label"
+                                       th:for="${'status-' + availabilityStatus.name()}"
+                                       th:text="${availabilityStatus}">
+                                    AVAILABLE
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <p class="filter-title mb-2">Price range</p>
+
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input name="minPrice"
+                                           type="number"
+                                           step="1"
+                                           min="0"
+                                           class="form-control"
+                                           placeholder="Min ₪"
+                                           th:value="${minPrice}">
+                                </div>
+
+                                <div class="col-6">
+                                    <input name="maxPrice"
+                                           type="number"
+                                           step="1"
+                                           min="0"
+                                           class="form-control"
+                                           placeholder="Max ₪"
+                                           th:value="${maxPrice}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-khoury w-100">
+                            Apply Filters
+                        </button>
+
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Product results -->
+            <div class="col-lg-9">
+
+                <div th:if="${#lists.isEmpty(products)}" class="empty-products-card">
+                    <div class="empty-products-icon">!</div>
+
+                    <h3 class="fw-bold mb-2">No products found</h3>
+
+                    <p class="text-muted mb-4">
+                        Try changing your search keyword or filter options.
+                    </p>
+
+                    <a class="btn btn-khoury" th:href="@{/products}">
+                        View all products
+                    </a>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(products)}" class="row g-4">
+                    <div class="col-sm-6 col-xl-4" th:each="product : ${products}">
+
+                        <a class="product-card-link"
+                           th:href="@{/products/{id}(id=${product.id()})}">
+
+                            <div class="card product-card h-100">
+
+                                <div class="product-image-wrapper">
+                                    <img th:if="${product.imageUrl() != null and !product.imageUrl().isBlank()}"
+                                         th:src="${product.imageUrl()}"
+                                         class="product-image"
+                                         th:alt="${product.name()}">
+
+                                    <div th:if="${product.imageUrl() == null or product.imageUrl().isBlank()}"
+                                         class="product-image-placeholder">
+                                        <span>No Image</span>
+                                    </div>
+                                </div>
+
+                                <div class="card-body p-4 d-flex flex-column">
+
+                                    <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                                        <div>
+                                            <p class="product-brand mb-1" th:text="${product.brand()}">
+                                                Brand
+                                            </p>
+
+                                            <h5 class="product-name mb-0" th:text="${product.name()}">
+                                                Product name
+                                            </h5>
+                                        </div>
+
+                                        <span class="badge product-status-badge"
+                                              th:classappend="${product.availabilityStatus().name() == 'AVAILABLE'} ? ' status-available' :
+                                                              (${product.availabilityStatus().name() == 'LOW_STOCK'} ? ' status-low-stock' : ' status-sold-out')"
+                                              th:text="${product.availabilityStatus()}">
+                                            AVAILABLE
+                                        </span>
+                                    </div>
+
+                                    <p class="product-description flex-grow-1"
+                                       th:text="${#strings.abbreviate(product.description(), 115)}">
+                                        Product description
+                                    </p>
+
+                                    <div class="product-footer">
+                                        <div>
+                                            <span class="product-price">
+                                                ₪<span th:text="${#numbers.formatDecimal(product.price(), 0, 0)}">0</span>
+                                            </span>
+                                        </div>
+
+                                        <span class="btn btn-outline-primary rounded-pill px-3">
+                                            Details
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+</body>
+</html>

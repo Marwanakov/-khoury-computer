@@ -25,8 +25,7 @@ public class ProductApplicationService {
 
     public ProductApplicationService(
             ProductRepository productRepository,
-            CategoryRepository categoryRepository
-    ) {
+            CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -45,8 +44,7 @@ public class ProductApplicationService {
                 calculateAvailabilityStatus(request.stockQuantity()),
                 request.imageUrl(),
                 request.categoryId(),
-                cleanTags(request.tags())
-        );
+                cleanTags(request.tags()));
 
         Product savedProduct = productRepository.save(product);
 
@@ -70,8 +68,7 @@ public class ProductApplicationService {
                 calculateAvailabilityStatus(request.stockQuantity()),
                 request.imageUrl(),
                 request.categoryId(),
-                cleanTags(request.tags())
-        );
+                cleanTags(request.tags()));
 
         Product savedProduct = productRepository.save(updatedProduct);
 
@@ -90,6 +87,31 @@ public class ProductApplicationService {
     public List<ProductResponse> listProducts() {
         return productRepository.findAll()
                 .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> filterProducts(
+            String keyword,
+            Long categoryId,
+            String brand,
+            ProductAvailabilityStatus availabilityStatus,
+            BigDecimal minPrice,
+            BigDecimal maxPrice) {
+        validatePriceFilter(minPrice, maxPrice);
+
+        String normalizedKeyword = normalizeFilterText(keyword);
+        String normalizedBrand = normalizeFilterText(brand);
+
+        return productRepository.findAll()
+                .stream()
+                .filter(product -> matchesKeyword(product, normalizedKeyword))
+                .filter(product -> categoryId == null || product.getCategoryId().equals(categoryId))
+                .filter(product -> matchesBrand(product, normalizedBrand))
+                .filter(product -> availabilityStatus == null || product.getAvailabilityStatus() == availabilityStatus)
+                .filter(product -> minPrice == null || product.getPrice().compareTo(minPrice) >= 0)
+                .filter(product -> maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0)
                 .map(this::toResponse)
                 .toList();
     }
@@ -129,31 +151,31 @@ public class ProductApplicationService {
         String cleanedBrand = brand == null ? "" : brand.trim();
 
         return productRepository.findByBrand(cleanedBrand)
-            .stream()
-            .map(this::toResponse)
-            .toList();
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponse> listProductsByAvailability(ProductAvailabilityStatus availabilityStatus) {
-    if (availabilityStatus == null) {
-        throw new IllegalArgumentException("Availability status cannot be null.");
-    }
+        if (availabilityStatus == null) {
+            throw new IllegalArgumentException("Availability status cannot be null.");
+        }
 
-    return productRepository.findByAvailabilityStatus(availabilityStatus)
-            .stream()
-            .map(this::toResponse)
-            .toList();
+        return productRepository.findByAvailabilityStatus(availabilityStatus)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponse> listProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
-    validatePriceRange(minPrice, maxPrice);
+        validatePriceRange(minPrice, maxPrice);
 
-    return productRepository.findByPriceBetween(minPrice, maxPrice)
-            .stream()
-            .map(this::toResponse)
-            .toList();
+        return productRepository.findByPriceBetween(minPrice, maxPrice)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional
@@ -172,17 +194,17 @@ public class ProductApplicationService {
     }
 
     private void validatePriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
-    if (minPrice == null || maxPrice == null) {
-        throw new IllegalArgumentException("Price range cannot be empty.");
-    }
+        if (minPrice == null || maxPrice == null) {
+            throw new IllegalArgumentException("Price range cannot be empty.");
+        }
 
-    if (minPrice.compareTo(BigDecimal.ZERO) < 0 || maxPrice.compareTo(BigDecimal.ZERO) < 0) {
-        throw new IllegalArgumentException("Price range cannot be negative.");
-    }
+        if (minPrice.compareTo(BigDecimal.ZERO) < 0 || maxPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price range cannot be negative.");
+        }
 
-    if (minPrice.compareTo(maxPrice) > 0) {
-        throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
-    }
+        if (minPrice.compareTo(maxPrice) > 0) {
+            throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
+        }
     }
 
     private ProductAvailabilityStatus calculateAvailabilityStatus(int stockQuantity) {
@@ -219,7 +241,52 @@ public class ProductApplicationService {
                 product.getAvailabilityStatus(),
                 product.getImageUrl(),
                 product.getCategoryId(),
-                product.getTags()
-        );
+                product.getTags());
+    }
+
+    private boolean matchesKeyword(Product product, String keyword) {
+        if (keyword == null) {
+            return true;
+        }
+
+        return containsIgnoreCase(product.getName(), keyword)
+                || containsIgnoreCase(product.getBrand(), keyword)
+                || product.getTags()
+                        .stream()
+                        .anyMatch(tag -> containsIgnoreCase(tag, keyword));
+    }
+
+    private boolean matchesBrand(Product product, String brand) {
+        if (brand == null) {
+            return true;
+        }
+
+        return containsIgnoreCase(product.getBrand(), brand);
+    }
+
+    private boolean containsIgnoreCase(String value, String searchText) {
+        return value != null && value.toLowerCase().contains(searchText);
+    }
+
+    private String normalizeFilterText(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        return value.trim().toLowerCase();
+    }
+
+    private void validatePriceFilter(BigDecimal minPrice, BigDecimal maxPrice) {
+        if (minPrice != null && minPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Minimum price cannot be negative.");
+        }
+
+        if (maxPrice != null && maxPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Maximum price cannot be negative.");
+        }
+
+        if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
+            throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
+        }
     }
 }

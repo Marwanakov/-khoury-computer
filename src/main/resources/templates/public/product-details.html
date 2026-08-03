@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${product.name()}, '/css/pages/product-details.css')}"></head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+
+    <section class="product-details-section">
+        <div class="container">
+
+            <div class="mb-4">
+                <a class="back-link" th:href="@{/products}">
+                    ← Back to products
+                </a>
+            </div>
+
+            <div class="row g-5 align-items-start">
+
+                <div class="col-lg-6">
+                    <div class="product-details-image-card">
+                        <img th:if="${product.imageUrl() != null and !product.imageUrl().isBlank()}"
+                             th:src="${product.imageUrl()}"
+                             th:alt="${product.name()}"
+                             class="product-details-image">
+
+                        <div th:if="${product.imageUrl() == null or product.imageUrl().isBlank()}"
+                             class="product-details-image-placeholder">
+                            <span>No Image Available</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="product-details-info">
+
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge rounded-pill text-bg-primary" th:text="${category.name()}">
+                                Category
+                            </span>
+
+                            <span class="badge product-status-badge"
+                                  th:classappend="${product.availabilityStatus().name() == 'AVAILABLE'} ? ' status-available' :
+                                                  (${product.availabilityStatus().name() == 'LOW_STOCK'} ? ' status-low-stock' : ' status-sold-out')"
+                                  th:text="${product.availabilityStatus()}">
+                                AVAILABLE
+                            </span>
+                        </div>
+
+                        <p class="product-details-brand mb-2" th:text="${product.brand()}">
+                            Brand
+                        </p>
+
+                        <h1 class="product-details-title mb-3" th:text="${product.name()}">
+                            Product name
+                        </h1>
+
+                        <div class="product-details-price mb-4">
+                            ₪<span th:text="${#numbers.formatDecimal(product.price(), 0, 0)}">0</span>
+                        </div>
+
+                        <p class="product-details-description" th:text="${product.description()}">
+                            Product description
+                        </p>
+
+                        <div class="product-details-meta">
+                            <div>
+                                <span class="meta-label">Stock</span>
+                                <strong th:text="${product.stockQuantity()}">0</strong>
+                            </div>
+
+                            <div>
+                                <span class="meta-label">Category</span>
+                                <strong th:text="${category.name()}">Category</strong>
+                            </div>
+
+                            <div>
+                                <span class="meta-label">Availability</span>
+                                <strong th:text="${product.availabilityStatus()}">AVAILABLE</strong>
+                            </div>
+                        </div>
+
+                        <div th:if="${product.tags() != null and !product.tags().isEmpty()}" class="mt-4">
+                            <h5 class="fw-bold mb-3">Features / Tags</h5>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <span th:each="tag : ${product.tags()}"
+                                      class="product-tag"
+                                      th:text="${tag}">
+                                    Tag
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="product-details-actions mt-5">
+
+                            <!-- This form will work after we build CartController in Phase 4.3 -->
+                            <form th:action="@{/cart/items}" method="post" class="d-flex gap-2">
+                                <input type="hidden" name="productId" th:value="${product.id()}">
+
+                                <input type="number"
+                                       name="quantity"
+                                       min="1"
+                                       value="1"
+                                       class="form-control quantity-input"
+                                       aria-label="Quantity">
+
+                                <button type="submit"
+                                        class="btn btn-khoury"
+                                        th:disabled="${product.availabilityStatus().name() == 'SOLD_OUT'}">
+                                    Add to Cart
+                                </button>
+                            </form>
+
+                            <a class="btn btn-outline-dark rounded-pill px-4" th:href="@{/contact}">
+                                Contact Store
+                            </a>
+
+                        </div>
+
+                        <p class="text-muted small mt-3 mb-0">
+                            Orders are submitted as requests. The store will contact you to confirm availability and details.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+</body>
+</html>
