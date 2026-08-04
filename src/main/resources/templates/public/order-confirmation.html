@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Order Confirmation', '/css/pages/orders.css')}"
+  ></head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main>
+      <section class="order-page-hero">
+        <div class="container">
+          <span class="order-page-label">Order received</span>
+
+          <h1 class="order-page-title">Thank you for your order request</h1>
+
+          <p class="order-page-subtitle">
+            Your request was submitted successfully. The store will review it
+            and contact you regarding availability and the next steps.
+          </p>
+        </div>
+      </section>
+
+      <section class="py-5">
+        <div class="container">
+          <div
+            th:if="${confirmationMessage}"
+            class="alert alert-success border-0 shadow-sm mb-4"
+            th:text="${confirmationMessage}"
+          >
+            Order submitted successfully.
+          </div>
+
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <div class="order-content-card mb-4">
+                <div
+                  class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"
+                >
+                  <div>
+                    <span class="order-section-label">Order number</span>
+
+                    <h2 class="order-number mb-0">
+                      #<span th:text="${order.id()}">1</span>
+                    </h2>
+                  </div>
+
+                  <span
+                    class="order-status-badge"
+                    th:classappend="' status-' + ${#strings.toLowerCase(order.status().name())}"
+                    th:text="${order.status()}"
+                  >
+                    PENDING
+                  </span>
+                </div>
+
+                <div class="order-meta-grid mb-4">
+                  <div>
+                    <span class="order-section-label">Submitted</span>
+
+                    <strong
+                      th:text="${#temporals.format(order.createdAt(), 'dd MMM yyyy, HH:mm')}"
+                    >
+                      04 Aug 2026, 01:30
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span class="order-section-label">Products</span>
+
+                    <strong th:text="${order.items().size()}"> 1 </strong>
+                  </div>
+                </div>
+
+                <div class="order-customer-section mb-4">
+                  <h3 class="order-card-title mb-3">Customer Information</h3>
+
+                  <div class="order-customer-card">
+                    <div class="order-customer-grid">
+                      <div>
+                        <span class="order-section-label"> Customer name </span>
+
+                        <strong th:text="${order.customerName()}">
+                          Customer Name
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span class="order-section-label"> Phone number </span>
+
+                        <strong th:text="${order.customerPhoneNumber()}">
+                          0599999999
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span class="order-section-label"> Email </span>
+
+                        <strong th:text="${order.customerEmail()}">
+                          customer@example.com
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span class="order-section-label">
+                          Delivery address
+                        </span>
+
+                        <strong>
+                          <span th:text="${order.deliveryAddress().street()}">
+                            Main Street </span
+                          >,
+                          <span th:text="${order.deliveryAddress().city()}">
+                            Ramallah
+                          </span>
+                        </strong>
+
+                        <p
+                          class="order-address-details mb-0"
+                          th:if="${!#strings.isEmpty(order.deliveryAddress().details())}"
+                          th:text="${order.deliveryAddress().details()}"
+                        >
+                          Additional delivery details
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 class="order-card-title mb-3">Products</h3>
+
+                <div class="order-item" th:each="item : ${order.items()}">
+                  <div>
+                    <h4 class="order-item-name" th:text="${item.productName()}">
+                      Product name
+                    </h4>
+
+                    <p class="order-item-meta mb-0">
+                      Quantity:
+                      <strong th:text="${item.quantity()}">1</strong>
+
+                      <span class="mx-2">·</span>
+
+                      Unit price:
+                      <strong class="money-amount">
+                        <span class="money-symbol">₪</span>
+                        <span
+                          th:text="${#numbers.formatDecimal(item.unitPrice(), 0, 0)}"
+                        >
+                          0
+                        </span>
+                      </strong>
+                    </p>
+                  </div>
+
+                  <strong class="order-item-price money-amount">
+                    <span class="money-symbol">₪</span>
+                    <span
+                      th:text="${#numbers.formatDecimal(item.subtotal(), 0, 0)}"
+                    >
+                      0
+                    </span>
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <aside class="order-summary-card">
+                <h3 class="order-card-title mb-4">Order Summary</h3>
+
+                <div class="order-summary-total">
+                  <span>Total</span>
+
+                  <strong class="money-amount">
+                    <span class="money-symbol">₪</span>
+                    <span
+                      th:text="${#numbers.formatDecimal(order.totalPrice(), 0, 0)}"
+                    >
+                      0
+                    </span>
+                  </strong>
+                </div>
+
+                <hr />
+
+                <p class="text-muted small">
+                  This is an order request. The store will confirm product
+                  availability before completing the order.
+                </p>
+
+                <a
+                  class="btn btn-khoury w-100 mt-3"
+                  th:href="@{/orders/my-orders}"
+                >
+                  View My Orders
+                </a>
+
+                <a
+                  class="btn btn-outline-secondary w-100 mt-2"
+                  th:href="@{/products}"
+                >
+                  Continue Shopping
+                </a>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>

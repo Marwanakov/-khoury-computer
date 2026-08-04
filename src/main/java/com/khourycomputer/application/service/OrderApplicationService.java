@@ -31,14 +31,14 @@ public class OrderApplicationService {
     public OrderApplicationService(
             OrderRepository orderRepository,
             CartRepository cartRepository,
-            UserRepository userRepository
-    ) {
+            UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
     }
 
-    // User story: customer submits an order request so the store can contact him and confirm it.
+    // User story: customer submits an order request so the store can contact him
+    // and confirm it.
     @Transactional
     public SubmitOrderResponse submitOrder(Long userId) {
         User user = userRepository.findById(userId)
@@ -57,8 +57,7 @@ public class OrderApplicationService {
                 createCustomerInfoSnapshot(user),
                 createOrderItemsFromCart(cart),
                 OrderStatus.PENDING,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
 
         Order savedOrder = orderRepository.save(order);
 
@@ -66,14 +65,20 @@ public class OrderApplicationService {
 
         return new SubmitOrderResponse(
                 toResponse(savedOrder),
-                "Your order request was submitted successfully. The store will contact you soon to confirm it."
-        );
+                "Your order request was submitted successfully. The store will contact you soon to confirm it.");
     }
 
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+
+        return toResponse(order);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderResponse getOrderByIdForUser(Long userId, Long orderId) {
+        Order order = findOrderOwnedByUser(userId, orderId);
 
         return toResponse(order);
     }
@@ -132,6 +137,20 @@ public class OrderApplicationService {
     }
 
     @Transactional
+    public OrderResponse cancelOrderByCustomer(Long userId, Long orderId) {
+        Order order = findOrderOwnedByUser(userId, orderId);
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException(
+                    "Only pending orders can be cancelled by the customer.");
+        }
+
+        order.cancel();
+
+        return toResponse(orderRepository.save(order));
+    }
+
+    @Transactional
     public OrderResponse cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found."));
@@ -146,8 +165,7 @@ public class OrderApplicationService {
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
-                user.getAddress()
-        );
+                user.getAddress());
     }
 
     private List<OrderItem> createOrderItemsFromCart(Cart cart) {
@@ -163,18 +181,27 @@ public class OrderApplicationService {
                 cartItem.getProductId(),
                 cartItem.getProductName(),
                 cartItem.getUnitPrice(),
-                cartItem.getQuantity()
-        );
+                cartItem.getQuantity());
     }
 
     private void clearCart(Cart cart) {
         Cart emptyCart = new Cart(
                 cart.getId(),
                 cart.getUserId(),
-                List.of()
-        );
+                List.of());
 
         cartRepository.save(emptyCart);
+    }
+
+    private Order findOrderOwnedByUser(Long userId, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+
+        if (!order.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Order not found.");
+        }
+
+        return order;
     }
 
     private OrderResponse toResponse(Order order) {
@@ -193,8 +220,7 @@ public class OrderApplicationService {
                         .toList(),
                 order.getStatus(),
                 order.getCreatedAt(),
-                order.getTotalPrice()
-        );
+                order.getTotalPrice());
     }
 
     private OrderItemResponse toItemResponse(OrderItem item) {
@@ -204,15 +230,13 @@ public class OrderApplicationService {
                 item.getProductName(),
                 item.getUnitPrice(),
                 item.getQuantity(),
-                item.getSubtotal()
-        );
+                item.getSubtotal());
     }
 
     private AddressResponse toAddressResponse(Address address) {
         return new AddressResponse(
                 address.getCity(),
                 address.getStreet(),
-                address.getDetails()
-        );
+                address.getDetails());
     }
 }

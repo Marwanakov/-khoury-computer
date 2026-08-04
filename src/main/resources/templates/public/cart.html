@@ -1,6 +1,8 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
- <head th:replace="~{fragments/head :: head('Cart', '/css/pages/cart.css')}"></head>
+  <head
+    th:replace="~{fragments/head :: head('Cart', '/css/pages/cart.css')}"
+  ></head>
 
   <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -179,13 +181,11 @@
                 </strong>
               </div>
 
-              <button type="button" class="btn btn-khoury w-100 mt-4" disabled>
-                Submit Order Request
-              </button>
-
-              <p class="text-muted small mt-3 mb-0">
-                Order submission will be connected in the next phase.
-              </p>
+              <form th:action="@{/orders/submit}" method="post" class="mt-4">
+                <button type="submit" class="btn btn-khoury w-100">
+                  Submit Order Request
+                </button>
+              </form>
 
               <form th:action="@{/cart/clear}" method="post" class="mt-3">
                 <button
