@@ -3,6 +3,13 @@ package com.khourycomputer.web.controller;
 import com.khourycomputer.application.dto.cart.AddCartItemRequest;
 import com.khourycomputer.application.dto.cart.UpdateCartItemQuantityRequest;
 import com.khourycomputer.application.service.CartApplicationService;
+import com.khourycomputer.config.security.CurrentUserService;
+import com.khourycomputer.web.viewmodel.cart.PendingCartAction;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import com.khourycomputer.config.security.PendingCartAuthenticationSuccessHandler;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,85 +20,135 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class CartController {
 
-    // Temporary user until real login is connected with Spring Security.
-    // If your test customer ID is not 1, change this number.
-    private static final Long TEMP_USER_ID = 1L;
+        private final CartApplicationService cartApplicationService;
+        private final CurrentUserService currentUserService;
 
-    private final CartApplicationService cartApplicationService;
+        public CartController(
+                        CartApplicationService cartApplicationService,
+                        CurrentUserService currentUserService) {
+                this.cartApplicationService = cartApplicationService;
+                this.currentUserService = currentUserService;
+        }
 
-    public CartController(CartApplicationService cartApplicationService) {
-        this.cartApplicationService = cartApplicationService;
-    }
+        @GetMapping("/cart")
+        public String showCartPage(
+                        Model model,
+                        HttpSession session) {
+                Long currentUserId = currentUserService.getCurrentUserId();
 
-    @GetMapping("/cart")
-    public String showCartPage(Model model) {
-        model.addAttribute("cart", cartApplicationService.getCartByUserId(TEMP_USER_ID));
+                model.addAttribute(
+                                "cart",
+                                cartApplicationService.getCartByUserId(currentUserId));
 
-        return "public/cart";
-    }
+                moveSessionMessageToModel(
+                                session,
+                                PendingCartAuthenticationSuccessHandler.SUCCESS_MESSAGE_SESSION_ATTRIBUTE,
+                                "successMessage",
+                                model);
 
-    @PostMapping("/cart/items")
-    public String addItemToCart(
-            @RequestParam Long productId,
-            @RequestParam(defaultValue = "1") int quantity,
-            RedirectAttributes redirectAttributes
-    ) {
-        cartApplicationService.addItemToCart(
-                TEMP_USER_ID,
-                new AddCartItemRequest(productId, quantity)
-        );
+                moveSessionMessageToModel(
+                                session,
+                                PendingCartAuthenticationSuccessHandler.ERROR_MESSAGE_SESSION_ATTRIBUTE,
+                                "errorMessage",
+                                model);
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Product added to cart successfully."
-        );
+                return "public/cart";
+        }
 
-        return "redirect:/cart";
-    }
+        @PostMapping("/cart/items")
+        public String addItemToCart(
+                        @RequestParam Long productId,
+                        @RequestParam(defaultValue = "1") int quantity,
+                        Authentication authentication,
+                        HttpSession session,
+                        RedirectAttributes redirectAttributes) {
+                boolean isAnonymous = authentication == null
+                                || !authentication.isAuthenticated()
+                                || authentication instanceof AnonymousAuthenticationToken;
 
-    @PostMapping("/cart/items/update")
-    public String updateCartItemQuantity(
-            @RequestParam Long productId,
-            @RequestParam int quantity,
-            RedirectAttributes redirectAttributes
-    ) {
-        cartApplicationService.updateItemQuantity(
-                TEMP_USER_ID,
-                new UpdateCartItemQuantityRequest(productId, quantity)
-        );
+                if (isAnonymous) {
+                        session.setAttribute(
+                                        PendingCartAction.SESSION_ATTRIBUTE,
+                                        new PendingCartAction(productId, quantity));
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Cart quantity updated successfully."
-        );
+                        redirectAttributes.addFlashAttribute(
+                                        "infoMessage",
+                                        "Sign in or create an account to add this product to your cart.");
 
-        return "redirect:/cart";
-    }
+                        return "redirect:/login";
+                }
 
-    @PostMapping("/cart/items/remove")
-    public String removeProductFromCart(
-            @RequestParam Long productId,
-            RedirectAttributes redirectAttributes
-    ) {
-        cartApplicationService.removeProductFromCart(TEMP_USER_ID, productId);
+                Long currentUserId = currentUserService.getCurrentUserId();
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Product removed from cart."
-        );
+                cartApplicationService.addItemToCart(
+                                currentUserId,
+                                new AddCartItemRequest(productId, quantity));
 
-        return "redirect:/cart";
-    }
+                redirectAttributes.addFlashAttribute(
+                                "successMessage",
+                                "Product added to cart successfully.");
 
-    @PostMapping("/cart/clear")
-    public String clearCart(RedirectAttributes redirectAttributes) {
-        cartApplicationService.clearCart(TEMP_USER_ID);
+                return "redirect:/cart";
+        }
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Cart cleared successfully."
-        );
+        @PostMapping("/cart/items/update")
+        public String updateCartItemQuantity(
+                        @RequestParam Long productId,
+                        @RequestParam int quantity,
+                        RedirectAttributes redirectAttributes) {
+                Long currentUserId = currentUserService.getCurrentUserId();
 
-        return "redirect:/cart";
-    }
+                cartApplicationService.updateItemQuantity(
+                                currentUserId,
+                                new UpdateCartItemQuantityRequest(productId, quantity));
+
+                redirectAttributes.addFlashAttribute(
+                                "successMessage",
+                                "Cart quantity updated successfully.");
+
+                return "redirect:/cart";
+        }
+
+        @PostMapping("/cart/items/remove")
+        public String removeProductFromCart(
+                        @RequestParam Long productId,
+                        RedirectAttributes redirectAttributes) {
+                Long currentUserId = currentUserService.getCurrentUserId();
+
+                cartApplicationService.removeProductFromCart(
+                                currentUserId,
+                                productId);
+
+                redirectAttributes.addFlashAttribute(
+                                "successMessage",
+                                "Product removed from cart.");
+
+                return "redirect:/cart";
+        }
+
+        @PostMapping("/cart/clear")
+        public String clearCart(RedirectAttributes redirectAttributes) {
+                Long currentUserId = currentUserService.getCurrentUserId();
+
+                cartApplicationService.clearCart(currentUserId);
+
+                redirectAttributes.addFlashAttribute(
+                                "successMessage",
+                                "Cart cleared successfully.");
+
+                return "redirect:/cart";
+        }
+
+        private void moveSessionMessageToModel(
+                        HttpSession session,
+                        String sessionAttributeName,
+                        String modelAttributeName,
+                        Model model) {
+                Object message = session.getAttribute(sessionAttributeName);
+
+                if (message != null) {
+                        model.addAttribute(modelAttributeName, message);
+                        session.removeAttribute(sessionAttributeName);
+                }
+        }
 }

@@ -26,15 +26,15 @@ public class CartApplicationService {
     public CartApplicationService(
             CartRepository cartRepository,
             ProductRepository productRepository,
-            UserRepository userRepository
-    ) {
+            UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
 
-    // User story: customer views his cart to check products, quantities, and total price.
-    @Transactional(readOnly = true)
+    // User story: customer views his cart to check products, quantities, and total
+    // price.
+    @Transactional
     public CartResponse getCartByUserId(Long userId) {
         validateUserExists(userId);
 
@@ -61,8 +61,7 @@ public class CartApplicationService {
         Cart updatedCart = new Cart(
                 cart.getId(),
                 cart.getUserId(),
-                updatedItems
-        );
+                updatedItems);
 
         Cart savedCart = cartRepository.save(updatedCart);
 
@@ -91,17 +90,14 @@ public class CartApplicationService {
                                 item.getProductId(),
                                 item.getProductName(),
                                 item.getUnitPrice(),
-                                request.quantity()
-                        )
-                        : item
-                )
+                                request.quantity())
+                        : item)
                 .toList();
 
         Cart updatedCart = new Cart(
                 cart.getId(),
                 cart.getUserId(),
-                updatedItems
-        );
+                updatedItems);
 
         Cart savedCart = cartRepository.save(updatedCart);
 
@@ -124,8 +120,7 @@ public class CartApplicationService {
         Cart updatedCart = new Cart(
                 cart.getId(),
                 cart.getUserId(),
-                updatedItems
-        );
+                updatedItems);
 
         Cart savedCart = cartRepository.save(updatedCart);
 
@@ -142,8 +137,7 @@ public class CartApplicationService {
         Cart emptyCart = new Cart(
                 cart.getId(),
                 cart.getUserId(),
-                List.of()
-        );
+                List.of());
 
         cartRepository.save(emptyCart);
     }
@@ -168,8 +162,7 @@ public class CartApplicationService {
                         item.getProductId(),
                         item.getProductName(),
                         item.getUnitPrice(),
-                        newQuantity
-                ));
+                        newQuantity));
 
                 productAlreadyInCart = true;
             } else {
@@ -183,8 +176,7 @@ public class CartApplicationService {
                     product.getId(),
                     product.getName(),
                     product.getPrice(),
-                    quantityToAdd
-            ));
+                    quantityToAdd));
         }
 
         return updatedItems;
@@ -216,8 +208,7 @@ public class CartApplicationService {
                         .stream()
                         .map(this::toItemResponse)
                         .toList(),
-                cart.getTotalPrice()
-        );
+                cart.getTotalPrice());
     }
 
     private CartItemResponse toItemResponse(CartItem item) {
@@ -227,7 +218,6 @@ public class CartApplicationService {
                 item.getProductName(),
                 item.getUnitPrice(),
                 item.getQuantity(),
-                item.getSubtotal()
-        );
+                item.getSubtotal());
     }
 }
