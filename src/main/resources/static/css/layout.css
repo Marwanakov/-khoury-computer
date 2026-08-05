@@ -96,6 +96,32 @@
     color: #2563eb;
 }
 
+.header-user-label {
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.header-user-label strong {
+    color: #0f172a;
+    font-weight: 800;
+}
+
+.header-logout-button {
+    border: 0;
+    background: transparent;
+    color: #111827;
+    font-weight: 600;
+    padding: 0;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.header-logout-button:hover {
+    color: #2563eb;
+}
+
 /* =========================
    Category Navigation
 ========================= */

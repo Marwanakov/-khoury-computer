@@ -1,83 +1,130 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-
-<header th:fragment="navbar" class="site-header bg-white shadow-sm">
-
-    <div class="container py-3">
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <body>
+    <header th:fragment="navbar" class="site-header bg-white shadow-sm">
+      <div class="container py-3">
         <div class="row align-items-center g-3">
+          <!-- Logo placeholder: later we replace this with your father's real shop logo -->
+          <div class="col-12 col-lg-3">
+            <a class="brand-area text-decoration-none" th:href="@{/}">
+              <div class="brand-logo-placeholder">Logo</div>
 
-            <!-- Logo placeholder: later we replace this with your father's real shop logo -->
-            <div class="col-12 col-lg-3">
-                <a class="brand-area text-decoration-none" th:href="@{/}">
-                    <div class="brand-logo-placeholder">
-                        Logo
-                    </div>
+              <div>
+                <div class="brand-name">Khoury Computer</div>
+                <div class="brand-subtitle">Computer shop & repair</div>
+              </div>
+            </a>
+          </div>
 
-                    <div>
-                        <div class="brand-name">Khoury Computer</div>
-                        <div class="brand-subtitle">Computer shop & repair</div>
-                    </div>
-                </a>
+          <!-- Search bar: simple for now, submits to /products?keyword=... -->
+          <div class="col-12 col-lg-6">
+            <form th:action="@{/products}" method="get" class="search-box">
+              <input
+                type="text"
+                name="keyword"
+                class="form-control search-input"
+                placeholder="Search for laptops, accessories, chargers..."
+                aria-label="Search products"
+              />
+
+              <button class="btn search-button" type="submit">Search</button>
+            </form>
+          </div>
+
+          <!-- Account / Cart actions -->
+          <div class="col-12 col-lg-3">
+            <div class="header-actions justify-content-lg-end">
+              <!-- Guest navigation -->
+              <a
+                sec:authorize="isAnonymous()"
+                class="header-action-link"
+                th:href="@{/login}"
+              >
+                Sign In
+              </a>
+
+              <a
+                sec:authorize="isAnonymous()"
+                class="btn btn-primary btn-sm px-3"
+                th:href="@{/register}"
+              >
+                Register
+              </a>
+
+              <!-- Authenticated customer navigation -->
+              <a
+                sec:authorize="isAuthenticated()"
+                class="header-action-link"
+                th:href="@{/profile}"
+              >
+                My Profile
+              </a>
+              <a
+                sec:authorize="isAuthenticated()"
+                class="header-action-link"
+                th:href="@{/orders/my-orders}"
+              >
+                My Orders
+              </a>
+
+              <a
+                sec:authorize="isAuthenticated()"
+                class="header-action-link"
+                th:href="@{/cart}"
+              >
+                Cart
+              </a>
+
+              <form
+                sec:authorize="isAuthenticated()"
+                th:action="@{/logout}"
+                method="post"
+                class="m-0"
+              >
+                <button type="submit" class="header-logout-button">
+                  Logout
+                </button>
+              </form>
             </div>
-
-            <!-- Search bar: simple for now, submits to /products?keyword=... -->
-            <div class="col-12 col-lg-6">
-                <form th:action="@{/products}" method="get" class="search-box">
-                    <input type="text"
-                           name="keyword"
-                           class="form-control search-input"
-                           placeholder="Search for laptops, accessories, chargers..."
-                           aria-label="Search products">
-
-                    <button class="btn search-button" type="submit">
-                        Search
-                    </button>
-                </form>
-            </div>
-
-            <!-- Account / Cart actions -->
-            <div class="col-12 col-lg-3">
-                <div class="header-actions justify-content-lg-end">
-                    <a class="header-action-link" th:href="@{/login}">
-                        Sign In
-                    </a>
-
-                    <a class="header-action-link" th:href="@{/orders/my-orders}">
-                        My Orders
-                    </a>
-
-                    <a class="header-action-link" th:href="@{/cart}">
-                        Cart
-                    </a>
-
-                    <a class="btn btn-primary btn-sm px-3" th:href="@{/register}">
-                        Register
-                    </a>
-                </div>
-            </div>
-
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Category navigation: this must match the Shop by Category section -->
-    <nav class="category-nav border-top">
+      <!-- Category navigation: this must match the Shop by Category section -->
+      <nav class="category-nav border-top">
         <div class="container">
-            <div class="category-nav-scroll">
-                <a class="category-nav-link" th:href="@{/}">Home</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=1)}">Laptops</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=2)}">Screens</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=3)}">Accessories</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=4)}">Chargers</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=5)}">USB Devices</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=6)}">Gaming Consoles</a>
-                <a class="category-nav-link" th:href="@{/products(categoryId=7)}">Networking</a>
-                <a class="category-nav-link" th:href="@{/contact}">Repair Services</a>
-            </div>
+          <div class="category-nav-scroll">
+            <a class="category-nav-link" th:href="@{/}">Home</a>
+            <a class="category-nav-link" th:href="@{/products(categoryId=1)}"
+              >Laptops</a
+            >
+            <a class="category-nav-link" th:href="@{/products(categoryId=2)}"
+              >Screens</a
+            >
+            <a class="category-nav-link" th:href="@{/products(categoryId=3)}"
+              >Accessories</a
+            >
+            <a class="category-nav-link" th:href="@{/products(categoryId=4)}"
+              >Chargers</a
+            >
+            <a class="category-nav-link" th:href="@{/products(categoryId=5)}"
+              >USB Devices</a
+            >
+            <a class="category-nav-link" th:href="@{/products(categoryId=6)}"
+              >Gaming Consoles</a
+            >
+            <a class="category-nav-link" th:href="@{/products(categoryId=7)}"
+              >Networking</a
+            >
+            <a class="category-nav-link" th:href="@{/contact}"
+              >Repair Services</a
+            >
+          </div>
         </div>
-    </nav>
-
-</header>
-
-</body>
+      </nav>
+    </header>
+  </body>
 </html>
