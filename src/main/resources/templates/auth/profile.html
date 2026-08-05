@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('My Profile', '/css/pages/profile.css')}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+
+    <section class="profile-hero">
+        <div class="container">
+
+            <span class="profile-label">
+                Customer account
+            </span>
+
+            <h1 class="profile-title">
+                My Profile
+            </h1>
+
+            <p class="profile-subtitle">
+                Review your personal, contact, and delivery information.
+            </p>
+
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+
+            <div th:if="${successMessage}"
+                 class="alert alert-success border-0 shadow-sm mb-4"
+                 th:text="${successMessage}">
+                Your profile was updated successfully.
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+                        <span class="profile-section-label">
+                            Customer
+                        </span>
+
+                        <h2 class="profile-customer-name"
+                            th:text="${user.fullName()}">
+                            Customer Name
+                        </h2>
+                    </div>
+
+                    <a class="btn btn-khoury"
+                       th:href="@{/profile/edit}">
+                        Edit Profile
+                    </a>
+
+                </div>
+
+                <div class="profile-information-grid">
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            First name
+                        </span>
+
+                        <strong th:text="${user.firstName()}">
+                            First name
+                        </strong>
+                    </div>
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            Last name
+                        </span>
+
+                        <strong th:text="${user.lastName()}">
+                            Last name
+                        </strong>
+                    </div>
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            Email
+                        </span>
+
+                        <strong th:text="${user.email()}">
+                            customer@example.com
+                        </strong>
+                    </div>
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            Phone number
+                        </span>
+
+                        <strong th:text="${user.phoneNumber()}">
+                            0599999999
+                        </strong>
+                    </div>
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            Account role
+                        </span>
+
+                        <strong th:text="${user.role()}">
+                            CUSTOMER
+                        </strong>
+                    </div>
+
+                </div>
+
+                <hr class="profile-divider">
+
+                <div class="mb-4">
+                    <span class="profile-section-label">
+                        Delivery information
+                    </span>
+
+                    <h3 class="profile-section-title">
+                        Address
+                    </h3>
+                </div>
+
+                <div class="profile-information-grid">
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            City
+                        </span>
+
+                        <strong th:text="${user.address().city()}">
+                            Ramallah
+                        </strong>
+                    </div>
+
+                    <div class="profile-information-item">
+                        <span class="profile-section-label">
+                            Street
+                        </span>
+
+                        <strong th:text="${user.address().street()}">
+                            Main Street
+                        </strong>
+                    </div>
+
+                    <div class="profile-information-item profile-information-wide">
+                        <span class="profile-section-label">
+                            Additional address details
+                        </span>
+
+                        <strong th:if="${!#strings.isEmpty(user.address().details())}"
+                                th:text="${user.address().details()}">
+                            Building and floor details
+                        </strong>
+
+                        <span th:if="${#strings.isEmpty(user.address().details())}"
+                              class="profile-empty-value">
+                            No additional details provided.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>
