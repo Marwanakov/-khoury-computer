@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Sign In', '/css/pages/auth.css')}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="auth-page">
+
+    <section class="auth-section">
+        <div class="container">
+
+            <div class="auth-card auth-login-card">
+
+                <div class="auth-heading">
+                    <span class="auth-label">Welcome back</span>
+
+                    <h1>Sign In</h1>
+
+                    <p>
+                        Sign in to manage your cart, submit order requests,
+                        and review your order history.
+                    </p>
+                </div>
+
+                <!-- Successful registration -->
+                <div th:if="${successMessage}"
+                     class="alert alert-success border-0 mb-4"
+                     th:text="${successMessage}">
+                    Registration completed successfully.
+                </div>
+
+                <div th:if="${infoMessage}"
+                    class="alert alert-info border-0 mb-4"
+                    th:text="${infoMessage}">
+                    Sign in or create an account to continue.
+                </div>
+
+                <!-- Invalid login -->
+                <div th:if="${param.error}"
+                    class="alert alert-danger border-0 mb-4">
+                    Invalid email or password.
+                </div>
+
+                <!-- Successful logout -->
+                <div th:if="${param.logout}"
+                    class="alert alert-success border-0 mb-4">
+                    You have been signed out successfully.
+                </div>
+
+                <div th:if="${param.emailChanged}"
+                    class="alert alert-success border-0 mb-4">
+                    Your profile was updated successfully.
+                    Sign in again using your new email address.
+                </div>
+
+                <form th:action="@{/login}" method="post">
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            Email
+                        </label>
+
+                        <input id="email"
+                               type="email"
+                               name="username"
+                               class="form-control"
+                               placeholder="customer@example.com"
+                               autocomplete="email"
+                               required
+                               autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            Password
+                        </label>
+
+                        <input id="password"
+                               type="password"
+                               name="password"
+                               class="form-control"
+                               autocomplete="current-password"
+                               required>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-khoury w-100 mt-2">
+                        Sign In
+                    </button>
+
+                </form>
+
+                <p class="auth-switch-text">
+                    Don’t have an account?
+                    <a th:href="@{/register}">Create an account</a>
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>
