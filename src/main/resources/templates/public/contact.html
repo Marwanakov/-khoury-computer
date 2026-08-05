@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Contact Us', '/css/pages/contact.css')}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+
+    <section class="contact-hero">
+        <div class="container">
+
+            <span class="contact-label">
+                Contact Khoury Computer
+            </span>
+
+            <h1 class="contact-title">
+                We are here to help
+            </h1>
+
+            <p class="contact-subtitle">
+                Contact us for product questions, laptop repairs,
+                order assistance, and general store inquiries.
+            </p>
+
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+
+            <div class="contact-layout">
+
+                <!-- Main contact information -->
+                <div class="contact-card">
+
+                    <div class="contact-card-heading">
+                        <span class="contact-section-label">
+                            Store information
+                        </span>
+
+                        <h2>Get in touch</h2>
+
+                        <p>
+                            Choose the communication method that is most
+                            convenient for you.
+                        </p>
+                    </div>
+
+                    <div class="contact-information-list">
+
+                        <!-- Phone -->
+                        <div class="contact-information-item">
+
+                            <div>
+                                <span class="contact-information-label">
+                                    Phone number
+                                </span>
+
+                                <a class="contact-information-value"
+                                   th:href="|tel:${contactInfo.phoneNumber()}|"
+                                   th:text="${contactInfo.phoneNumber()}">
+                                    Phone number
+                                </a>
+                            </div>
+
+                            <a class="btn btn-outline-khoury contact-action-button"
+                               th:href="|tel:${contactInfo.phoneNumber()}|">
+                                Call Store
+                            </a>
+
+                        </div>
+
+                        <!-- Email -->
+                        <div class="contact-information-item">
+
+                            <div>
+                                <span class="contact-information-label">
+                                    Email
+                                </span>
+
+                                <a class="contact-information-value"
+                                   th:href="|mailto:${contactInfo.email()}|"
+                                   th:text="${contactInfo.email()}">
+                                    store@example.com
+                                </a>
+                            </div>
+
+                            <a class="btn btn-outline-khoury contact-action-button"
+                               th:href="|mailto:${contactInfo.email()}|">
+                                Send Email
+                            </a>
+
+                        </div>
+
+                        <!-- WhatsApp -->
+                        <div class="contact-information-item"
+                             th:if="${!#strings.isEmpty(contactInfo.whatsappNumber())}">
+
+                            <div>
+                                <span class="contact-information-label">
+                                    WhatsApp
+                                </span>
+
+                                <span class="contact-information-value"
+                                      th:text="${contactInfo.whatsappNumber()}">
+                                    WhatsApp number
+                                </span>
+                            </div>
+
+                            <a class="btn btn-outline-khoury contact-action-button"
+                               th:href="|https://wa.me/${contactInfo.whatsappNumber()}|"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Open WhatsApp
+                            </a>
+
+                        </div>
+
+                        <!-- Facebook Messenger -->
+                        <div class="contact-information-item"
+                             th:if="${!#strings.isEmpty(contactInfo.facebookMessengerLink())}">
+
+                            <div>
+                                <span class="contact-information-label">
+                                    Facebook Messenger
+                                </span>
+
+                                <span class="contact-information-value">
+                                    Message Khoury Computer directly
+                                </span>
+                            </div>
+
+                            <a class="btn btn-outline-khoury contact-action-button"
+                               th:href="${contactInfo.facebookMessengerLink()}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Open Messenger
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Address and opening-hours card -->
+                <aside class="contact-address-card">
+
+                    <span class="contact-section-label">
+                        Visit the store
+                    </span>
+
+                    <h2>Store Address</h2>
+
+                    <div class="contact-address-details">
+
+                        <div>
+                            <span>City</span>
+
+                            <strong th:text="${contactInfo.storeAddress().city()}">
+                                City
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Street</span>
+
+                            <strong th:text="${contactInfo.storeAddress().street()}">
+                                Street
+                            </strong>
+                        </div>
+
+                        <div th:if="${!#strings.isEmpty(contactInfo.storeAddress().details())}">
+                            <span>Additional details</span>
+
+                            <strong th:text="${contactInfo.storeAddress().details()}">
+                                Store address details
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="contact-opening-hours">
+                        <div th:replace="~{fragments/opening-hours :: fullOpeningHours}"></div>
+                    </div>
+
+                    <hr class="contact-divider">
+
+                    <p class="contact-address-note">
+                        Contact the store before visiting when asking about
+                        product availability or laptop repair services.
+                    </p>
+
+                    <a class="btn btn-khoury w-100"
+                       th:href="@{/products}">
+                        Browse Products
+                    </a>
+
+                </aside>
+
+                <!-- Google Maps -->
+                <div class="contact-map-card">
+
+                    <div class="contact-map-heading">
+
+                        <div>
+                            <span class="contact-section-label">
+                                Find us
+                            </span>
+
+                            <h2>Khoury Computer on Google Maps</h2>
+
+                            <p>
+                                Visit our store on Manger Street in Bethlehem,
+                                opposite Bank of Jerusalem.
+                            </p>
+                        </div>
+
+                        <a class="btn btn-outline-khoury contact-map-button"
+                           href="https://share.google/90XXdzZnuXl6gS5Kl"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Open in Google Maps
+                        </a>
+
+                    </div>
+
+                    <div class="contact-map-wrapper">
+
+                        <iframe
+                            class="contact-map"
+                            title="Khoury Computer location on Google Maps"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1200.0440514699144!2d35.20568683058608!3d31.70941639358781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1502d996bd5b8063%3A0x8ac8d29f4380a767!2sKhoury%20Computer!5e0!3m2!1sen!2sde!4v1785948996524!5m2!1sen!2sde"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="strict-origin-when-cross-origin">
+                        </iframe>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>

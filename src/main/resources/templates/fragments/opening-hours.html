@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<!-- Full version used on the Contact page -->
+<div th:fragment="fullOpeningHours"
+     class="opening-hours">
+
+    <div class="opening-hours-heading">
+        <span class="contact-section-label">
+            Opening hours
+        </span>
+
+        <h2>When to visit</h2>
+    </div>
+
+    <div class="opening-hours-list">
+
+        <div class="opening-hours-row">
+            <span class="opening-hours-day">
+                Monday – Saturday
+            </span>
+
+            <div class="opening-hours-time">
+                <span>9:00 AM – 5:00 PM</span>
+                <small>Lunch break</small>
+                <span>6:00 PM – approximately 9:00–9:30 PM</span>
+            </div>
+        </div>
+
+        <div class="opening-hours-row">
+            <span class="opening-hours-day">
+                Sunday
+            </span>
+
+            <div class="opening-hours-time">
+                <strong class="opening-hours-closed">
+                    Closed
+                </strong>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Compact version used in the Footer -->
+<div th:fragment="compactOpeningHours"
+     class="footer-opening-hours">
+
+    <p>
+        <strong>Monday – Saturday</strong>
+        <span>9:00 AM–5:00 PM</span>
+        <span>6:00 PM–approximately 9:00–9:30 PM</span>
+    </p>
+
+    <p>
+        <strong>Sunday</strong>
+        <span>Closed</span>
+    </p>
+
+</div>
+
+</body>
+</html>

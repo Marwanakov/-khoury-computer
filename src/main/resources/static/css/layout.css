@@ -269,6 +269,57 @@
     gap: 1rem;
 }
 
+/* =========================
+   Footer Opening Hours
+========================= */
+
+.footer-opening-hours {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.footer-opening-hours p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0;
+}
+
+.footer-opening-hours strong {
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 850;
+    line-height: 1.4;
+}
+
+.footer-opening-hours span {
+    color: #cbd5e1;
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+.footer-opening-hours p:last-child span {
+    color: #fca5a5;
+    font-weight: 800;
+}
+
+/* =========================
+   Footer Responsive
+========================= */
+
+@media (max-width: 991px) {
+    .footer-contact-card {
+        height: 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    .footer-opening-hours {
+        margin-bottom: 0.5rem;
+    }
+}
+
 /* ===========================
    Footer responsive behavior
 =============================*/
