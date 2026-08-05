@@ -1,5 +1,6 @@
 package com.khourycomputer.application.service;
 
+import com.khourycomputer.domain.exception.OrderNotFoundException;
 import com.khourycomputer.application.dto.common.address.AddressResponse;
 import com.khourycomputer.application.dto.order.OrderItemResponse;
 import com.khourycomputer.application.dto.order.OrderResponse;
@@ -71,7 +72,7 @@ public class OrderApplicationService {
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(OrderNotFoundException::new);
 
         return toResponse(order);
     }
@@ -119,7 +120,7 @@ public class OrderApplicationService {
     @Transactional
     public OrderResponse confirmOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(OrderNotFoundException::new);
 
         order.confirm();
 
@@ -129,7 +130,7 @@ public class OrderApplicationService {
     @Transactional
     public OrderResponse completeOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(OrderNotFoundException::new);
 
         order.complete();
 
@@ -153,7 +154,7 @@ public class OrderApplicationService {
     @Transactional
     public OrderResponse cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(OrderNotFoundException::new);
 
         order.cancel();
 
@@ -195,10 +196,10 @@ public class OrderApplicationService {
 
     private Order findOrderOwnedByUser(Long userId, Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(OrderNotFoundException::new);
 
         if (!order.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Order not found.");
+            throw new OrderNotFoundException();
         }
 
         return order;
