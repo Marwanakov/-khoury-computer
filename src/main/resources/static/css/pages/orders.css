@@ -404,3 +404,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+.order-back-link {
+    color: #475569;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.order-back-link:hover {
+    color: #2563eb;
+    transform: translateX(-3px);
+}
