@@ -1,0 +1,843 @@
+/* =========================
+   Page
+========================= */
+
+.admin-customers-page {
+    min-height: 70vh;
+    background-color: #f4f7fb;
+}
+
+
+/* =========================
+   Header
+========================= */
+
+.admin-customers-header {
+    padding: 3.5rem 0 3rem;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.15),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f7fb 100%
+        );
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-customer-back-link {
+    display: block;
+    width: fit-content;
+    margin-bottom: 1.25rem;
+    color: #64748b;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.admin-customer-back-link:hover {
+    color: #2563eb;
+    transform: translateX(-3px);
+}
+
+.admin-customers-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: #2563eb;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.admin-customers-header h1 {
+    margin-bottom: 0.75rem;
+    color: #0f172a;
+    font-size: clamp(2.15rem, 4vw, 3.35rem);
+    font-weight: 950;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+}
+
+.admin-customers-header p {
+    max-width: 700px;
+    margin-bottom: 0;
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   Content
+========================= */
+
+.admin-customers-content {
+    padding: 3rem 0 5rem;
+}
+
+
+/* =========================
+   Summary
+========================= */
+
+.admin-customer-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-customer-summary-card {
+    position: relative;
+    overflow: hidden;
+    padding: 1.4rem 1.5rem;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.15rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.admin-customer-summary-card::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    background-color: #2563eb;
+    content: "";
+}
+
+.admin-customer-summary-card span {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #64748b;
+    font-size: 0.76rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.admin-customer-summary-card strong {
+    color: #0f172a;
+    font-size: 1.9rem;
+    font-weight: 950;
+    line-height: 1;
+}
+
+.summary-with-orders::before {
+    background-color: #16a34a;
+}
+
+.summary-customer-orders::before {
+    background-color: #7c3aed;
+}
+
+
+/* =========================
+   Shared Cards
+========================= */
+
+.admin-customer-search-card,
+.admin-customer-list-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.35rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
+}
+
+.admin-customer-search-card {
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-customer-list-card {
+    overflow: hidden;
+}
+
+
+/* =========================
+   Headings
+========================= */
+
+.admin-customer-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-customer-section-heading span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-customer-section-heading h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+.admin-customer-section-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+.admin-customer-reset-link {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.admin-customer-reset-link:hover {
+    color: #2563eb;
+}
+
+
+/* =========================
+   Search
+========================= */
+
+.admin-customer-search-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    align-items: end;
+    gap: 1rem;
+}
+
+.admin-customer-search-form label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #334155;
+    font-size: 0.8rem;
+    font-weight: 850;
+}
+
+.admin-customer-search-form .form-control,
+.admin-customer-search-form .btn {
+    min-height: 46px;
+}
+
+.admin-customer-search-form .form-control {
+    border-color: #dbe2ea;
+    border-radius: 0.75rem;
+}
+
+.admin-customer-search-form .form-control:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================
+   Customer Table
+========================= */
+
+.admin-customer-list-heading {
+    padding: 1.75rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-customers-table {
+    min-width: 900px;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.admin-customers-table thead th {
+    padding: 1rem 1.25rem;
+    color: #64748b;
+    font-size: 0.73rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-customers-table tbody td {
+    padding: 1.1rem 1.25rem;
+    color: #334155;
+    border-color: #eef2f7;
+}
+
+.admin-customers-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-customers-table tbody tr:hover {
+    background-color: #f8fbff;
+}
+
+
+/* =========================
+   Customer Identity
+========================= */
+
+.admin-customer-identity {
+    display: flex;
+    min-width: 220px;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.admin-customer-avatar {
+    display: flex;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    align-items: center;
+    justify-content: center;
+    color: #1d4ed8;
+    font-size: 0.8rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    background-color: #dbeafe;
+    border-radius: 50%;
+}
+
+.admin-customer-identity strong {
+    display: block;
+    color: #0f172a;
+    font-size: 0.9rem;
+    font-weight: 850;
+}
+
+.admin-customer-identity > div:last-child > span {
+    display: block;
+    margin-top: 0.2rem;
+    color: #64748b;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.admin-customer-contact {
+    min-width: 220px;
+}
+
+.admin-customer-contact a {
+    display: block;
+    width: fit-content;
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+}
+
+.admin-customer-contact a + a {
+    margin-top: 0.3rem;
+}
+
+.admin-customer-contact a:hover {
+    color: #2563eb;
+}
+
+.admin-customer-city {
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 750;
+}
+
+.admin-customer-order-count {
+    display: inline-flex;
+    min-width: 36px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    color: #1d4ed8;
+    font-size: 0.78rem;
+    font-weight: 900;
+    background-color: #eff6ff;
+    border-radius: 999px;
+}
+
+.admin-customer-actions {
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+.admin-customer-actions .btn {
+    padding: 0.4rem 0.75rem;
+    font-weight: 800;
+    border-radius: 0.65rem;
+}
+
+
+/* =========================
+   Empty State
+========================= */
+
+.admin-customers-empty {
+    padding: 4rem 1.5rem;
+    text-align: center;
+}
+
+.admin-customers-empty-icon {
+    display: flex;
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 1rem;
+    align-items: center;
+    justify-content: center;
+    color: #2563eb;
+    font-weight: 950;
+    background-color: #eff6ff;
+    border-radius: 50%;
+}
+
+.admin-customers-empty h3 {
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.admin-customers-empty p {
+    margin-bottom: 1.5rem;
+    color: #64748b;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 767.98px) {
+
+    .admin-customers-header {
+        padding: 2.75rem 0 2.25rem;
+    }
+
+    .admin-customers-content {
+        padding: 2rem 0 4rem;
+    }
+
+    .admin-customer-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-customer-search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-customer-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .admin-customer-search-card,
+    .admin-customer-list-heading {
+        padding: 1.25rem;
+    }
+}
+
+/* =========================
+   Customer Details Page
+========================= */
+
+.admin-customer-details-page {
+    min-height: 70vh;
+    background-color: #f4f7fb;
+}
+
+.admin-customer-details-header {
+    padding: 3.25rem 0 2.75rem;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.15),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f7fb 100%
+        );
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-customer-details-header h1 {
+    margin-bottom: 0.75rem;
+    color: #0f172a;
+    font-size: clamp(2.1rem, 4vw, 3.2rem);
+    font-weight: 950;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+}
+
+.admin-customer-details-header p {
+    max-width: 700px;
+    margin-bottom: 0;
+    color: #64748b;
+    line-height: 1.7;
+}
+
+.admin-customer-details-content {
+    padding: 3rem 0 5rem;
+}
+
+
+/* =========================
+   Customer Order Summary
+========================= */
+
+.admin-customer-order-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.customer-pending::before {
+    background-color: #f59e0b;
+}
+
+.customer-confirmed::before {
+    background-color: #2563eb;
+}
+
+.customer-completed::before {
+    background-color: #16a34a;
+}
+
+.customer-cancelled::before {
+    background-color: #dc2626;
+}
+
+
+/* =========================
+   Detail Cards
+========================= */
+
+.admin-customer-detail-card,
+.admin-customer-value-card,
+.admin-customer-order-history {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.35rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
+}
+
+.admin-customer-detail-card {
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-customer-detail-card:last-child {
+    margin-bottom: 0;
+}
+
+.admin-customer-detail-heading {
+    margin-bottom: 1.5rem;
+}
+
+.admin-customer-detail-heading span {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-customer-detail-heading h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+
+/* =========================
+   Information Grids
+========================= */
+
+.admin-customer-detail-grid,
+.admin-customer-address-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.admin-customer-detail-grid > div,
+.admin-customer-address-grid > div {
+    padding: 1rem;
+    background-color: #f8fafc;
+    border: 1px solid #e8edf3;
+    border-radius: 0.9rem;
+}
+
+.admin-customer-detail-grid > div > span:first-child,
+.admin-customer-address-grid > div > span:first-child {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.admin-customer-detail-grid strong,
+.admin-customer-address-grid strong {
+    color: #0f172a;
+    font-size: 0.9rem;
+    font-weight: 850;
+}
+
+.admin-customer-detail-grid a {
+    color: #2563eb;
+    font-size: 0.9rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+}
+
+.admin-customer-detail-grid a:hover {
+    text-decoration: underline;
+}
+
+.admin-customer-address-details {
+    grid-column: 1 / -1;
+}
+
+.admin-customer-empty-value {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+
+/* =========================
+   Customer Value Sidebar
+========================= */
+
+.admin-customer-value-card {
+    position: sticky;
+    top: 150px;
+    padding: 1.75rem;
+}
+
+.admin-customer-value-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.admin-customer-total-value {
+    display: block;
+    color: #0f172a;
+    font-size: 2rem;
+    font-weight: 950;
+}
+
+.admin-customer-value-card p {
+    margin: 1rem 0 1.5rem;
+    color: #64748b;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.admin-customer-value-card hr {
+    margin: 1.5rem 0;
+    color: #e2e8f0;
+    opacity: 1;
+}
+
+
+/* =========================
+   Customer Order History
+========================= */
+
+.admin-customer-order-history {
+    margin-top: 1.5rem;
+    overflow: hidden;
+}
+
+.admin-customer-history-heading {
+    padding: 1.75rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-customer-orders-table {
+    min-width: 850px;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.admin-customer-orders-table thead th {
+    padding: 1rem 1.25rem;
+    color: #64748b;
+    font-size: 0.73rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-customer-orders-table tbody td {
+    padding: 1rem 1.25rem;
+    color: #334155;
+    border-color: #eef2f7;
+}
+
+.admin-customer-orders-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-customer-orders-table tbody tr:hover {
+    background-color: #f8fbff;
+}
+
+.admin-customer-order-number {
+    color: #2563eb;
+    font-weight: 900;
+}
+
+.admin-customer-order-date {
+    color: #475569;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.admin-customer-order-total {
+    color: #0f172a;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.admin-customer-order-status {
+    display: inline-block;
+    padding: 0.42rem 0.7rem;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.035em;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.admin-customer-order-status.status-pending {
+    color: #92400e;
+    background-color: #fef3c7;
+}
+
+.admin-customer-order-status.status-confirmed {
+    color: #1d4ed8;
+    background-color: #dbeafe;
+}
+
+.admin-customer-order-status.status-completed {
+    color: #166534;
+    background-color: #dcfce7;
+}
+
+.admin-customer-order-status.status-cancelled {
+    color: #991b1b;
+    background-color: #fee2e2;
+}
+
+.admin-customer-order-actions {
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+.admin-customer-order-actions .btn {
+    font-weight: 800;
+    border-radius: 0.65rem;
+}
+
+
+/* =========================
+   No Orders
+========================= */
+
+.admin-customer-no-orders {
+    padding: 4rem 1.5rem;
+    text-align: center;
+}
+
+.admin-customer-no-orders h3 {
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+.admin-customer-no-orders p {
+    margin: 0;
+    color: #64748b;
+}
+
+
+/* =========================
+   Details Responsive
+========================= */
+
+@media (max-width: 1199.98px) {
+
+    .admin-customer-order-summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+
+    .admin-customer-order-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-customer-value-card {
+        position: static;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .admin-customer-order-summary-grid,
+    .admin-customer-detail-grid,
+    .admin-customer-address-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-customer-address-details {
+        grid-column: auto;
+    }
+
+    .admin-customer-detail-card,
+    .admin-customer-value-card,
+    .admin-customer-history-heading {
+        padding: 1.25rem;
+    }
+}

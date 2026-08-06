@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Manage Customers', '/css/pages/admin-customers.css')}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="admin-customers-page">
+
+    <!-- Header -->
+    <section class="admin-customers-header">
+        <div class="container">
+
+            <a class="admin-customer-back-link"
+               th:href="@{/admin}">
+                &larr; Admin Dashboard
+            </a>
+
+            <span class="admin-customers-label">
+                Customer management
+            </span>
+
+            <h1>Manage Customers</h1>
+
+            <p>
+                Find registered customers, review their contact
+                information, and access their order history.
+            </p>
+
+        </div>
+    </section>
+
+    <section class="admin-customers-content">
+        <div class="container">
+
+            <!-- Summary -->
+            <div class="admin-customer-summary-grid">
+
+                <div class="admin-customer-summary-card">
+                    <span>Total customers</span>
+
+                    <strong th:text="${totalCustomerCount}">
+                        0
+                    </strong>
+                </div>
+
+                <div class="admin-customer-summary-card summary-with-orders">
+                    <span>Customers with orders</span>
+
+                    <strong th:text="${customersWithOrdersCount}">
+                        0
+                    </strong>
+                </div>
+
+                <div class="admin-customer-summary-card summary-customer-orders">
+                    <span>Total customer orders</span>
+
+                    <strong th:text="${totalCustomerOrderCount}">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- Search -->
+            <div class="admin-customer-search-card">
+
+                <div class="admin-customer-section-heading">
+
+                    <div>
+                        <span>Customer tools</span>
+                        <h2>Search customers</h2>
+                    </div>
+
+                    <a class="admin-customer-reset-link"
+                       th:href="@{/admin/customers}">
+                        Reset search
+                    </a>
+
+                </div>
+
+                <form th:action="@{/admin/customers}"
+                      method="get"
+                      class="admin-customer-search-form">
+
+                    <div>
+                        <label for="keyword">
+                            Name, email, phone, city, or customer ID
+                        </label>
+
+                        <input id="keyword"
+                               name="keyword"
+                               type="text"
+                               class="form-control"
+                               placeholder="Search registered customers..."
+                               th:value="${keyword}">
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-khoury">
+                        Search
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Customer list -->
+            <div class="admin-customer-list-card">
+
+                <div class="admin-customer-section-heading admin-customer-list-heading">
+
+                    <div>
+                        <span>Registered accounts</span>
+                        <h2>Customers</h2>
+                    </div>
+
+                    <p>
+                        Showing
+                        <strong th:text="${customers.size()}">0</strong>
+                        customers
+                    </p>
+
+                </div>
+
+                <!-- Empty state -->
+                <div th:if="${#lists.isEmpty(customers)}"
+                     class="admin-customers-empty">
+
+                    <div class="admin-customers-empty-icon">0</div>
+
+                    <h3>No customers found</h3>
+
+                    <p>
+                        No registered customers match your search.
+                    </p>
+
+                    <a class="btn btn-khoury"
+                       th:href="@{/admin/customers}">
+                        View All Customers
+                    </a>
+
+                </div>
+
+                <!-- Customer table -->
+                <div th:if="${!#lists.isEmpty(customers)}"
+                     class="table-responsive">
+
+                    <table class="table admin-customers-table">
+
+                        <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>City</th>
+                            <th>Orders</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="customer : ${customers}">
+
+                            <td>
+                                <div class="admin-customer-identity">
+
+                                    <div class="admin-customer-avatar"
+                                         th:text="${#strings.substring(
+                                             customer.firstName(),
+                                             0,
+                                             1
+                                         ) + #strings.substring(
+                                             customer.lastName(),
+                                             0,
+                                             1
+                                         )}">
+                                        KC
+                                    </div>
+
+                                    <div>
+                                        <strong th:text="${customer.fullName()}">
+                                            Customer Name
+                                        </strong>
+
+                                        <span>
+                                            Customer #<span
+                                                th:text="${customer.id()}">
+                                                1
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="admin-customer-contact">
+
+                                    <a th:href="|mailto:${customer.email()}|"
+                                       th:text="${customer.email()}">
+                                        customer@example.com
+                                    </a>
+
+                                    <a th:href="|tel:${customer.phoneNumber()}|"
+                                       th:text="${customer.phoneNumber()}">
+                                        0599999999
+                                    </a>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="admin-customer-city"
+                                      th:text="${customer.address().city()}">
+                                    City
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="admin-customer-order-count"
+                                      th:text="${orderCountByCustomerId[
+                                          customer.id()
+                                      ] ?: 0}">
+                                    0
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="admin-customer-actions">
+
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       th:href="@{/admin/customers/{id}(
+                                           id=${customer.id()}
+                                       )}">
+                                        View Details
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>
