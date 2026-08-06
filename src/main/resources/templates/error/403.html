@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/head :: head('Access Denied', '/css/pages/error.css')}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="error-page">
+
+    <section class="error-section">
+        <div class="container">
+
+            <div class="error-card">
+
+                <span class="error-code">403</span>
+
+                <h1>
+                    Access Denied
+                </h1>
+
+                <p>
+                    You are signed in, but your account does not have
+                    permission to access this page.
+                </p>
+
+                <div class="error-actions">
+
+                    <a class="btn btn-khoury"
+                       th:href="@{/}">
+                        Go to Home
+                    </a>
+
+                    <a class="btn btn-outline-secondary"
+                       th:href="@{/products}">
+                        Browse Products
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>

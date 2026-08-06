@@ -3,69 +3,111 @@ package com.khourycomputer.config.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http, PendingCartAuthenticationSuccessHandler successHandler)
-                        throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            PendingCartAuthenticationSuccessHandler successHandler
+    ) throws Exception {
 
-                return http
-                                .authorizeHttpRequests(auth -> auth
+        return http
+                .authorizeHttpRequests(auth -> auth
 
-                                                // Public pages and resources
-                                                .requestMatchers(
-                                                                "/",
-                                                                "/products/**",
-                                                                "/contact",
-                                                                "/register",
-                                                                "/login",
-                                                                "/error",
-                                                                "/favicon.ico",
-                                                                "/css/**",
-                                                                "/js/**",
-                                                                "/images/**")
-                                                .permitAll()
+                        // Public pages and resources
+                        .requestMatchers(
+                                "/",
+                                "/products/**",
+                                "/contact",
+                                "/register",
+                                "/login",
+                                "/access-denied",
+                                "/error",
+                                "/favicon.ico",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
+                        )
+                        .permitAll()
 
-                                                // Future admin area
-                                                .requestMatchers("/admin/**")
-                                                .hasRole("ADMIN")
+                        // Admin area
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
 
-                                                .requestMatchers(HttpMethod.POST, "/cart/items")
-                                                .permitAll()
+                        // Guests may begin the pending-cart login flow.
+                        // Customers may add products normally.
+                        // Admins are denied.
+                        .requestMatchers(HttpMethod.POST, "/cart/items")
+                        .access((authentication, context) -> {
 
-                                                // Customer account pages
-                                                .requestMatchers(
-                                                                "/cart/**",
-                                                                "/orders/**",
-                                                                "/profile/**")
-                                                .authenticated()
+                            boolean isAnonymous =
+                                    authentication.get()
+                                            .getAuthorities()
+                                            .stream()
+                                            .anyMatch(authority ->
+                                                    authority.getAuthority()
+                                                            .equals("ROLE_ANONYMOUS")
+                                            );
 
-                                                // Safe default for future routes
-                                                .anyRequest().authenticated())
+                            boolean isCustomer =
+                                    authentication.get()
+                                            .getAuthorities()
+                                            .stream()
+                                            .anyMatch(authority ->
+                                                    authority.getAuthority()
+                                                            .equals("ROLE_CUSTOMER")
+                                            );
 
-                                // Spring Security handles POST /login
-                                .formLogin(formLogin -> formLogin
-                                                .loginPage("/login")
-                                                .loginProcessingUrl("/login")
-                                                .successHandler(successHandler)
-                                                .failureUrl("/login?error")
-                                                .permitAll())
+                            return new AuthorizationDecision(
+                                    isAnonymous || isCustomer
+                            );
+                        })
 
-                                // Spring Security handles POST /logout
-                                .logout(logout -> logout
-                                                .logoutUrl("/logout")
-                                                .logoutSuccessUrl("/login?logout")
-                                                .invalidateHttpSession(true)
-                                                .deleteCookies("JSESSIONID")
-                                                .permitAll())
+                        // Customer-only account pages
+                        .requestMatchers(
+                                "/cart/**",
+                                "/orders/**",
+                                "/profile/**"
+                        )
+                        .hasRole("CUSTOMER")
 
-                                // We do not want browser HTTP Basic authentication.
-                                .httpBasic(httpBasic -> httpBasic.disable())
+                        // Safe default for future routes
+                        .anyRequest()
+                        .authenticated()
+                )
 
-                                .build();
-        }
+                // Spring Security handles POST /login
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .successHandler(successHandler)
+                        .failureUrl("/login?error")
+                        .permitAll()
+                )
+
+                // Spring Security handles POST /logout
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+
+                // Show a clean page when an authenticated user
+                // does not have permission to access a route.
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedPage("/access-denied")
+                )
+
+                // Disable browser HTTP Basic authentication.
+                .httpBasic(httpBasic -> httpBasic.disable())
+
+                .build();
+    }
 }
