@@ -162,3 +162,60 @@
         max-width: 100%;
     }
 }
+
+.product-back-link {
+    color: #475569;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.product-back-link:hover {
+    color: #2563eb;
+    transform: translateX(-3px);
+}
+
+/* =========================
+   Add to Cart Controls
+========================= */
+
+.product-add-cart-form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.product-add-cart-form .quantity-input {
+    width: 82px;
+    height: 48px;
+    padding: 0.65rem;
+    text-align: center;
+    border-color: #dbe2ea;
+    border-radius: 0.75rem;
+}
+
+.product-add-cart-form .quantity-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12);
+}
+
+.product-add-cart-form .btn {
+    min-width: 145px;
+    height: 48px;
+    padding: 0.65rem 1.25rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+
+    .product-add-cart-form {
+        width: 100%;
+    }
+
+    .product-add-cart-form .btn {
+        flex: 1;
+    }
+}

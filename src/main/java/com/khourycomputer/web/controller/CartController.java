@@ -80,15 +80,24 @@ public class CartController {
 
                 Long currentUserId = currentUserService.getCurrentUserId();
 
-                cartApplicationService.addItemToCart(
-                                currentUserId,
-                                new AddCartItemRequest(productId, quantity));
+                try {
+                        cartApplicationService.addItemToCart(
+                                        currentUserId,
+                                        new AddCartItemRequest(productId, quantity));
 
-                redirectAttributes.addFlashAttribute(
-                                "successMessage",
-                                "Product added to cart successfully.");
+                        redirectAttributes.addFlashAttribute(
+                                        "successMessage",
+                                        "Product added to cart successfully.");
 
-                return "redirect:/cart";
+                        return "redirect:/cart";
+
+                } catch (IllegalArgumentException exception) {
+                        redirectAttributes.addFlashAttribute(
+                                        "errorMessage",
+                                        exception.getMessage());
+
+                        return "redirect:/products/" + productId;
+                }
         }
 
         @PostMapping("/cart/items/update")
@@ -98,13 +107,22 @@ public class CartController {
                         RedirectAttributes redirectAttributes) {
                 Long currentUserId = currentUserService.getCurrentUserId();
 
-                cartApplicationService.updateItemQuantity(
-                                currentUserId,
-                                new UpdateCartItemQuantityRequest(productId, quantity));
+                try {
+                        cartApplicationService.updateItemQuantity(
+                                        currentUserId,
+                                        new UpdateCartItemQuantityRequest(
+                                                        productId,
+                                                        quantity));
 
-                redirectAttributes.addFlashAttribute(
-                                "successMessage",
-                                "Cart quantity updated successfully.");
+                        redirectAttributes.addFlashAttribute(
+                                        "successMessage",
+                                        "Cart quantity updated successfully.");
+
+                } catch (IllegalArgumentException exception) {
+                        redirectAttributes.addFlashAttribute(
+                                        "errorMessage",
+                                        exception.getMessage());
+                }
 
                 return "redirect:/cart";
         }
