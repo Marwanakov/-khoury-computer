@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Product {
+    private static final int LOW_STOCK_LIMIT = 5;
 
     private Long id;
     private String name;
@@ -89,7 +90,34 @@ public class Product {
     }
 
     public void changeStockQuantity(int stockQuantity) {
-        setStockQuantity(stockQuantity);
+    setStockQuantity(stockQuantity);
+    refreshAvailabilityStatus();
+    }   
+
+    public void reduceStock(int quantity) {
+    validateStockAdjustmentQuantity(quantity);
+
+    if (stockQuantity < quantity) {
+        throw new IllegalStateException(
+                "Insufficient stock for product \""
+                        + name
+                        + "\". Requested: "
+                        + quantity
+                        + ", available: "
+                        + stockQuantity
+                        + "."
+        );
+    }
+
+    stockQuantity -= quantity;
+    refreshAvailabilityStatus();
+    }
+
+    public void restoreStock(int quantity) {
+    validateStockAdjustmentQuantity(quantity);
+
+    stockQuantity += quantity;
+    refreshAvailabilityStatus();
     }
 
     public void markAsSoldOut() {
@@ -154,4 +182,29 @@ public class Product {
     private void setTags(Set<String> tags) {
         this.tags = tags == null ? new HashSet<>() : new HashSet<>(tags);
     }
+
+    private void validateStockAdjustmentQuantity(int quantity) {
+    if (quantity <= 0) {
+        throw new IllegalArgumentException(
+                "Stock adjustment quantity must be greater than zero."
+        );
+    }
+}
+
+private void refreshAvailabilityStatus() {
+    if (stockQuantity == 0) {
+        availabilityStatus =
+                ProductAvailabilityStatus.SOLD_OUT;
+        return;
+    }
+
+    if (stockQuantity <= LOW_STOCK_LIMIT) {
+        availabilityStatus =
+                ProductAvailabilityStatus.LOW_STOCK;
+        return;
+    }
+
+    availabilityStatus =
+            ProductAvailabilityStatus.AVAILABLE;
+}
 }

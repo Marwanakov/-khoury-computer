@@ -80,12 +80,27 @@ public class Order {
     }
 
     public void cancel() {
-        if (status == OrderStatus.COMPLETED) {
-            throw new IllegalStateException("Completed orders cannot be cancelled.");
-        }
-
-        status = OrderStatus.CANCELLED;
+    if (status == OrderStatus.CANCELLED) {
+        throw new IllegalStateException(
+                "This order has already been cancelled."
+        );
     }
+
+    if (status == OrderStatus.COMPLETED) {
+        throw new IllegalStateException(
+                "Completed orders cannot be cancelled."
+        );
+    }
+
+    if (status != OrderStatus.PENDING
+            && status != OrderStatus.CONFIRMED) {
+        throw new IllegalStateException(
+                "Only pending or confirmed orders can be cancelled."
+        );
+    }
+
+    status = OrderStatus.CANCELLED;
+}
 
     private void setId(Long id) {
         this.id = id;

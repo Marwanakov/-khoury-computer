@@ -1,12 +1,14 @@
 package com.khourycomputer.application.service;
 
 import com.khourycomputer.domain.exception.OrderNotFoundException;
+import com.khourycomputer.domain.exception.ProductNotFoundException;
 import com.khourycomputer.application.dto.common.address.AddressResponse;
 import com.khourycomputer.application.dto.order.OrderItemResponse;
 import com.khourycomputer.application.dto.order.OrderResponse;
 import com.khourycomputer.application.dto.order.SubmitOrderResponse;
 import com.khourycomputer.application.repository.CartRepository;
 import com.khourycomputer.application.repository.OrderRepository;
+import com.khourycomputer.application.repository.ProductRepository;
 import com.khourycomputer.application.repository.UserRepository;
 import com.khourycomputer.domain.enums.OrderStatus;
 import com.khourycomputer.domain.model.Address;
@@ -15,6 +17,7 @@ import com.khourycomputer.domain.model.CartItem;
 import com.khourycomputer.domain.model.CustomerInfo;
 import com.khourycomputer.domain.model.Order;
 import com.khourycomputer.domain.model.OrderItem;
+import com.khourycomputer.domain.model.Product;
 import com.khourycomputer.domain.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +31,17 @@ public class OrderApplicationService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     public OrderApplicationService(
             OrderRepository orderRepository,
             CartRepository cartRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     // User story: customer submits an order request so the store can contact him
@@ -122,7 +128,10 @@ public class OrderApplicationService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new);
 
+        // Validate the status before changing inventory.
         order.confirm();
+
+        reduceStockForOrder(order);
 
         return toResponse(orderRepository.save(order));
     }
@@ -156,7 +165,14 @@ public class OrderApplicationService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new);
 
+        OrderStatus previousStatus = order.getStatus();
+
+        // This also rejects repeated or invalid cancellation.
         order.cancel();
+
+        if (previousStatus == OrderStatus.CONFIRMED) {
+            restoreStockForOrder(order);
+        }
 
         return toResponse(orderRepository.save(order));
     }
@@ -203,6 +219,31 @@ public class OrderApplicationService {
         }
 
         return order;
+    }
+
+    private void reduceStockForOrder(Order order) {
+        for (OrderItem item : order.getItems()) {
+            Product product = getProductForStockUpdate(
+                    item.getProductId());
+
+            product.reduceStock(item.getQuantity());
+            productRepository.save(product);
+        }
+    }
+
+    private void restoreStockForOrder(Order order) {
+        for (OrderItem item : order.getItems()) {
+            Product product = getProductForStockUpdate(
+                    item.getProductId());
+
+            product.restoreStock(item.getQuantity());
+            productRepository.save(product);
+        }
+    }
+
+    private Product getProductForStockUpdate(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     private OrderResponse toResponse(Order order) {
