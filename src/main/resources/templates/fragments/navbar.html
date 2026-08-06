@@ -1,3 +1,9 @@
+<!--
+Guest: Sign In and Register
+CUSTOMER: My Profile, My Orders, Cart, and Logout
+ADMIN: Admin Dashboard and Logout
+-->
+
 <!doctype html>
 <html
   xmlns:th="http://www.thymeleaf.org"
@@ -14,12 +20,12 @@
 
               <div>
                 <div class="brand-name">Khoury Computer</div>
-                <div class="brand-subtitle">Computer shop & repair</div>
+                <div class="brand-subtitle">Computer shop &amp; repair</div>
               </div>
             </a>
           </div>
 
-          <!-- Search bar: simple for now, submits to /products?keyword=... -->
+          <!-- Search bar -->
           <div class="col-12 col-lg-6">
             <form th:action="@{/products}" method="get" class="search-box">
               <input
@@ -30,13 +36,16 @@
                 aria-label="Search products"
               />
 
-              <button class="btn search-button" type="submit">Search</button>
+              <button class="btn search-button" type="submit">
+                Search
+              </button>
             </form>
           </div>
 
-          <!-- Account / Cart actions -->
+          <!-- Account actions -->
           <div class="col-12 col-lg-3">
             <div class="header-actions justify-content-lg-end">
+
               <!-- Guest navigation -->
               <a
                 sec:authorize="isAnonymous()"
@@ -54,16 +63,17 @@
                 Register
               </a>
 
-              <!-- Authenticated customer navigation -->
+              <!-- Customer navigation -->
               <a
-                sec:authorize="isAuthenticated()"
+                sec:authorize="hasRole('CUSTOMER')"
                 class="header-action-link"
                 th:href="@{/profile}"
               >
                 My Profile
               </a>
+
               <a
-                sec:authorize="isAuthenticated()"
+                sec:authorize="hasRole('CUSTOMER')"
                 class="header-action-link"
                 th:href="@{/orders/my-orders}"
               >
@@ -71,13 +81,23 @@
               </a>
 
               <a
-                sec:authorize="isAuthenticated()"
+                sec:authorize="hasRole('CUSTOMER')"
                 class="header-action-link"
                 th:href="@{/cart}"
               >
                 Cart
               </a>
 
+              <!-- Admin navigation -->
+              <a
+                sec:authorize="hasRole('ADMIN')"
+                class="header-action-link"
+                th:href="@{/admin}"
+              >
+                Admin Dashboard
+              </a>
+
+              <!-- Authenticated navigation -->
               <form
                 sec:authorize="isAuthenticated()"
                 th:action="@{/logout}"
@@ -88,40 +108,77 @@
                   Logout
                 </button>
               </form>
+
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Category navigation: this must match the Shop by Category section -->
+      <!-- Category navigation -->
       <nav class="category-nav border-top">
         <div class="container">
           <div class="category-nav-scroll">
-            <a class="category-nav-link" th:href="@{/}">Home</a>
-            <a class="category-nav-link" th:href="@{/products(categoryId=1)}"
-              >Laptops</a
+
+            <a class="category-nav-link" th:href="@{/}">
+              Home
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=1)}"
             >
-            <a class="category-nav-link" th:href="@{/products(categoryId=2)}"
-              >Screens</a
+              Laptops
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=2)}"
             >
-            <a class="category-nav-link" th:href="@{/products(categoryId=3)}"
-              >Accessories</a
+              Screens
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=3)}"
             >
-            <a class="category-nav-link" th:href="@{/products(categoryId=4)}"
-              >Chargers</a
+              Accessories
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=4)}"
             >
-            <a class="category-nav-link" th:href="@{/products(categoryId=5)}"
-              >USB Devices</a
+              Chargers
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=5)}"
             >
-            <a class="category-nav-link" th:href="@{/products(categoryId=6)}"
-              >Gaming Consoles</a
+              USB Devices
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=6)}"
             >
-            <a class="category-nav-link" th:href="@{/products(categoryId=7)}"
-              >Networking</a
+              Gaming Consoles
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/products(categoryId=7)}"
             >
-            <a class="category-nav-link" th:href="@{/contact}"
-              >Repair Services</a
+              Networking
+            </a>
+
+            <a
+              class="category-nav-link"
+              th:href="@{/contact}"
             >
+              Repair Services
+            </a>
+
           </div>
         </div>
       </nav>
