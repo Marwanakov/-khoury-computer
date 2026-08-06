@@ -6,6 +6,7 @@ import com.khourycomputer.application.dto.product.UpdateProductRequest;
 import com.khourycomputer.application.repository.CategoryRepository;
 import com.khourycomputer.application.repository.ProductRepository;
 import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
+import com.khourycomputer.domain.exception.ProductNotFoundException;
 import com.khourycomputer.domain.model.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class ProductApplicationService {
     @Transactional
     public ProductResponse updateProduct(Long productId, UpdateProductRequest request) {
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found."));
+                .orElseThrow(() -> new ProductNotFoundException(productId));
 
         validateCategoryExists(request.categoryId());
 
@@ -78,7 +79,7 @@ public class ProductApplicationService {
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found."));
+                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
         return toResponse(product);
     }
@@ -181,7 +182,7 @@ public class ProductApplicationService {
     @Transactional
     public void deleteProduct(Long productId) {
         if (!productRepository.existsById(productId)) {
-            throw new IllegalArgumentException("Product not found.");
+            throw new ProductNotFoundException(productId);
         }
 
         productRepository.deleteById(productId);
