@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Order Details', '/css/pages/admin-orders.css')}"
+  >
+  </head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="admin-order-details-page">
+      <!-- Header -->
+      <section class="admin-order-details-header">
+        <div class="container">
+          <a class="admin-order-back-link" th:href="@{/admin/orders}">
+            &larr; Manage Orders
+          </a>
+
+          <span class="admin-orders-label"> Order management </span>
+
+          <div class="admin-order-details-title-row">
+            <div>
+              <h1>Order #<span th:text="${order.id()}">1</span></h1>
+
+              <p>
+                Review the customer, delivery, product, and payment information
+                for this order.
+              </p>
+            </div>
+
+            <span
+              class="admin-order-status admin-order-header-status"
+              th:classappend="' status-'
+                          + ${#strings.toLowerCase(
+                              order.status().name()
+                          )}"
+              th:text="${order.status()}"
+            >
+              PENDING
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-order-details-content">
+        <div class="container">
+          <!-- Messages -->
+          <div
+            th:if="${successMessage != null}"
+            class="alert alert-success alert-dismissible fade show border-0 mb-4"
+            role="status"
+          >
+            <span th:text="${successMessage}">
+              Order updated successfully.
+            </span>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div
+            th:if="${errorMessage != null}"
+            class="alert alert-danger alert-dismissible fade show border-0 mb-4"
+            role="alert"
+          >
+            <span th:text="${errorMessage}">
+              The order could not be updated.
+            </span>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="row g-4">
+            <!-- Main information -->
+            <div class="col-lg-8">
+              <!-- Order information -->
+              <div class="admin-order-detail-card">
+                <div class="admin-order-detail-card-heading">
+                  <span>Order information</span>
+                  <h2>Order summary</h2>
+                </div>
+
+                <div class="admin-order-meta-grid">
+                  <div>
+                    <span>Order number</span>
+
+                    <strong> #<span th:text="${order.id()}">1</span> </strong>
+                  </div>
+
+                  <div>
+                    <span>Submitted</span>
+
+                    <strong
+                      th:text="${#temporals.format(
+                                    order.createdAt(),
+                                    'dd MMM yyyy, HH:mm'
+                                )}"
+                    >
+                      06 Aug 2026, 12:00
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Order status</span>
+
+                    <span
+                      class="admin-order-status"
+                      th:classappend="' status-'
+                                          + ${#strings.toLowerCase(
+                                              order.status().name()
+                                          )}"
+                      th:text="${order.status()}"
+                    >
+                      PENDING
+                    </span>
+                  </div>
+
+                  <div>
+                    <span>Product lines</span>
+
+                    <strong th:text="${order.items().size()}"> 1 </strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Customer information -->
+              <div class="admin-order-detail-card">
+                <div class="admin-order-detail-card-heading">
+                  <span>Customer</span>
+                  <h2>Customer information</h2>
+                </div>
+
+                <div class="admin-customer-detail-grid">
+                  <div>
+                    <span>Full name</span>
+
+                    <strong th:text="${order.customerName()}">
+                      Customer Name
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Phone number</span>
+
+                    <a
+                      th:href="|tel:${order.customerPhoneNumber()}|"
+                      th:text="${order.customerPhoneNumber()}"
+                    >
+                      0599999999
+                    </a>
+                  </div>
+
+                  <div>
+                    <span>Email address</span>
+
+                    <a
+                      th:href="|mailto:${order.customerEmail()}|"
+                      th:text="${order.customerEmail()}"
+                    >
+                      customer@example.com
+                    </a>
+                  </div>
+
+                  <div>
+                    <span>User ID</span>
+
+                    <strong th:text="${order.userId()}"> 1 </strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Delivery information -->
+              <div class="admin-order-detail-card">
+                <div class="admin-order-detail-card-heading">
+                  <span>Delivery</span>
+                  <h2>Delivery address</h2>
+                </div>
+
+                <div class="admin-address-grid">
+                  <div>
+                    <span>City</span>
+
+                    <strong th:text="${order.deliveryAddress().city()}">
+                      City
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Street</span>
+
+                    <strong th:text="${order.deliveryAddress().street()}">
+                      Street
+                    </strong>
+                  </div>
+
+                  <div
+                    class="admin-address-details"
+                    th:if="${!#strings.isEmpty(
+                                     order.deliveryAddress().details()
+                                 )}"
+                  >
+                    <span>Additional details</span>
+
+                    <strong th:text="${order.deliveryAddress().details()}">
+                      Building and floor
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ordered products -->
+              <div class="admin-order-detail-card">
+                <div class="admin-order-detail-card-heading">
+                  <span>Products</span>
+                  <h2>Ordered products</h2>
+                </div>
+
+                <div class="admin-ordered-product-list">
+                  <div
+                    class="admin-ordered-product"
+                    th:each="item : ${order.items()}"
+                  >
+                    <div class="admin-ordered-product-main">
+                      <div>
+                        <a
+                          class="admin-ordered-product-name"
+                          th:href="@{/products/{id}(
+                                               id=${item.productId()}
+                                           )}"
+                          target="_blank"
+                          rel="noopener"
+                          th:text="${item.productName()}"
+                        >
+                          Product name
+                        </a>
+
+                        <p>
+                          Product ID:
+                          <span th:text="${item.productId()}"> 1 </span>
+                        </p>
+
+                        <p class="admin-product-current-stock">
+                          Current stock:
+                          <strong
+                            th:text="${currentStockByProductId[
+        item.productId()
+    ]}"
+                          >
+                            0
+                          </strong>
+                        </p>
+                      </div>
+
+                      <div class="admin-ordered-product-meta">
+                        <div>
+                          <span>Quantity</span>
+
+                          <strong th:text="${item.quantity()}"> 1 </strong>
+                        </div>
+
+                        <div>
+                          <span>Unit price</span>
+
+                          <strong>
+                            &#8362;<span
+                              th:text="${#numbers.formatDecimal(
+                                                        item.unitPrice(),
+                                                        1,
+                                                        2
+                                                    )}"
+                            >
+                              0.00
+                            </span>
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>Subtotal</span>
+
+                          <strong>
+                            &#8362;<span
+                              th:text="${#numbers.formatDecimal(
+                                                        item.subtotal(),
+                                                        1,
+                                                        2
+                                                    )}"
+                            >
+                              0.00
+                            </span>
+                          </strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+              <aside class="admin-order-action-card">
+                <span class="admin-action-card-label"> Order total </span>
+
+                <div class="admin-order-grand-total">
+                  <span>Total</span>
+
+                  <strong>
+                    &#8362;<span
+                      th:text="${#numbers.formatDecimal(
+                                        order.totalPrice(),
+                                        1,
+                                        2
+                                    )}"
+                    >
+                      0.00
+                    </span>
+                  </strong>
+                </div>
+
+                <hr />
+
+                <div class="admin-current-status">
+                  <span>Current status</span>
+
+                  <span
+                    class="admin-order-status"
+                    th:classappend="' status-'
+                                      + ${#strings.toLowerCase(
+                                          order.status().name()
+                                      )}"
+                    th:text="${order.status()}"
+                  >
+                    PENDING
+                  </span>
+                </div>
+
+                <!-- Pending order actions -->
+                <div
+                  th:if="${order.status().name() == 'PENDING'}"
+                  class="admin-order-status-actions"
+                >
+                  <p class="admin-order-action-note">
+                    Confirming this order will reduce the stock quantity for
+                    every ordered product.
+                  </p>
+
+                  <form
+                    th:action="@{/admin/orders/{id}/confirm(
+              id=${order.id()}
+          )}"
+                    method="post"
+                    onsubmit="
+                      return confirm(
+                        'Confirm this order and reduce product stock?',
+                      );
+                    "
+                  >
+                    <button type="submit" class="btn btn-khoury w-100">
+                      Confirm Order
+                    </button>
+                  </form>
+
+                  <form
+                    th:action="@{/admin/orders/{id}/cancel(
+              id=${order.id()}
+          )}"
+                    method="post"
+                    class="mt-2"
+                    onsubmit="return confirm('Cancel this pending order?');"
+                  >
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                      Cancel Order
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Confirmed order actions -->
+                <div
+                  th:if="${order.status().name() == 'CONFIRMED'}"
+                  class="admin-order-status-actions"
+                >
+                  <p class="admin-order-action-note">
+                    The product stock has been reduced. Completing the order
+                    will finalize it. Cancelling it will return the quantities
+                    to stock.
+                  </p>
+
+                  <form
+                    th:action="@{/admin/orders/{id}/complete(
+              id=${order.id()}
+          )}"
+                    method="post"
+                    onsubmit="return confirm('Mark this order as completed?');"
+                  >
+                    <button type="submit" class="btn btn-khoury w-100">
+                      Complete Order
+                    </button>
+                  </form>
+
+                  <form
+                    th:action="@{/admin/orders/{id}/cancel(
+              id=${order.id()}
+          )}"
+                    method="post"
+                    class="mt-2"
+                    onsubmit="
+                      return confirm(
+                        'Cancel this confirmed order and restore its stock?',
+                      );
+                    "
+                  >
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                      Cancel and Restore Stock
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Completed order state -->
+                <div
+                  th:if="${order.status().name() == 'COMPLETED'}"
+                  class="admin-order-final-state status-completed-message"
+                >
+                  <strong>Order completed</strong>
+
+                  <p>This order is final and can no longer be changed.</p>
+                </div>
+
+                <!-- Cancelled order state -->
+                <div
+                  th:if="${order.status().name() == 'CANCELLED'}"
+                  class="admin-order-final-state status-cancelled-message"
+                >
+                  <strong>Order cancelled</strong>
+
+                  <p>
+                    This order has been cancelled and no further actions are
+                    available.
+                  </p>
+                </div>
+
+                <a
+                  class="btn btn-outline-secondary w-100"
+                  th:href="@{/admin/orders}"
+                >
+                  Back to Orders
+                </a>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>

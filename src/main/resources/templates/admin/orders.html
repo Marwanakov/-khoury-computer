@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Manage Orders', '/css/pages/admin-orders.css')}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="admin-orders-page">
+
+    <!-- Page header -->
+    <section class="admin-orders-header">
+        <div class="container">
+
+            <a class="admin-order-back-link"
+               th:href="@{/admin}">
+                &larr; Admin Dashboard
+            </a>
+
+            <span class="admin-orders-label">
+                Order management
+            </span>
+
+            <h1>Manage Orders</h1>
+
+            <p>
+                Review customer order requests, confirm availability,
+                and monitor order progress.
+            </p>
+
+        </div>
+    </section>
+
+    <section class="admin-orders-content">
+        <div class="container">
+
+            <!-- Messages -->
+            <div th:if="${successMessage != null}"
+                 class="alert alert-success alert-dismissible fade show border-0 mb-4"
+                 role="status">
+
+                <span th:text="${successMessage}">
+                    Order updated successfully.
+                </span>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+            <div th:if="${errorMessage != null}"
+                 class="alert alert-danger alert-dismissible fade show border-0 mb-4"
+                 role="alert">
+
+                <span th:text="${errorMessage}">
+                    The order could not be updated.
+                </span>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+            <!-- Order summary -->
+            <div class="admin-order-summary-grid">
+
+                <div class="admin-order-summary-card">
+                    <span>Total orders</span>
+                    <strong th:text="${totalOrderCount}">0</strong>
+                </div>
+
+                <div class="admin-order-summary-card summary-pending">
+                    <span>Pending</span>
+                    <strong th:text="${pendingCount}">0</strong>
+                </div>
+
+                <div class="admin-order-summary-card summary-confirmed">
+                    <span>Confirmed</span>
+                    <strong th:text="${confirmedCount}">0</strong>
+                </div>
+
+                <div class="admin-order-summary-card summary-completed">
+                    <span>Completed</span>
+                    <strong th:text="${completedCount}">0</strong>
+                </div>
+
+                <div class="admin-order-summary-card summary-cancelled">
+                    <span>Cancelled</span>
+                    <strong th:text="${cancelledCount}">0</strong>
+                </div>
+
+            </div>
+
+            <!-- Filters -->
+            <div class="admin-order-filters">
+
+                <div class="admin-order-section-heading">
+
+                    <div>
+                        <span>Order tools</span>
+                        <h2>Search and filter</h2>
+                    </div>
+
+                    <a class="admin-order-reset-link"
+                       th:href="@{/admin/orders}">
+                        Reset filters
+                    </a>
+
+                </div>
+
+                <form th:action="@{/admin/orders}"
+                      method="get"
+                      class="admin-order-filter-form">
+
+                    <div class="admin-order-filter-field order-search-field">
+                        <label for="keyword">
+                            Search
+                        </label>
+
+                        <input id="keyword"
+                               name="keyword"
+                               type="text"
+                               class="form-control"
+                               placeholder="Order number, name, email, or phone"
+                               th:value="${keyword}">
+                    </div>
+
+                    <div class="admin-order-filter-field">
+                        <label for="status">
+                            Status
+                        </label>
+
+                        <select id="status"
+                                name="status"
+                                class="form-select">
+
+                            <option value="">
+                                All statuses
+                            </option>
+
+                            <option th:each="orderStatus : ${orderStatuses}"
+                                    th:value="${orderStatus}"
+                                    th:text="${orderStatus}"
+                                    th:selected="${selectedStatus != null
+                                        and selectedStatus == orderStatus}">
+                                PENDING
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="admin-order-filter-field">
+                        <label for="dateFrom">
+                            From
+                        </label>
+
+                        <input id="dateFrom"
+                               name="dateFrom"
+                               type="date"
+                               class="form-control"
+                               th:value="${dateFrom}">
+                    </div>
+
+                    <div class="admin-order-filter-field">
+                        <label for="dateTo">
+                            To
+                        </label>
+
+                        <input id="dateTo"
+                               name="dateTo"
+                               type="date"
+                               class="form-control"
+                               th:value="${dateTo}">
+                    </div>
+
+                    <div class="admin-order-filter-submit">
+                        <button type="submit"
+                                class="btn btn-khoury w-100">
+                            Apply Filters
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Order list -->
+            <div class="admin-order-list-card">
+
+                <div class="admin-order-section-heading admin-order-list-heading">
+
+                    <div>
+                        <span>Customer orders</span>
+                        <h2>Orders</h2>
+                    </div>
+
+                    <p>
+                        Showing
+                        <strong th:text="${orders.size()}">0</strong>
+                        orders
+                    </p>
+
+                </div>
+
+                <!-- Empty state -->
+                <div th:if="${#lists.isEmpty(orders)}"
+                     class="admin-orders-empty">
+
+                    <div class="admin-orders-empty-icon">0</div>
+
+                    <h3>No orders found</h3>
+
+                    <p>
+                        No orders match the selected search and filters.
+                    </p>
+
+                    <a class="btn btn-khoury"
+                       th:href="@{/admin/orders}">
+                        View All Orders
+                    </a>
+
+                </div>
+
+                <!-- Orders table -->
+                <div th:if="${!#lists.isEmpty(orders)}"
+                     class="table-responsive">
+
+                    <table class="table admin-orders-table">
+
+                        <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Submitted</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="order : ${orders}">
+
+                            <td>
+                                <strong class="admin-order-number">
+                                    #<span th:text="${order.id()}">1</span>
+                                </strong>
+                            </td>
+
+                            <td>
+                                <div class="admin-order-customer">
+                                    <strong th:text="${order.customerName()}">
+                                        Customer Name
+                                    </strong>
+
+                                    <span th:text="${order.customerEmail()}">
+                                        customer@example.com
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="admin-order-date"
+                                      th:text="${#temporals.format(
+                                          order.createdAt(),
+                                          'dd MMM yyyy, HH:mm'
+                                      )}">
+                                    06 Aug 2026, 12:00
+                                </span>
+                            </td>
+
+                            <td>
+                                <span th:text="${order.items().size()}">
+                                    1
+                                </span>
+                            </td>
+
+                            <td>
+                                <strong class="admin-order-total">
+                                    &#8362;<span
+                                        th:text="${#numbers.formatDecimal(
+                                            order.totalPrice(),
+                                            1,
+                                            2
+                                        )}">
+                                        0.00
+                                    </span>
+                                </strong>
+                            </td>
+
+                            <td>
+                                <span class="admin-order-status"
+                                      th:classappend="' status-'
+                                          + ${#strings.toLowerCase(
+                                              order.status().name()
+                                          )}"
+                                      th:text="${order.status()}">
+                                    PENDING
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="admin-order-actions">
+
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       th:href="@{/admin/orders/{id}(
+                                           id=${order.id()}
+                                       )}">
+                                        View Details
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>
