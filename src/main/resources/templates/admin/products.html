@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Manage Products', '/css/pages/admin-products.css')}"
+  >
+  </head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="admin-products-page">
+      <!-- Page header -->
+      <section class="admin-products-header">
+        <div class="container">
+          <div class="admin-products-header-layout">
+            <div>
+              <a class="admin-back-link" th:href="@{/admin}">
+                ← Admin Dashboard
+              </a>
+
+              <span class="admin-products-label"> Product management </span>
+
+              <h1>Manage Products</h1>
+
+              <p>
+                Review the catalog, monitor inventory, and manage product
+                information.
+              </p>
+            </div>
+
+            <a
+              class="btn btn-khoury admin-add-product-button"
+              th:href="@{/admin/products/new}"
+            >
+              Add Product
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-products-content">
+        <div class="container">
+          <!-- Success message -->
+          <div
+            th:if="${successMessage != null}"
+            class="alert alert-success alert-dismissible fade show border-0 mb-4"
+            role="status"
+          >
+            <span th:text="${successMessage}">
+              Product saved successfully.
+            </span>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Inventory summary -->
+          <div class="admin-product-summary-grid">
+            <div class="admin-summary-card">
+              <span>Total products</span>
+              <strong th:text="${totalProductCount}">0</strong>
+            </div>
+
+            <div class="admin-summary-card summary-available">
+              <span>Available</span>
+              <strong th:text="${availableCount}">0</strong>
+            </div>
+
+            <div class="admin-summary-card summary-low-stock">
+              <span>Low stock</span>
+              <strong th:text="${lowStockCount}">0</strong>
+            </div>
+
+            <div class="admin-summary-card summary-sold-out">
+              <span>Sold out</span>
+              <strong th:text="${soldOutCount}">0</strong>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="admin-product-filters">
+            <div class="admin-section-heading">
+              <div>
+                <span>Catalog tools</span>
+                <h2>Search and filter</h2>
+              </div>
+
+              <a class="admin-reset-link" th:href="@{/admin/products}">
+                Reset filters
+              </a>
+            </div>
+
+            <form
+              th:action="@{/admin/products}"
+              method="get"
+              class="admin-filter-form"
+            >
+              <div class="admin-filter-field admin-filter-search">
+                <label for="keyword"> Search </label>
+
+                <input
+                  id="keyword"
+                  name="keyword"
+                  type="text"
+                  class="form-control"
+                  placeholder="Product name, brand, or tag"
+                  th:value="${keyword}"
+                />
+              </div>
+
+              <div class="admin-filter-field">
+                <label for="categoryId"> Category </label>
+
+                <select id="categoryId" name="categoryId" class="form-select">
+                  <option value="">All categories</option>
+
+                  <option
+                    th:each="category : ${categories}"
+                    th:value="${category.id()}"
+                    th:text="${category.name()}"
+                    th:selected="${selectedCategoryId != null
+                                        and selectedCategoryId == category.id()}"
+                  >
+                    Category
+                  </option>
+                </select>
+              </div>
+
+              <div class="admin-filter-field">
+                <label for="status"> Availability </label>
+
+                <select id="status" name="status" class="form-select">
+                  <option value="">All statuses</option>
+
+                  <option
+                    th:each="availabilityStatus
+                                    : ${availabilityStatuses}"
+                    th:value="${availabilityStatus}"
+                    th:text="${#strings.replace(
+                                    availabilityStatus.name(),
+                                    '_',
+                                    ' '
+                                )}"
+                    th:selected="${selectedStatus != null
+                                    and selectedStatus
+                                        == availabilityStatus}"
+                  >
+                    AVAILABLE
+                  </option>
+                </select>
+              </div>
+
+              <div class="admin-filter-field">
+                <label for="minPrice"> Minimum price </label>
+
+                <input
+                  id="minPrice"
+                  name="minPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  class="form-control"
+                  placeholder="0"
+                  th:value="${minPrice}"
+                />
+              </div>
+
+              <div class="admin-filter-field">
+                <label for="maxPrice"> Maximum price </label>
+
+                <input
+                  id="maxPrice"
+                  name="maxPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  class="form-control"
+                  placeholder="Any"
+                  th:value="${maxPrice}"
+                />
+              </div>
+
+              <div class="admin-filter-submit">
+                <button type="submit" class="btn btn-khoury w-100">
+                  Apply Filters
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Product list -->
+          <div class="admin-product-list-card">
+            <div class="admin-section-heading admin-list-heading">
+              <div>
+                <span>Inventory</span>
+                <h2>Products</h2>
+              </div>
+
+              <p>
+                Showing
+                <strong th:text="${products.size()}">0</strong>
+                products
+              </p>
+            </div>
+
+            <!-- Empty state -->
+            <div
+              th:if="${#lists.isEmpty(products)}"
+              class="admin-products-empty"
+            >
+              <div class="admin-empty-icon">!</div>
+
+              <h3>No products found</h3>
+
+              <p>Try changing the search term or removing some filters.</p>
+
+              <a class="btn btn-khoury" th:href="@{/admin/products}">
+                View All Products
+              </a>
+            </div>
+
+            <!-- Desktop table -->
+            <div th:if="${!#lists.isEmpty(products)}" class="table-responsive">
+              <table class="table admin-products-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr th:each="product : ${products}">
+                    <td>
+                      <div class="admin-product-identity">
+                        <div class="admin-product-image">
+                          <img
+                            th:if="${product.imageUrl() != null
+                                                and !product.imageUrl().isBlank()}"
+                            th:src="${product.imageUrl()}"
+                            th:alt="${product.name()}"
+                          />
+
+                          <span
+                            th:if="${product.imageUrl() == null
+                                                or product.imageUrl().isBlank()}"
+                          >
+                            No image
+                          </span>
+                        </div>
+
+                        <div>
+                          <strong th:text="${product.name()}">
+                            Product name
+                          </strong>
+
+                          <span th:text="${product.brand()}"> Brand </span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td
+                      th:text="${categoriesById[
+                                    product.categoryId()
+                                ].name()}"
+                    >
+                      Category
+                    </td>
+
+                    <td>
+                      <strong class="admin-product-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                                            product.price(),
+                                            1,
+                                            2
+                                        )}"
+                        >
+                          0.00
+                        </span>
+                      </strong>
+                    </td>
+
+                    <td>
+                      <span
+                        class="admin-stock-quantity"
+                        th:text="${product.stockQuantity()}"
+                      >
+                        0
+                      </span>
+                    </td>
+
+                    <td>
+                      <span
+                        class="admin-status-badge"
+                        th:classappend="${
+                                        product.availabilityStatus().name()
+                                            == 'AVAILABLE'
+                                    } ? ' status-available' :
+                                    (${
+                                        product.availabilityStatus().name()
+                                            == 'LOW_STOCK'
+                                    } ? ' status-low-stock'
+                                      : ' status-sold-out')"
+                        th:text="${#strings.replace(
+                                        product.availabilityStatus().name(),
+                                        '_',
+                                        ' '
+                                    )}"
+                      >
+                        AVAILABLE
+                      </span>
+                    </td>
+
+                    <td>
+                      <div class="admin-product-actions">
+                        <a
+                          class="btn btn-sm btn-outline-secondary"
+                          th:href="@{/products/{id}(
+                                            id=${product.id()}
+                                        )}"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          View
+                        </a>
+
+                        <a
+                          class="btn btn-sm btn-outline-primary"
+                          th:href="@{/admin/products/{id}/edit(
+                                            id=${product.id()}
+                                        )}"
+                        >
+                          Edit
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>

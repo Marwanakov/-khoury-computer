@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(${formTitle}, '/css/pages/admin-products.css')}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="admin-product-form-page">
+
+    <section class="admin-product-form-header">
+        <div class="container">
+
+            <a class="admin-back-link"
+               th:href="@{/admin/products}">
+                ← Manage Products
+            </a>
+
+            <span class="admin-products-label">
+                Product management
+            </span>
+
+            <h1 th:text="${formTitle}">
+                Add Product
+            </h1>
+
+            <p th:text="${formDescription}">
+                Create a new product for the catalog.
+            </p>
+
+        </div>
+    </section>
+
+    <section class="admin-product-form-content">
+        <div class="container">
+
+            <form class="admin-product-form-card"
+                  th:action="${formAction}"
+                  th:object="${productForm}"
+                  method="post"
+                  novalidate>
+
+                <!-- Global errors -->
+                <div th:if="${#fields.hasGlobalErrors()}"
+                     class="alert alert-danger border-0 mb-4">
+
+                    <p th:each="error : ${#fields.globalErrors()}"
+                       th:text="${error}"
+                       class="mb-0">
+                        Product could not be saved.
+                    </p>
+
+                </div>
+
+                <!-- Basic information -->
+                <div class="admin-form-section">
+
+                    <div class="admin-form-section-heading">
+                        <span>Basic information</span>
+
+                        <h2>Product details</h2>
+
+                        <p>
+                            Enter the information customers will see in
+                            the storefront.
+                        </p>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-8">
+                            <label for="name"
+                                   class="form-label">
+                                Product name
+                            </label>
+
+                            <input id="name"
+                                   type="text"
+                                   class="form-control"
+                                   th:field="*{name}"
+                                   th:errorclass="is-invalid"
+                                   maxlength="150"
+                                   placeholder="Example: HP EliteBook 840 G8">
+
+                            <div class="invalid-feedback"
+                                 th:errors="*{name}">
+                                Product name error
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="brand"
+                                   class="form-label">
+                                Brand
+                            </label>
+
+                            <input id="brand"
+                                   type="text"
+                                   class="form-control"
+                                   th:field="*{brand}"
+                                   th:errorclass="is-invalid"
+                                   maxlength="100"
+                                   placeholder="Example: HP">
+
+                            <div class="invalid-feedback"
+                                 th:errors="*{brand}">
+                                Brand error
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3">
+                        <label for="description"
+                               class="form-label">
+                            Description
+                        </label>
+
+                        <textarea id="description"
+                                  class="form-control"
+                                  th:field="*{description}"
+                                  th:errorclass="is-invalid"
+                                  rows="6"
+                                  maxlength="5000"
+                                  placeholder="Describe the product, its specifications, and important features."></textarea>
+
+                        <div class="invalid-feedback"
+                             th:errors="*{description}">
+                            Description error
+                        </div>
+
+                        <div class="form-text">
+                            Write a clear description that helps customers
+                            understand the product.
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="admin-form-divider">
+
+                <!-- Pricing and inventory -->
+                <div class="admin-form-section">
+
+                    <div class="admin-form-section-heading">
+                        <span>Inventory</span>
+
+                        <h2>Price and stock</h2>
+
+                        <p>
+                            Availability is calculated automatically from
+                            the stock quantity.
+                        </p>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label for="price"
+                                   class="form-label">
+                                Price (₪)
+                            </label>
+
+                            <input id="price"
+                                   type="number"
+                                   class="form-control"
+                                   th:field="*{price}"
+                                   th:errorclass="is-invalid"
+                                   min="0"
+                                   step="0.01"
+                                   placeholder="0.00">
+
+                            <div class="invalid-feedback"
+                                 th:errors="*{price}">
+                                Price error
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="stockQuantity"
+                                   class="form-label">
+                                Stock quantity
+                            </label>
+
+                            <input id="stockQuantity"
+                                   type="number"
+                                   class="form-control"
+                                   th:field="*{stockQuantity}"
+                                   th:errorclass="is-invalid"
+                                   min="0"
+                                   step="1"
+                                   placeholder="0">
+
+                            <div class="invalid-feedback"
+                                 th:errors="*{stockQuantity}">
+                                Stock quantity error
+                            </div>
+
+                            <div class="form-text">
+                                0 = Sold out, 1–5 = Low stock,
+                                6 or more = Available.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr class="admin-form-divider">
+
+                <!-- Organization -->
+                <div class="admin-form-section">
+
+                    <div class="admin-form-section-heading">
+                        <span>Organization</span>
+
+                        <h2>Category and tags</h2>
+
+                        <p>
+                            Organize the product so customers can find it
+                            through search and filters.
+                        </p>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label for="categoryId"
+                                   class="form-label">
+                                Category
+                            </label>
+
+                            <select id="categoryId"
+                                    class="form-select"
+                                    th:field="*{categoryId}"
+                                    th:errorclass="is-invalid">
+
+                                <option value="">
+                                    Select a category
+                                </option>
+
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id()}"
+                                        th:text="${category.name()}">
+                                    Category
+                                </option>
+
+                            </select>
+
+                            <div class="invalid-feedback"
+                                 th:errors="*{categoryId}">
+                                Category error
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="tags"
+                                   class="form-label">
+                                Tags
+                            </label>
+
+                            <input id="tags"
+                                   type="text"
+                                   class="form-control"
+                                   th:field="*{tags}"
+                                   th:errorclass="is-invalid"
+                                   maxlength="500"
+                                   placeholder="gaming, wireless, usb">
+
+                            <div class="invalid-feedback"
+                                 th:errors="*{tags}">
+                                Tags error
+                            </div>
+
+                            <div class="form-text">
+                                Separate multiple tags with commas.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr class="admin-form-divider">
+
+                <!-- Product image -->
+                <div class="admin-form-section">
+
+                    <div class="admin-form-section-heading">
+                        <span>Presentation</span>
+
+                        <h2>Product image</h2>
+
+                        <p>
+                            Add a direct image URL for the product.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="imageUrl"
+                               class="form-label">
+                            Image URL
+                        </label>
+
+                        <input id="imageUrl"
+                               type="url"
+                               class="form-control"
+                               th:field="*{imageUrl}"
+                               th:errorclass="is-invalid"
+                               maxlength="2000"
+                               placeholder="https://example.com/product-image.jpg">
+
+                        <div class="invalid-feedback"
+                             th:errors="*{imageUrl}">
+                            Image URL error
+                        </div>
+
+                        <div class="form-text">
+                            Leave this empty to use the standard
+                            “No Image” placeholder.
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="admin-form-actions">
+
+                    <a class="btn btn-outline-secondary"
+                       th:href="@{/admin/products}">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-khoury"
+                            th:text="${submitLabel}">
+                        Create Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>
