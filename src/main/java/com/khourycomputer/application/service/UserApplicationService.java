@@ -7,6 +7,7 @@ import com.khourycomputer.application.dto.user.UpdateUserProfileRequest;
 import com.khourycomputer.application.dto.user.UserResponse;
 import com.khourycomputer.application.repository.UserRepository;
 import com.khourycomputer.domain.enums.UserRole;
+import com.khourycomputer.domain.exception.CustomerNotFoundException;
 import com.khourycomputer.domain.model.Address;
 import com.khourycomputer.domain.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -92,6 +93,20 @@ public class UserApplicationService {
 
         return toResponse(user);
     }
+
+    @Transactional(readOnly = true)
+public UserResponse getCustomerById(Long customerId) {
+    User customer = userRepository.findById(customerId)
+            .orElseThrow(() ->
+                    new CustomerNotFoundException(customerId)
+            );
+
+    if (customer.getRole() != UserRole.CUSTOMER) {
+        throw new CustomerNotFoundException(customerId);
+    }
+
+    return toResponse(customer);
+}
 
     // User story support: login later needs to load a user by email.
     @Transactional(readOnly = true)

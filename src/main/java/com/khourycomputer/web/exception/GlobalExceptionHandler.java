@@ -1,5 +1,6 @@
 package com.khourycomputer.web.exception;
 
+import com.khourycomputer.domain.exception.CustomerNotFoundException;
 import com.khourycomputer.domain.exception.OrderNotFoundException;
 import com.khourycomputer.domain.exception.ProductNotFoundException;
 
@@ -31,6 +32,22 @@ public class GlobalExceptionHandler {
         model.addAttribute(
                 "errorTitle",
                 "Product Not Found");
+
+        model.addAttribute(
+                "errorMessage",
+                exception.getMessage());
+
+        return "error/404";
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleCustomerNotFound(
+            CustomerNotFoundException exception,
+            Model model) {
+        model.addAttribute(
+                "errorTitle",
+                "Customer Not Found");
 
         model.addAttribute(
                 "errorMessage",
