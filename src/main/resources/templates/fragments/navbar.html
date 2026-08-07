@@ -36,16 +36,13 @@ ADMIN: Admin Dashboard and Logout
                 aria-label="Search products"
               />
 
-              <button class="btn search-button" type="submit">
-                Search
-              </button>
+              <button class="btn search-button" type="submit">Search</button>
             </form>
           </div>
 
           <!-- Account actions -->
           <div class="col-12 col-lg-3">
             <div class="header-actions justify-content-lg-end">
-
               <!-- Guest navigation -->
               <a
                 sec:authorize="isAnonymous()"
@@ -108,77 +105,77 @@ ADMIN: Admin Dashboard and Logout
                   Logout
                 </button>
               </form>
-
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Category navigation -->
+      <!-- Main store navigation -->
       <nav class="category-nav border-top">
         <div class="container">
           <div class="category-nav-scroll">
+            <a class="category-nav-link" th:href="@{/}"> Home </a>
 
-            <a class="category-nav-link" th:href="@{/}">
-              Home
-            </a>
+            <a class="category-nav-link" th:href="@{/products}"> Products </a>
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=1)}"
-            >
-              Laptops
-            </a>
+            <div class="dropdown category-dropdown">
+              <button
+                class="category-nav-link category-dropdown-button"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Categories
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=2)}"
-            >
-              Screens
-            </a>
+                <span class="category-dropdown-arrow" aria-hidden="true">
+                  ▾
+                </span>
+              </button>
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=3)}"
-            >
-              Accessories
-            </a>
+              <ul class="dropdown-menu category-dropdown-menu">
+                <li>
+                  <a
+                    class="dropdown-item category-dropdown-item"
+                    th:href="@{/products}"
+                  >
+                    All Products
+                  </a>
+                </li>
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=4)}"
-            >
-              Chargers
-            </a>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=5)}"
-            >
-              USB Devices
-            </a>
+                <li
+                  th:each="category
+                        : ${navigationCategories}"
+                >
+                  <a
+                    class="dropdown-item category-dropdown-item"
+                    th:href="@{/products(
+                               categoryId=${category.id()}
+                           )}"
+                    th:text="${category.name()}"
+                  >
+                    Category
+                  </a>
+                </li>
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=6)}"
-            >
-              Gaming Consoles
-            </a>
+                <li
+                  th:if="${#lists.isEmpty(
+                        navigationCategories
+                    )}"
+                >
+                  <span class="dropdown-item-text category-dropdown-empty">
+                    No categories available
+                  </span>
+                </li>
+              </ul>
+            </div>
 
-            <a
-              class="category-nav-link"
-              th:href="@{/products(categoryId=7)}"
-            >
-              Networking
-            </a>
-
-            <a
-              class="category-nav-link"
-              th:href="@{/contact}"
-            >
+            <a class="category-nav-link" th:href="@{/contact}">
               Repair Services
             </a>
-
           </div>
         </div>
       </nav>
