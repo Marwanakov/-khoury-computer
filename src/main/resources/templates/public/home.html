@@ -98,89 +98,114 @@
         </div>
     </section>
 
-    <!-- Shop By Category -->
-    <section class="container py-5">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
-            <div>
-                <h2 class="section-title mb-2">Shop by category</h2>
-                <p class="text-muted mb-0">
-                    Quickly browse the main product and service categories.
+   <!-- Shop By Category -->
+<section class="container py-5">
+
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-end
+                gap-3 mb-4">
+
+        <div>
+            <h2 class="section-title mb-2">
+                Shop by category
+            </h2>
+
+            <p class="text-muted mb-0">
+                Browse the product categories available from
+                Khoury Computer.
+            </p>
+        </div>
+
+        <a class="btn btn-outline-primary rounded-pill px-4"
+           th:href="@{/products}">
+            View All Products
+        </a>
+
+    </div>
+
+    <!-- No categories -->
+    <div th:if="${#lists.isEmpty(categories)}"
+         class="home-categories-empty">
+
+        <strong>No product categories are available yet.</strong>
+
+        <p>
+            Browse all products or contact the store for assistance.
+        </p>
+
+        <a class="btn btn-khoury"
+           th:href="@{/products}">
+            Browse Products
+        </a>
+
+    </div>
+
+    <!-- Dynamic categories -->
+    <div th:if="${!#lists.isEmpty(categories)}"
+         class="row g-4">
+
+        <div class="col-6 col-md-4 col-lg-3"
+             th:each="category : ${categories}">
+
+            <a class="category-card"
+               th:href="@{/products(
+                   categoryId=${category.id()}
+               )}">
+
+                <div class="category-card-icon"
+                     th:text="${#strings.toUpperCase(
+                         #strings.substring(
+                             category.name(),
+                             0,
+                             1
+                         )
+                     )}">
+                    C
+                </div>
+
+                <h5 th:text="${category.name()}">
+                    Category
+                </h5>
+
+                <p th:if="${!#strings.isEmpty(
+                    category.description()
+                )}"
+                   th:text="${category.description()}">
+                    Category description
                 </p>
-            </div>
 
-            <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/products}">
-                View all products
+                <p th:if="${#strings.isEmpty(
+                    category.description()
+                )}"
+                   class="category-card-fallback">
+                    Browse products available in this category.
+                </p>
+
             </a>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=1)}">
-                    <div class="category-card-icon">LP</div>
-                    <h5>Laptops</h5>
-                    <p>Portable devices for work, study, and gaming.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=2)}">
-                    <div class="category-card-icon">SC</div>
-                    <h5>Screens</h5>
-                    <p>Monitors and displays for every setup.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=3)}">
-                    <div class="category-card-icon">AC</div>
-                    <h5>Accessories</h5>
-                    <p>Keyboards, mice, headsets, and more.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=4)}">
-                    <div class="category-card-icon">CH</div>
-                    <h5>Chargers</h5>
-                    <p>Chargers and power accessories.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=5)}">
-                    <div class="category-card-icon">USB</div>
-                    <h5>USB Devices</h5>
-                    <p>Flash drives, hubs, adapters, and cables.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=6)}">
-                    <div class="category-card-icon">GM</div>
-                    <h5>Gaming Consoles</h5>
-                    <p>Gaming devices and related accessories.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/products(categoryId=7)}">
-                    <div class="category-card-icon">NW</div>
-                    <h5>Networking</h5>
-                    <p>Routers, network devices, and connectivity.</p>
-                </a>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg-3">
-                <a class="category-card" th:href="@{/contact}">
-                    <div class="category-card-icon">RS</div>
-                    <h5>Repair Services</h5>
-                    <p>Contact us for laptop and computer repair.</p>
-                </a>
-            </div>
 
         </div>
-    </section>
+
+        <!-- Permanent repair-services card -->
+        <div class="col-6 col-md-4 col-lg-3">
+
+            <a class="category-card category-service-card"
+               th:href="@{/contact}">
+
+                <div class="category-card-icon">RS</div>
+
+                <h5>Repair Services</h5>
+
+                <p>
+                    Contact us for laptop and computer repair.
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 
     <!-- Featured products placeholder for later -->
     <section class="container pb-5">
