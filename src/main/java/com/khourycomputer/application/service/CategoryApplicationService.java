@@ -4,6 +4,8 @@ import com.khourycomputer.application.dto.category.CategoryResponse;
 import com.khourycomputer.application.dto.category.CreateCategoryRequest;
 import com.khourycomputer.application.dto.category.UpdateCategoryRequest;
 import com.khourycomputer.application.repository.CategoryRepository;
+import com.khourycomputer.application.repository.ProductRepository;
+import com.khourycomputer.domain.exception.CategoryNotFoundException;
 import com.khourycomputer.domain.model.Category;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +16,13 @@ import java.util.List;
 public class CategoryApplicationService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
-    public CategoryApplicationService(CategoryRepository categoryRepository) {
+    public CategoryApplicationService(
+            CategoryRepository categoryRepository,
+            ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -30,8 +36,7 @@ public class CategoryApplicationService {
         Category category = new Category(
                 null,
                 name,
-                request.description()
-        );
+                request.description());
 
         Category savedCategory = categoryRepository.save(category);
 
@@ -41,7 +46,7 @@ public class CategoryApplicationService {
     @Transactional
     public CategoryResponse updateCategory(Long categoryId, UpdateCategoryRequest request) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found."));
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
         String newName = request.name().trim();
 
@@ -62,7 +67,7 @@ public class CategoryApplicationService {
     @Transactional(readOnly = true)
     public CategoryResponse getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found."));
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
         return toResponse(category);
     }
@@ -76,19 +81,24 @@ public class CategoryApplicationService {
     }
 
     @Transactional
-    public void deleteCategory(Long categoryId) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new IllegalArgumentException("Category not found.");
-        }
-
-        categoryRepository.deleteById(categoryId);
+public void deleteCategory(Long categoryId) {
+    if (!categoryRepository.existsById(categoryId)) {
+        throw new CategoryNotFoundException(categoryId);
     }
+
+    if (!productRepository.findByCategoryId(categoryId).isEmpty()) {
+        throw new IllegalStateException(
+                "This category cannot be deleted because it still contains products."
+        );
+    }
+
+    categoryRepository.deleteById(categoryId);
+}
 
     private CategoryResponse toResponse(Category category) {
         return new CategoryResponse(
                 category.getId(),
                 category.getName(),
-                category.getDescription()
-        );
+                category.getDescription());
     }
 }

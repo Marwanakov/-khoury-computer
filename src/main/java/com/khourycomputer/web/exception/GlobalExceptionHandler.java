@@ -1,5 +1,6 @@
 package com.khourycomputer.web.exception;
 
+import com.khourycomputer.domain.exception.CategoryNotFoundException;
 import com.khourycomputer.domain.exception.CustomerNotFoundException;
 import com.khourycomputer.domain.exception.OrderNotFoundException;
 import com.khourycomputer.domain.exception.ProductNotFoundException;
@@ -55,4 +56,23 @@ public class GlobalExceptionHandler {
 
         return "error/404";
     }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public String handleCategoryNotFound(
+        CategoryNotFoundException exception,
+        Model model
+) {
+    model.addAttribute(
+            "errorTitle",
+            "Category Not Found"
+    );
+
+    model.addAttribute(
+            "errorMessage",
+            exception.getMessage()
+    );
+
+    return "error/404";
+}
 }
