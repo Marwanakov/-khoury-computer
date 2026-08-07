@@ -1,0 +1,515 @@
+/* =========================
+   Page
+========================= */
+
+.admin-overview-page {
+    min-height: 70vh;
+    background-color: #f4f7fb;
+}
+
+
+/* =========================
+   Header
+========================= */
+
+.admin-overview-header {
+    padding: 3.5rem 0 3rem;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.16),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f7fb 100%
+        );
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-overview-header-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+}
+
+.admin-overview-back-link {
+    display: block;
+    width: fit-content;
+    margin-bottom: 1.25rem;
+    color: #64748b;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.admin-overview-back-link:hover {
+    color: #2563eb;
+    transform: translateX(-3px);
+}
+
+.admin-overview-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: #2563eb;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.admin-overview-header h1 {
+    margin-bottom: 0.75rem;
+    color: #0f172a;
+    font-size: clamp(2.15rem, 4vw, 3.35rem);
+    font-weight: 950;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+}
+
+.admin-overview-header p {
+    max-width: 700px;
+    margin-bottom: 0;
+    color: #64748b;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   Content
+========================= */
+
+.admin-overview-content {
+    padding: 3rem 0 5rem;
+}
+
+
+/* =========================
+   Statistics
+========================= */
+
+.admin-overview-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-overview-stat-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 1.4rem 1.5rem;
+    color: inherit;
+    text-decoration: none;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.15rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.admin-overview-stat-card::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background-color: #2563eb;
+    content: "";
+}
+
+.admin-overview-stat-card:hover {
+    color: inherit;
+    border-color: #bfdbfe;
+    box-shadow: 0 17px 38px rgba(15, 23, 42, 0.1);
+    transform: translateY(-3px);
+}
+
+.admin-overview-stat-card > span {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #64748b;
+    font-size: 0.76rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.admin-overview-stat-card > strong {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #0f172a;
+    font-size: 2rem;
+    font-weight: 950;
+    line-height: 1;
+}
+
+.admin-overview-stat-card > small {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.stat-pending::before {
+    background-color: #f59e0b;
+}
+
+.stat-low-stock::before {
+    background-color: #f97316;
+}
+
+.stat-sold-out::before {
+    background-color: #dc2626;
+}
+
+
+/* =========================
+   Main Panels
+========================= */
+
+.admin-overview-main-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(0, 0.85fr);
+    gap: 1.5rem;
+}
+
+.admin-overview-panel {
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.35rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
+}
+
+.admin-overview-panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-overview-panel-heading span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #2563eb;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-overview-panel-heading h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.admin-overview-panel-heading > a {
+    color: #2563eb;
+    font-size: 0.78rem;
+    font-weight: 850;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.admin-overview-panel-heading > a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   Recent Orders
+========================= */
+
+.admin-recent-order-list,
+.admin-inventory-alert-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-recent-order,
+.admin-inventory-alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.5rem;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid #eef2f7;
+    transition: background-color 0.2s ease;
+}
+
+.admin-recent-order:last-child,
+.admin-inventory-alert:last-child {
+    border-bottom: 0;
+}
+
+.admin-recent-order:hover,
+.admin-inventory-alert:hover {
+    color: inherit;
+    background-color: #f8fbff;
+}
+
+.admin-recent-order-main {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+}
+
+.admin-recent-order-number {
+    color: #2563eb;
+    font-size: 0.85rem;
+    font-weight: 900;
+}
+
+.admin-recent-order-main strong,
+.admin-inventory-alert > div:first-child strong {
+    display: block;
+    overflow: hidden;
+    color: #0f172a;
+    font-size: 0.87rem;
+    font-weight: 850;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-recent-order-main small,
+.admin-inventory-alert > div:first-child small {
+    display: block;
+    margin-top: 0.2rem;
+    color: #64748b;
+    font-size: 0.72rem;
+}
+
+.admin-recent-order-side {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.admin-recent-order-total {
+    color: #0f172a;
+    font-size: 0.82rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   Status Badges
+========================= */
+
+.admin-overview-status,
+.admin-inventory-status {
+    display: inline-block;
+    padding: 0.38rem 0.62rem;
+    font-size: 0.63rem;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.admin-overview-status.status-pending {
+    color: #92400e;
+    background-color: #fef3c7;
+}
+
+.admin-overview-status.status-confirmed {
+    color: #1d4ed8;
+    background-color: #dbeafe;
+}
+
+.admin-overview-status.status-completed {
+    color: #166534;
+    background-color: #dcfce7;
+}
+
+.admin-overview-status.status-cancelled {
+    color: #991b1b;
+    background-color: #fee2e2;
+}
+
+.admin-inventory-status.status-low-stock {
+    color: #92400e;
+    background-color: #fef3c7;
+}
+
+.admin-inventory-status.status-sold-out {
+    color: #991b1b;
+    background-color: #fee2e2;
+}
+
+
+/* =========================
+   Inventory Alerts
+========================= */
+
+.admin-inventory-alert-side {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.admin-inventory-alert-side > small {
+    color: #64748b;
+    font-size: 0.7rem;
+}
+
+.admin-inventory-alert-side > small strong {
+    color: #0f172a;
+    font-weight: 900;
+}
+
+
+/* =========================
+   Empty States
+========================= */
+
+.admin-overview-empty {
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+}
+
+.admin-overview-empty strong {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #0f172a;
+    font-weight: 900;
+}
+
+.admin-overview-empty p {
+    max-width: 420px;
+    margin: 0 auto;
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.overview-inventory-clear strong {
+    color: #166534;
+}
+
+
+/* =========================
+   Quick Actions
+========================= */
+
+.admin-overview-quick-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding: 1.75rem;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.35rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
+}
+
+.admin-overview-quick-actions h2 {
+    margin-bottom: 0.4rem;
+    color: #0f172a;
+    font-size: 1.3rem;
+    font-weight: 900;
+}
+
+.admin-overview-quick-actions p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.admin-overview-action-links {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.admin-overview-action-links .btn {
+    font-size: 0.8rem;
+    font-weight: 800;
+    border-radius: 0.7rem;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-overview-header-layout,
+    .admin-overview-quick-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-overview-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-overview-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-overview-action-links {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .admin-overview-header {
+        padding: 2.75rem 0 2.25rem;
+    }
+
+    .admin-overview-content {
+        padding: 2rem 0 4rem;
+    }
+
+    .admin-overview-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-recent-order,
+    .admin-inventory-alert {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-recent-order-side,
+    .admin-inventory-alert-side {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .admin-overview-panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-overview-action-links,
+    .admin-overview-action-links .btn {
+        width: 100%;
+    }
+}

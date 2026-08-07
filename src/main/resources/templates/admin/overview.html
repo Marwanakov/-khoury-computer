@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Admin Overview', '/css/pages/admin-overview.css')}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="admin-overview-page">
+
+    <!-- Header -->
+    <section class="admin-overview-header">
+        <div class="container">
+
+            <div class="admin-overview-header-layout">
+
+                <div>
+                    <a class="admin-overview-back-link"
+                       th:href="@{/admin}">
+                        &larr; Admin Dashboard
+                    </a>
+
+                    <span class="admin-overview-label">
+                        Store operations
+                    </span>
+
+                    <h1>Admin Overview</h1>
+
+                    <p>
+                        Monitor store activity, pending orders,
+                        customer accounts, and product inventory.
+                    </p>
+                </div>
+
+                <a class="btn btn-khoury"
+                   th:href="@{/admin}">
+                    Open Management Dashboard
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="admin-overview-content">
+        <div class="container">
+
+            <!-- Main statistics -->
+            <div class="admin-overview-stat-grid">
+
+                <a class="admin-overview-stat-card"
+                   th:href="@{/admin/products}">
+
+                    <span>Total products</span>
+
+                    <strong th:text="${totalProductCount}">
+                        0
+                    </strong>
+
+                    <small>Manage catalog</small>
+
+                </a>
+
+                <a class="admin-overview-stat-card"
+                   th:href="@{/admin/customers}">
+
+                    <span>Total customers</span>
+
+                    <strong th:text="${totalCustomerCount}">
+                        0
+                    </strong>
+
+                    <small>View customers</small>
+
+                </a>
+
+                <a class="admin-overview-stat-card"
+                   th:href="@{/admin/orders}">
+
+                    <span>Total orders</span>
+
+                    <strong th:text="${totalOrderCount}">
+                        0
+                    </strong>
+
+                    <small>Manage orders</small>
+
+                </a>
+
+                <a class="admin-overview-stat-card stat-pending"
+                   th:href="@{/admin/orders(status='PENDING')}">
+
+                    <span>Pending orders</span>
+
+                    <strong th:text="${pendingOrderCount}">
+                        0
+                    </strong>
+
+                    <small>Requires attention</small>
+
+                </a>
+
+                <a class="admin-overview-stat-card stat-low-stock"
+                   th:href="@{/admin/products(status='LOW_STOCK')}">
+
+                    <span>Low-stock products</span>
+
+                    <strong th:text="${lowStockProductCount}">
+                        0
+                    </strong>
+
+                    <small>Review inventory</small>
+
+                </a>
+
+                <a class="admin-overview-stat-card stat-sold-out"
+                   th:href="@{/admin/products(status='SOLD_OUT')}">
+
+                    <span>Sold-out products</span>
+
+                    <strong th:text="${soldOutProductCount}">
+                        0
+                    </strong>
+
+                    <small>Restock products</small>
+
+                </a>
+
+            </div>
+
+            <div class="admin-overview-main-grid">
+
+                <!-- Recent orders -->
+                <section class="admin-overview-panel">
+
+                    <div class="admin-overview-panel-heading">
+
+                        <div>
+                            <span>Latest activity</span>
+                            <h2>Recent Orders</h2>
+                        </div>
+
+                        <a th:href="@{/admin/orders}">
+                            View All Orders
+                        </a>
+
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(recentOrders)}"
+                         class="admin-overview-empty">
+
+                        <strong>No orders yet</strong>
+
+                        <p>
+                            Customer orders will appear here after
+                            they are submitted.
+                        </p>
+
+                    </div>
+
+                    <div th:if="${!#lists.isEmpty(recentOrders)}"
+                         class="admin-recent-order-list">
+
+                        <a class="admin-recent-order"
+                           th:each="order : ${recentOrders}"
+                           th:href="@{/admin/orders/{id}(
+                               id=${order.id()}
+                           )}">
+
+                            <div class="admin-recent-order-main">
+
+                                <span class="admin-recent-order-number">
+                                    #<span th:text="${order.id()}">
+                                        1
+                                    </span>
+                                </span>
+
+                                <div>
+                                    <strong th:text="${order.customerName()}">
+                                        Customer Name
+                                    </strong>
+
+                                    <small th:text="${#temporals.format(
+                                        order.createdAt(),
+                                        'dd MMM yyyy, HH:mm'
+                                    )}">
+                                        07 Aug 2026, 12:00
+                                    </small>
+                                </div>
+
+                            </div>
+
+                            <div class="admin-recent-order-side">
+
+                                <span class="admin-overview-status"
+                                      th:classappend="' status-'
+                                          + ${#strings.toLowerCase(
+                                              order.status().name()
+                                          )}"
+                                      th:text="${order.status()}">
+                                    PENDING
+                                </span>
+
+                                <strong class="admin-recent-order-total">
+                                    &#8362;<span
+                                        th:text="${#numbers.formatDecimal(
+                                            order.totalPrice(),
+                                            1,
+                                            2
+                                        )}">
+                                        0.00
+                                    </span>
+                                </strong>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+                <!-- Inventory attention -->
+                <section class="admin-overview-panel">
+
+                    <div class="admin-overview-panel-heading">
+
+                        <div>
+                            <span>Inventory</span>
+                            <h2>Needs Attention</h2>
+                        </div>
+
+                        <a th:href="@{/admin/products}">
+                            Manage Products
+                        </a>
+
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(inventoryAlerts)}"
+                         class="admin-overview-empty overview-inventory-clear">
+
+                        <strong>Inventory looks healthy</strong>
+
+                        <p>
+                            There are no low-stock or sold-out
+                            products right now.
+                        </p>
+
+                    </div>
+
+                    <div th:if="${!#lists.isEmpty(inventoryAlerts)}"
+                         class="admin-inventory-alert-list">
+
+                        <a class="admin-inventory-alert"
+                           th:each="product : ${inventoryAlerts}"
+                           th:href="@{/admin/products/{id}/edit(
+                               id=${product.id()}
+                           )}">
+
+                            <div>
+                                <strong th:text="${product.name()}">
+                                    Product name
+                                </strong>
+
+                                <small th:text="${product.brand()}">
+                                    Brand
+                                </small>
+                            </div>
+
+                            <div class="admin-inventory-alert-side">
+
+                                <span class="admin-inventory-status"
+                                      th:classappend="${
+                                          product.availabilityStatus()
+                                              .name() == 'LOW_STOCK'
+                                      } ? ' status-low-stock'
+                                        : ' status-sold-out'"
+                                      th:text="${#strings.replace(
+                                          product.availabilityStatus()
+                                              .name(),
+                                          '_',
+                                          ' '
+                                      )}">
+                                    LOW STOCK
+                                </span>
+
+                                <small>
+                                    Stock:
+                                    <strong th:text="${product.stockQuantity()}">
+                                        0
+                                    </strong>
+                                </small>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- Quick actions -->
+            <section class="admin-overview-quick-actions">
+
+                <div>
+                    <span class="admin-overview-label">
+                        Quick actions
+                    </span>
+
+                    <h2>Store Management</h2>
+
+                    <p>
+                        Open a management area directly from the
+                        operational overview.
+                    </p>
+                </div>
+
+                <div class="admin-overview-action-links">
+
+                    <a class="btn btn-outline-primary"
+                       th:href="@{/admin/orders}">
+                        Manage Orders
+                    </a>
+
+                    <a class="btn btn-outline-primary"
+                       th:href="@{/admin/products}">
+                        Manage Products
+                    </a>
+
+                    <a class="btn btn-outline-primary"
+                       th:href="@{/admin/customers}">
+                        Manage Customers
+                    </a>
+
+                    <a class="btn btn-outline-primary"
+                       th:href="@{/admin/categories}">
+                        Manage Categories
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>
