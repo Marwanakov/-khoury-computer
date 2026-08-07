@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Manage Categories', '/css/pages/admin-categories.css')}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="admin-categories-page">
+
+    <section class="admin-categories-header">
+        <div class="container">
+
+            <div class="admin-categories-header-layout">
+
+                <div>
+                    <a class="admin-category-back-link"
+                       th:href="@{/admin}">
+                        &larr; Admin Dashboard
+                    </a>
+
+                    <span class="admin-categories-label">
+                        Category management
+                    </span>
+
+                    <h1>Manage Categories</h1>
+
+                    <p>
+                        Organize the product catalog and control the
+                        categories available throughout the store.
+                    </p>
+                </div>
+
+                <a class="btn btn-khoury admin-add-category-button"
+                   th:href="@{/admin/categories/new}">
+                    Add Category
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="admin-categories-content">
+        <div class="container">
+
+            <!-- Success message -->
+            <div th:if="${successMessage != null}"
+                 class="alert alert-success alert-dismissible fade show border-0 mb-4"
+                 role="status">
+
+                <span th:text="${successMessage}">
+                    Category saved successfully.
+                </span>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+            <!-- Error message -->
+            <div th:if="${errorMessage != null}"
+                 class="alert alert-danger alert-dismissible fade show border-0 mb-4"
+                 role="alert">
+
+                <span th:text="${errorMessage}">
+                    The category could not be deleted.
+                </span>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+            <!-- Summary -->
+            <div class="admin-category-summary-grid">
+
+                <div class="admin-category-summary-card">
+                    <span>Total categories</span>
+
+                    <strong th:text="${totalCategoryCount}">
+                        0
+                    </strong>
+                </div>
+
+                <div class="admin-category-summary-card summary-category-used">
+                    <span>With products</span>
+
+                    <strong th:text="${categoriesWithProductsCount}">
+                        0
+                    </strong>
+                </div>
+
+                <div class="admin-category-summary-card summary-category-empty">
+                    <span>Empty categories</span>
+
+                    <strong th:text="${emptyCategoryCount}">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- Search -->
+            <div class="admin-category-search-card">
+
+                <div class="admin-category-section-heading">
+
+                    <div>
+                        <span>Category tools</span>
+                        <h2>Search categories</h2>
+                    </div>
+
+                    <a class="admin-category-reset-link"
+                       th:href="@{/admin/categories}">
+                        Reset search
+                    </a>
+
+                </div>
+
+                <form th:action="@{/admin/categories}"
+                      method="get"
+                      class="admin-category-search-form">
+
+                    <div>
+                        <label for="keyword">
+                            Name or description
+                        </label>
+
+                        <input id="keyword"
+                               name="keyword"
+                               type="text"
+                               class="form-control"
+                               placeholder="Search product categories..."
+                               th:value="${keyword}">
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-khoury">
+                        Search
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Category list -->
+            <div class="admin-category-list-card">
+
+                <div class="admin-category-section-heading admin-category-list-heading">
+
+                    <div>
+                        <span>Catalog structure</span>
+                        <h2>Categories</h2>
+                    </div>
+
+                    <p>
+                        Showing
+                        <strong th:text="${categories.size()}">0</strong>
+                        categories
+                    </p>
+
+                </div>
+
+                <!-- Empty state -->
+                <div th:if="${#lists.isEmpty(categories)}"
+                     class="admin-categories-empty">
+
+                    <div class="admin-categories-empty-icon">
+                        0
+                    </div>
+
+                    <h3>No categories found</h3>
+
+                    <p>
+                        No categories match your current search.
+                    </p>
+
+                    <a class="btn btn-khoury"
+                       th:href="@{/admin/categories}">
+                        View All Categories
+                    </a>
+
+                </div>
+
+                <!-- Category table -->
+                <div th:if="${!#lists.isEmpty(categories)}"
+                     class="table-responsive">
+
+                    <table class="table admin-categories-table">
+
+                        <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Products</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="category : ${categories}">
+
+                            <td>
+                                <div class="admin-category-identity">
+
+                                    <div class="admin-category-icon"
+                                         th:text="${#strings.toUpperCase(
+                                             #strings.substring(
+                                                 category.name(),
+                                                 0,
+                                                 1
+                                             )
+                                         )}">
+                                        C
+                                    </div>
+
+                                    <div>
+                                        <strong th:text="${category.name()}">
+                                            Category
+                                        </strong>
+
+                                        <span>
+                                            Category #<span
+                                                th:text="${category.id()}">
+                                                1
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <p class="admin-category-description"
+                                   th:if="${!#strings.isEmpty(
+                                       category.description()
+                                   )}"
+                                   th:text="${#strings.abbreviate(
+                                       category.description(),
+                                       120
+                                   )}">
+                                    Category description
+                                </p>
+
+                                <span class="admin-category-empty-description"
+                                      th:if="${#strings.isEmpty(
+                                          category.description()
+                                      )}">
+                                    No description provided.
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="admin-category-product-count"
+                                      th:text="${productCountByCategoryId[
+                                          category.id()
+                                      ] ?: 0}">
+                                    0
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="admin-category-actions">
+
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       th:href="@{/products(
+                                           categoryId=${category.id()}
+                                       )}"
+                                       target="_blank"
+                                       rel="noopener">
+                                        View Products
+                                    </a>
+
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       th:href="@{/admin/categories/{id}/edit(
+                                           id=${category.id()}
+                                       )}">
+                                        Edit
+                                    </a>
+
+                                    <!-- Empty categories may be deleted -->
+                                    <form
+                                        th:if="${emptyCategoryIds.contains(
+                                            category.id()
+                                        )}"
+                                        th:action="@{/admin/categories/{id}/delete(
+                                            id=${category.id()}
+                                        )}"
+                                        method="post"
+                                        onsubmit="return confirm('Delete this empty category permanently?');">
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger">
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                    <!-- Used categories cannot be deleted -->
+                                    <span
+                                        th:unless="${emptyCategoryIds.contains(
+                                            category.id()
+                                        )}"
+                                        class="admin-category-in-use">
+                                        In Use
+                                    </span>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+</body>
+</html>

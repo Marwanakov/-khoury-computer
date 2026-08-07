@@ -1,110 +1,88 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Admin Dashboard', '/css/pages/admin-dashboard.css')}"
+  >
+  </head>
 
-<head th:replace="~{fragments/head :: head('Admin Dashboard', '/css/pages/admin-dashboard.css')}">
-</head>
+  <body class="d-flex flex-column min-vh-100">
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<body class="d-flex flex-column min-vh-100">
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<main class="admin-dashboard flex-grow-1">
-
-    <section class="admin-dashboard-header">
+    <main class="admin-dashboard flex-grow-1">
+      <section class="admin-dashboard-header">
         <div class="container">
+          <span class="admin-dashboard-label"> Administration </span>
 
-            <span class="admin-dashboard-label">
-                Administration
-            </span>
+          <h1 class="admin-dashboard-title">Admin Dashboard</h1>
 
-            <h1 class="admin-dashboard-title">
-                Admin Dashboard
-            </h1>
-
-            <p class="admin-dashboard-subtitle">
-                Manage the Khoury Computer store, products, orders,
-                and customer accounts.
-            </p>
-
+          <p class="admin-dashboard-subtitle">
+            Manage the Khoury Computer store, products, orders, and customer
+            accounts.
+          </p>
         </div>
-    </section>
+      </section>
 
-    <section class="admin-dashboard-content">
+      <section class="admin-dashboard-content">
         <div class="container">
+          <div class="admin-dashboard-grid">
+            <a class="admin-dashboard-card" th:href="@{/admin/products}">
+              <span class="admin-card-label"> Catalog </span>
 
-            <div class="admin-dashboard-grid">
+              <h2>Manage Products</h2>
 
-                <a class="admin-dashboard-card"
-                   th:href="@{/admin/products}">
+              <p>
+                Add products and update their information, prices, stock, and
+                availability.
+              </p>
 
-                    <span class="admin-card-label">
-                        Catalog
-                    </span>
+              <span class="admin-card-action"> Open products </span>
+            </a>
 
-                    <h2>Manage Products</h2>
+            <a class="admin-dashboard-card" th:href="@{/admin/orders}">
+              <span class="admin-card-label"> Sales </span>
 
-                    <p>
-                        Add products and update their information,
-                        prices, stock, and availability.
-                    </p>
+              <h2>Manage Orders</h2>
 
-                    <span class="admin-card-action">
-                        Open products
-                    </span>
+              <p>
+                Review customer orders and update their processing and delivery
+                status.
+              </p>
 
-                </a>
+              <span class="admin-card-action"> Open orders </span>
+            </a>
 
-                <a class="admin-dashboard-card"
-                   th:href="@{/admin/orders}">
+            <a class="admin-dashboard-card" th:href="@{/admin/customers}">
+              <span class="admin-card-label"> Accounts </span>
 
-                    <span class="admin-card-label">
-                        Sales
-                    </span>
+              <h2>View Customers</h2>
 
-                    <h2>Manage Orders</h2>
+              <p>
+                View registered customer accounts and their basic account
+                information.
+              </p>
 
-                    <p>
-                        Review customer orders and update their
-                        processing and delivery status.
-                    </p>
+              <span class="admin-card-action"> Open customers </span>
+            </a>
 
-                    <span class="admin-card-action">
-                        Open orders
-                    </span>
+            <a class="admin-dashboard-card" th:href="@{/admin/categories}">
+              <span class="admin-card-label"> Catalog </span>
 
-                </a>
+              <h2>Manage Categories</h2>
 
-                <a class="admin-dashboard-card"
-                   th:href="@{/admin/customers}">
+              <p>
+                Add and edit the categories used in product navigation, filters,
+                and the Home page.
+              </p>
 
-                    <span class="admin-card-label">
-                        Accounts
-                    </span>
-
-                    <h2>View Customers</h2>
-
-                    <p>
-                        View registered customer accounts and their
-                        basic account information.
-                    </p>
-
-                    <span class="admin-card-action">
-                        Open customers
-                    </span>
-
-                </a>
-
-            </div>
-
+              <span class="admin-card-action"> Open categories </span>
+            </a>
+          </div>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
-
-<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
-
-</body>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
 </html>
