@@ -244,6 +244,25 @@
     }
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 1199px) {
+    .header-actions {
+        gap: 0.75rem;
+    }
+
+    .header-action-link,
+    .header-logout-button {
+        font-size: 0.9rem;
+    }
+}
+
 /* =========================
    Footer
 ========================= */

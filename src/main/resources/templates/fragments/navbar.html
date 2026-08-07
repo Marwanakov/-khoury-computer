@@ -26,7 +26,7 @@ ADMIN: Admin Dashboard and Logout
           </div>
 
           <!-- Search bar -->
-          <div class="col-12 col-lg-6">
+          <div class="col-12 col-lg-5">
             <form th:action="@{/products}" method="get" class="search-box">
               <input
                 type="text"
@@ -41,7 +41,7 @@ ADMIN: Admin Dashboard and Logout
           </div>
 
           <!-- Account actions -->
-          <div class="col-12 col-lg-3">
+          <div class="col-12 col-lg-4">
             <div class="header-actions justify-content-lg-end">
               <!-- Guest navigation -->
               <a
@@ -92,6 +92,14 @@ ADMIN: Admin Dashboard and Logout
                 th:href="@{/admin}"
               >
                 Admin Dashboard
+              </a>
+
+              <a
+                sec:authorize="hasRole('ADMIN')"
+                class="header-action-link"
+                th:href="@{/admin/overview}"
+              >
+                Admin Overview
               </a>
 
               <!-- Authenticated navigation -->
