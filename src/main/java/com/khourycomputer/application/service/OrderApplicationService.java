@@ -265,15 +265,17 @@ public class OrderApplicationService {
                 order.getTotalPrice());
     }
 
-    private OrderItemResponse toItemResponse(OrderItem item) {
-        return new OrderItemResponse(
-                item.getId(),
-                item.getProductId(),
-                item.getProductName(),
-                item.getUnitPrice(),
-                item.getQuantity(),
-                item.getSubtotal());
-    }
+  private OrderItemResponse toItemResponse(OrderItem item) {
+    return new OrderItemResponse(
+            item.getId(),
+            item.getProductId(),
+            item.getProductName(),
+            findCurrentProductImageUrl(item.getProductId()),
+            item.getUnitPrice(),
+            item.getQuantity(),
+            item.getSubtotal()
+    );
+}
 
     private AddressResponse toAddressResponse(Address address) {
         return new AddressResponse(
@@ -281,4 +283,10 @@ public class OrderApplicationService {
                 address.getStreet(),
                 address.getDetails());
     }
+
+    private String findCurrentProductImageUrl(Long productId) {
+    return productRepository.findById(productId)
+            .map(Product::getImageUrl)
+            .orElse("");
+}
 }
