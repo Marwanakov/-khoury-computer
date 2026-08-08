@@ -6,29 +6,21 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
 public class AdminProductForm {
 
     @NotBlank(message = "Product name is required.")
-    @Size(
-            max = 150,
-            message = "Product name cannot exceed 150 characters."
-    )
+    @Size(max = 150, message = "Product name cannot exceed 150 characters.")
     private String name;
 
-    @Size(
-            max = 5000,
-            message = "Description cannot exceed 5000 characters."
-    )
+    @Size(max = 5000, message = "Description cannot exceed 5000 characters.")
     private String description;
 
     @NotNull(message = "Price is required.")
-    @DecimalMin(
-            value = "0.00",
-            message = "Price cannot be negative."
-    )
+    @DecimalMin(value = "0.00", message = "Price cannot be negative.")
     @Digits(
             integer = 8,
             fraction = 2,
@@ -37,32 +29,21 @@ public class AdminProductForm {
     private BigDecimal price;
 
     @NotBlank(message = "Brand is required.")
-    @Size(
-            max = 100,
-            message = "Brand cannot exceed 100 characters."
-    )
+    @Size(max = 100, message = "Brand cannot exceed 100 characters.")
     private String brand;
 
     @NotNull(message = "Stock quantity is required.")
-    @Min(
-            value = 0,
-            message = "Stock quantity cannot be negative."
-    )
+    @Min(value = 0, message = "Stock quantity cannot be negative.")
     private Integer stockQuantity;
 
-    @Size(
-            max = 2000,
-            message = "Image URL cannot exceed 2000 characters."
-    )
-    private String imageUrl;
+    private MultipartFile image;
+
+    private boolean removeImage;
 
     @NotNull(message = "Category is required.")
     private Long categoryId;
 
-    @Size(
-            max = 500,
-            message = "Tags cannot exceed 500 characters."
-    )
+    @Size(max = 500, message = "Tags cannot exceed 500 characters.")
     private String tags;
 
     public String getName() {
@@ -105,12 +86,20 @@ public class AdminProductForm {
         this.stockQuantity = stockQuantity;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public MultipartFile getImage() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
+
+    public boolean isRemoveImage() {
+        return removeImage;
+    }
+
+    public void setRemoveImage(boolean removeImage) {
+        this.removeImage = removeImage;
     }
 
     public Long getCategoryId() {

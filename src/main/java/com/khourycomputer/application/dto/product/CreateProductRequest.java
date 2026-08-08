@@ -9,7 +9,6 @@ public record CreateProductRequest(
         BigDecimal price,
         String brand,
         int stockQuantity,
-        String imageUrl,
         Long categoryId,
         Set<String> tags
 ) {

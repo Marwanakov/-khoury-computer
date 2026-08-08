@@ -11,6 +11,14 @@ import com.khourycomputer.domain.model.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.khourycomputer.application.port.storage.ImageStorage;
+import com.khourycomputer.application.port.storage.ImageStorageFolder;
+import com.khourycomputer.application.port.storage.ImageUpload;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import java.util.Objects;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -23,17 +31,26 @@ public class ProductApplicationService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageStorage imageStorage;
 
     public ProductApplicationService(
             ProductRepository productRepository,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository,
+            ImageStorage imageStorage) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.imageStorage = imageStorage;
     }
 
     @Transactional
-    public ProductResponse createProduct(CreateProductRequest request) {
+    public ProductResponse createProduct(
+            CreateProductRequest request,
+            ImageUpload image) {
         validateCategoryExists(request.categoryId());
+
+        String imageUrl = storeImageIfPresent(image);
+
+        registerImageDeletionOnRollback(imageUrl);
 
         Product product = new Product(
                 null,
@@ -43,7 +60,7 @@ public class ProductApplicationService {
                 request.brand(),
                 request.stockQuantity(),
                 calculateAvailabilityStatus(request.stockQuantity()),
-                request.imageUrl(),
+                imageUrl,
                 request.categoryId(),
                 cleanTags(request.tags()));
 
@@ -53,11 +70,30 @@ public class ProductApplicationService {
     }
 
     @Transactional
-    public ProductResponse updateProduct(Long productId, UpdateProductRequest request) {
+    public ProductResponse createProduct(
+            CreateProductRequest request) {
+        return createProduct(
+                request,
+                ImageUpload.empty());
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(
+            Long productId,
+            UpdateProductRequest request,
+            ImageUpload newImage,
+            boolean removeImage) {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
         validateCategoryExists(request.categoryId());
+
+        String oldImageUrl = existingProduct.getImageUrl();
+
+        String resultingImageUrl = determineResultingImageUrl(
+                oldImageUrl,
+                newImage,
+                removeImage);
 
         Product updatedProduct = new Product(
                 existingProduct.getId(),
@@ -67,19 +103,34 @@ public class ProductApplicationService {
                 request.brand(),
                 request.stockQuantity(),
                 calculateAvailabilityStatus(request.stockQuantity()),
-                request.imageUrl(),
+                resultingImageUrl,
                 request.categoryId(),
                 cleanTags(request.tags()));
 
         Product savedProduct = productRepository.save(updatedProduct);
 
+        if (!Objects.equals(oldImageUrl, resultingImageUrl)) {
+            registerImageDeletionAfterCommit(oldImageUrl);
+        }
+
         return toResponse(savedProduct);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(
+            Long productId,
+            UpdateProductRequest request) {
+        return updateProduct(
+                productId,
+                request,
+                ImageUpload.empty(),
+                false);
     }
 
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findById(productId)
-                 .orElseThrow(() -> new ProductNotFoundException(productId));
+                .orElseThrow(() -> new ProductNotFoundException(productId));
 
         return toResponse(product);
     }
@@ -181,11 +232,12 @@ public class ProductApplicationService {
 
     @Transactional
     public void deleteProduct(Long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new ProductNotFoundException(productId);
-        }
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
 
         productRepository.deleteById(productId);
+
+        registerImageDeletionAfterCommit(product.getImageUrl());
     }
 
     private void validateCategoryExists(Long categoryId) {
@@ -289,5 +341,75 @@ public class ProductApplicationService {
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
         }
+    }
+
+    private String storeImageIfPresent(ImageUpload image) {
+        if (image == null || !image.isPresent()) {
+            return "";
+        }
+
+        return imageStorage.store(
+                image,
+                ImageStorageFolder.PRODUCTS);
+    }
+
+    private String determineResultingImageUrl(
+            String oldImageUrl,
+            ImageUpload newImage,
+            boolean removeImage) {
+        if (newImage != null && newImage.isPresent()) {
+            String newImageUrl = imageStorage.store(
+                    newImage,
+                    ImageStorageFolder.PRODUCTS);
+
+            registerImageDeletionOnRollback(newImageUrl);
+
+            return newImageUrl;
+        }
+
+        if (removeImage) {
+            return "";
+        }
+
+        return oldImageUrl;
+    }
+
+    private void registerImageDeletionOnRollback(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+            return;
+        }
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCompletion(int status) {
+                        if (status == STATUS_ROLLED_BACK) {
+                            imageStorage.delete(imageUrl);
+                        }
+                    }
+                });
+    }
+
+    private void registerImageDeletionAfterCommit(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+            imageStorage.delete(imageUrl);
+            return;
+        }
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        imageStorage.delete(imageUrl);
+                    }
+                });
     }
 }
