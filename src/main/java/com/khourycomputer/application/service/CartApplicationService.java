@@ -212,12 +212,20 @@ public class CartApplicationService {
     }
 
     private CartItemResponse toItemResponse(CartItem item) {
-        return new CartItemResponse(
-                item.getId(),
-                item.getProductId(),
-                item.getProductName(),
-                item.getUnitPrice(),
-                item.getQuantity(),
-                item.getSubtotal());
+    return new CartItemResponse(
+            item.getId(),
+            item.getProductId(),
+            item.getProductName(),
+            findCurrentProductImageUrl(item.getProductId()),
+            item.getUnitPrice(),
+            item.getQuantity(),
+            item.getSubtotal()
+    );
     }
+
+    private String findCurrentProductImageUrl(Long productId) {
+    return productRepository.findById(productId)
+            .map(Product::getImageUrl)
+            .orElse("");
+}
 }

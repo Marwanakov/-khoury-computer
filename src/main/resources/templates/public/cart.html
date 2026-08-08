@@ -78,12 +78,43 @@
           <div class="col-lg-8">
             <div class="d-flex flex-column gap-3">
               <div class="cart-item-card" th:each="item : ${cart.items()}">
-                <div class="cart-item-image-placeholder">Product</div>
+                <a
+                  class="cart-item-image-link"
+                  th:href="@{/products/{id}(id=${item.productId()})}"
+                  th:aria-label="|View ${item.productName()} details|"
+                >
+                  <img
+                    th:if="${!#strings.isEmpty(item.imageUrl())}"
+                    class="cart-item-image"
+                    th:src="${item.imageUrl()}"
+                    th:alt="${item.productName()}"
+                  />
+
+                  <img
+                    th:if="${#strings.isEmpty(item.imageUrl())}"
+                    class="cart-item-image cart-item-fallback-image"
+                    th:src="@{/images/products/product-fallback.png}"
+                    th:alt="|Default image for ${item.productName()}|"
+                  />
+                </a>
 
                 <div class="cart-item-content">
-                  <h5 class="cart-item-title" th:text="${item.productName()}">
-                    Product name
+                  <h5 class="cart-item-title">
+                    <a
+                      th:href="@{/products/{id}(id=${item.productId()})}"
+                      th:text="${item.productName()}"
+                    >
+                      Product name
+                    </a>
                   </h5>
+
+                  <a
+                    class="cart-view-product-link"
+                    th:href="@{/products/{id}(id=${item.productId()})}"
+                  >
+                    View Product
+                    <span aria-hidden="true">&rarr;</span>
+                  </a>
 
                   <div class="cart-unit-price mb-3">
                     <span class="cart-price-label">Unit price</span>
