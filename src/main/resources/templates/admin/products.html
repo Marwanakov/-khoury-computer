@@ -243,18 +243,18 @@
                       <div class="admin-product-identity">
                         <div class="admin-product-image">
                           <img
-                            th:if="${product.imageUrl() != null
-                                                and !product.imageUrl().isBlank()}"
+                            th:if="${!#strings.isEmpty(product.imageUrl())}"
                             th:src="${product.imageUrl()}"
-                            th:alt="${product.name()}"
+                            th:alt="|${product.name()} thumbnail|"
+                            loading="lazy"
                           />
 
-                          <span
-                            th:if="${product.imageUrl() == null
-                                                or product.imageUrl().isBlank()}"
-                          >
-                            No image
-                          </span>
+                          <img
+                            th:if="${#strings.isEmpty(product.imageUrl())}"
+                            th:src="@{/images/products/product-fallback.png}"
+                            th:alt="|Default image for ${product.name()}|"
+                            loading="lazy"
+                          />
                         </div>
 
                         <div>

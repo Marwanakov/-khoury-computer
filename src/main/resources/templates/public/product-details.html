@@ -29,18 +29,18 @@
             <div class="col-lg-6">
               <div class="product-details-image-card">
                 <img
-                  th:if="${product.imageUrl() != null and !product.imageUrl().isBlank()}"
+                  th:if="${!#strings.isEmpty(product.imageUrl())}"
                   th:src="${product.imageUrl()}"
                   th:alt="${product.name()}"
                   class="product-details-image"
                 />
 
-                <div
-                  th:if="${product.imageUrl() == null or product.imageUrl().isBlank()}"
-                  class="product-details-image-placeholder"
-                >
-                  <span>No Image Available</span>
-                </div>
+                <img
+                  th:if="${#strings.isEmpty(product.imageUrl())}"
+                  th:src="@{/images/products/product-fallback.png}"
+                  th:alt="|Default image for ${product.name()}|"
+                  class="product-details-image product-details-fallback-image"
+                />
               </div>
             </div>
 

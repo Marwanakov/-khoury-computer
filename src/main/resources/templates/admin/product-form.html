@@ -1,356 +1,391 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head(${formTitle}, '/css/pages/admin-products.css')}"
+  >
+  </head>
 
-<head th:replace="~{fragments/head :: head(${formTitle}, '/css/pages/admin-products.css')}">
-</head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<body>
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<main class="admin-product-form-page">
-
-    <section class="admin-product-form-header">
+    <main class="admin-product-form-page">
+      <section class="admin-product-form-header">
         <div class="container">
+          <a class="admin-back-link" th:href="@{/admin/products}">
+            ← Manage Products
+          </a>
 
-            <a class="admin-back-link"
-               th:href="@{/admin/products}">
-                ← Manage Products
-            </a>
+          <span class="admin-products-label"> Product management </span>
 
-            <span class="admin-products-label">
-                Product management
-            </span>
+          <h1 th:text="${formTitle}">Add Product</h1>
 
-            <h1 th:text="${formTitle}">
-                Add Product
-            </h1>
-
-            <p th:text="${formDescription}">
-                Create a new product for the catalog.
-            </p>
-
+          <p th:text="${formDescription}">
+            Create a new product for the catalog.
+          </p>
         </div>
-    </section>
+      </section>
 
-    <section class="admin-product-form-content">
+      <section class="admin-product-form-content">
         <div class="container">
+          <form
+            class="admin-product-form-card"
+            th:action="${formAction}"
+            th:object="${productForm}"
+            method="post"
+            enctype="multipart/form-data"
+            novalidate
+          >
+            <!-- Global errors -->
+            <div
+              th:if="${#fields.hasGlobalErrors()}"
+              class="alert alert-danger border-0 mb-4"
+            >
+              <p
+                th:each="error : ${#fields.globalErrors()}"
+                th:text="${error}"
+                class="mb-0"
+              >
+                Product could not be saved.
+              </p>
+            </div>
 
-            <form class="admin-product-form-card"
-                  th:action="${formAction}"
-                  th:object="${productForm}"
-                  method="post"
-                  novalidate>
+            <!-- Basic information -->
+            <div class="admin-form-section">
+              <div class="admin-form-section-heading">
+                <span>Basic information</span>
 
-                <!-- Global errors -->
-                <div th:if="${#fields.hasGlobalErrors()}"
-                     class="alert alert-danger border-0 mb-4">
+                <h2>Product details</h2>
 
-                    <p th:each="error : ${#fields.globalErrors()}"
-                       th:text="${error}"
-                       class="mb-0">
-                        Product could not be saved.
-                    </p>
+                <p>
+                  Enter the information customers will see in the storefront.
+                </p>
+              </div>
 
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label for="name" class="form-label"> Product name </label>
+
+                  <input
+                    id="name"
+                    type="text"
+                    class="form-control"
+                    th:field="*{name}"
+                    th:errorclass="is-invalid"
+                    maxlength="150"
+                    placeholder="Example: HP EliteBook 840 G8"
+                  />
+
+                  <div class="invalid-feedback" th:errors="*{name}">
+                    Product name error
+                  </div>
                 </div>
 
-                <!-- Basic information -->
-                <div class="admin-form-section">
+                <div class="col-md-4">
+                  <label for="brand" class="form-label"> Brand </label>
 
-                    <div class="admin-form-section-heading">
-                        <span>Basic information</span>
+                  <input
+                    id="brand"
+                    type="text"
+                    class="form-control"
+                    th:field="*{brand}"
+                    th:errorclass="is-invalid"
+                    maxlength="100"
+                    placeholder="Example: HP"
+                  />
 
-                        <h2>Product details</h2>
+                  <div class="invalid-feedback" th:errors="*{brand}">
+                    Brand error
+                  </div>
+                </div>
+              </div>
 
-                        <p>
-                            Enter the information customers will see in
-                            the storefront.
-                        </p>
-                    </div>
+              <div class="mt-3">
+                <label for="description" class="form-label">
+                  Description
+                </label>
 
-                    <div class="row g-3">
+                <textarea
+                  id="description"
+                  class="form-control"
+                  th:field="*{description}"
+                  th:errorclass="is-invalid"
+                  rows="6"
+                  maxlength="5000"
+                  placeholder="Describe the product, its specifications, and important features."
+                ></textarea>
 
-                        <div class="col-md-8">
-                            <label for="name"
-                                   class="form-label">
-                                Product name
-                            </label>
-
-                            <input id="name"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{name}"
-                                   th:errorclass="is-invalid"
-                                   maxlength="150"
-                                   placeholder="Example: HP EliteBook 840 G8">
-
-                            <div class="invalid-feedback"
-                                 th:errors="*{name}">
-                                Product name error
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="brand"
-                                   class="form-label">
-                                Brand
-                            </label>
-
-                            <input id="brand"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{brand}"
-                                   th:errorclass="is-invalid"
-                                   maxlength="100"
-                                   placeholder="Example: HP">
-
-                            <div class="invalid-feedback"
-                                 th:errors="*{brand}">
-                                Brand error
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="mt-3">
-                        <label for="description"
-                               class="form-label">
-                            Description
-                        </label>
-
-                        <textarea id="description"
-                                  class="form-control"
-                                  th:field="*{description}"
-                                  th:errorclass="is-invalid"
-                                  rows="6"
-                                  maxlength="5000"
-                                  placeholder="Describe the product, its specifications, and important features."></textarea>
-
-                        <div class="invalid-feedback"
-                             th:errors="*{description}">
-                            Description error
-                        </div>
-
-                        <div class="form-text">
-                            Write a clear description that helps customers
-                            understand the product.
-                        </div>
-                    </div>
-
+                <div class="invalid-feedback" th:errors="*{description}">
+                  Description error
                 </div>
 
-                <hr class="admin-form-divider">
+                <div class="form-text">
+                  Write a clear description that helps customers understand the
+                  product.
+                </div>
+              </div>
+            </div>
 
-                <!-- Pricing and inventory -->
-                <div class="admin-form-section">
+            <hr class="admin-form-divider" />
 
-                    <div class="admin-form-section-heading">
-                        <span>Inventory</span>
+            <!-- Pricing and inventory -->
+            <div class="admin-form-section">
+              <div class="admin-form-section-heading">
+                <span>Inventory</span>
 
-                        <h2>Price and stock</h2>
+                <h2>Price and stock</h2>
 
-                        <p>
-                            Availability is calculated automatically from
-                            the stock quantity.
-                        </p>
-                    </div>
+                <p>
+                  Availability is calculated automatically from the stock
+                  quantity.
+                </p>
+              </div>
 
-                    <div class="row g-3">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="price" class="form-label"> Price (₪) </label>
 
-                        <div class="col-md-6">
-                            <label for="price"
-                                   class="form-label">
-                                Price (₪)
-                            </label>
+                  <input
+                    id="price"
+                    type="number"
+                    class="form-control"
+                    th:field="*{price}"
+                    th:errorclass="is-invalid"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                  />
 
-                            <input id="price"
-                                   type="number"
-                                   class="form-control"
-                                   th:field="*{price}"
-                                   th:errorclass="is-invalid"
-                                   min="0"
-                                   step="0.01"
-                                   placeholder="0.00">
-
-                            <div class="invalid-feedback"
-                                 th:errors="*{price}">
-                                Price error
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="stockQuantity"
-                                   class="form-label">
-                                Stock quantity
-                            </label>
-
-                            <input id="stockQuantity"
-                                   type="number"
-                                   class="form-control"
-                                   th:field="*{stockQuantity}"
-                                   th:errorclass="is-invalid"
-                                   min="0"
-                                   step="1"
-                                   placeholder="0">
-
-                            <div class="invalid-feedback"
-                                 th:errors="*{stockQuantity}">
-                                Stock quantity error
-                            </div>
-
-                            <div class="form-text">
-                                0 = Sold out, 1–5 = Low stock,
-                                6 or more = Available.
-                            </div>
-                        </div>
-
-                    </div>
-
+                  <div class="invalid-feedback" th:errors="*{price}">
+                    Price error
+                  </div>
                 </div>
 
-                <hr class="admin-form-divider">
+                <div class="col-md-6">
+                  <label for="stockQuantity" class="form-label">
+                    Stock quantity
+                  </label>
 
-                <!-- Organization -->
-                <div class="admin-form-section">
+                  <input
+                    id="stockQuantity"
+                    type="number"
+                    class="form-control"
+                    th:field="*{stockQuantity}"
+                    th:errorclass="is-invalid"
+                    min="0"
+                    step="1"
+                    placeholder="0"
+                  />
 
-                    <div class="admin-form-section-heading">
-                        <span>Organization</span>
+                  <div class="invalid-feedback" th:errors="*{stockQuantity}">
+                    Stock quantity error
+                  </div>
 
-                        <h2>Category and tags</h2>
+                  <div class="form-text">
+                    0 = Sold out, 1–5 = Low stock, 6 or more = Available.
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                        <p>
-                            Organize the product so customers can find it
-                            through search and filters.
-                        </p>
-                    </div>
+            <hr class="admin-form-divider" />
 
-                    <div class="row g-3">
+            <!-- Organization -->
+            <div class="admin-form-section">
+              <div class="admin-form-section-heading">
+                <span>Organization</span>
 
-                        <div class="col-md-6">
-                            <label for="categoryId"
-                                   class="form-label">
-                                Category
-                            </label>
+                <h2>Category and tags</h2>
 
-                            <select id="categoryId"
-                                    class="form-select"
-                                    th:field="*{categoryId}"
-                                    th:errorclass="is-invalid">
+                <p>
+                  Organize the product so customers can find it through search
+                  and filters.
+                </p>
+              </div>
 
-                                <option value="">
-                                    Select a category
-                                </option>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="categoryId" class="form-label"> Category </label>
 
-                                <option th:each="category : ${categories}"
-                                        th:value="${category.id()}"
-                                        th:text="${category.name()}">
-                                    Category
-                                </option>
+                  <select
+                    id="categoryId"
+                    class="form-select"
+                    th:field="*{categoryId}"
+                    th:errorclass="is-invalid"
+                  >
+                    <option value="">Select a category</option>
 
-                            </select>
+                    <option
+                      th:each="category : ${categories}"
+                      th:value="${category.id()}"
+                      th:text="${category.name()}"
+                    >
+                      Category
+                    </option>
+                  </select>
 
-                            <div class="invalid-feedback"
-                                 th:errors="*{categoryId}">
-                                Category error
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="tags"
-                                   class="form-label">
-                                Tags
-                            </label>
-
-                            <input id="tags"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{tags}"
-                                   th:errorclass="is-invalid"
-                                   maxlength="500"
-                                   placeholder="gaming, wireless, usb">
-
-                            <div class="invalid-feedback"
-                                 th:errors="*{tags}">
-                                Tags error
-                            </div>
-
-                            <div class="form-text">
-                                Separate multiple tags with commas.
-                            </div>
-                        </div>
-
-                    </div>
-
+                  <div class="invalid-feedback" th:errors="*{categoryId}">
+                    Category error
+                  </div>
                 </div>
 
-                <hr class="admin-form-divider">
+                <div class="col-md-6">
+                  <label for="tags" class="form-label"> Tags </label>
 
-                <!-- Product image -->
-                <div class="admin-form-section">
+                  <input
+                    id="tags"
+                    type="text"
+                    class="form-control"
+                    th:field="*{tags}"
+                    th:errorclass="is-invalid"
+                    maxlength="500"
+                    placeholder="gaming, wireless, usb"
+                  />
 
-                    <div class="admin-form-section-heading">
-                        <span>Presentation</span>
+                  <div class="invalid-feedback" th:errors="*{tags}">
+                    Tags error
+                  </div>
 
-                        <h2>Product image</h2>
+                  <div class="form-text">
+                    Separate multiple tags with commas.
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                        <p>
-                            Add a direct image URL for the product.
-                        </p>
-                    </div>
+            <hr class="admin-form-divider" />
 
-                    <div>
-                        <label for="imageUrl"
-                               class="form-label">
-                            Image URL
-                        </label>
+            <!-- Product image -->
+            <div class="admin-form-section">
+              <div class="admin-form-section-heading">
+                <span>Presentation</span>
 
-                        <input id="imageUrl"
-                               type="url"
-                               class="form-control"
-                               th:field="*{imageUrl}"
-                               th:errorclass="is-invalid"
-                               maxlength="2000"
-                               placeholder="https://example.com/product-image.jpg">
+                <h2>Product image</h2>
 
-                        <div class="invalid-feedback"
-                             th:errors="*{imageUrl}">
-                            Image URL error
-                        </div>
+                <p>
+                  Upload a clear product image from your computer. JPG, PNG, and
+                  WebP files are supported.
+                </p>
+              </div>
 
-                        <div class="form-text">
-                            Leave this empty to use the standard
-                            “No Image” placeholder.
-                        </div>
-                    </div>
+              <div class="admin-product-image-upload">
+                <div class="admin-product-image-preview">
+                  <img
+                    id="productImagePreview"
+                    th:if="${!#strings.isEmpty(currentImageUrl)}"
+                    th:src="${currentImageUrl}"
+                    alt="Current product image"
+                  />
 
+                  <img
+                    id="productImagePreview"
+                    th:if="${#strings.isEmpty(currentImageUrl)}"
+                    th:src="@{/images/products/product-fallback.png}"
+                    alt="Default product image"
+                  />
                 </div>
 
-                <!-- Actions -->
-                <div class="admin-form-actions">
+                <div class="admin-product-image-controls">
+                  <div>
+                    <label for="image" class="form-label">
+                      Product image
+                    </label>
 
-                    <a class="btn btn-outline-secondary"
-                       th:href="@{/admin/products}">
-                        Cancel
-                    </a>
+                    <input
+                      id="image"
+                      type="file"
+                      class="form-control"
+                      th:field="*{image}"
+                      th:errorclass="is-invalid"
+                      accept="image/jpeg,image/png,image/webp"
+                    />
 
-                    <button type="submit"
-                            class="btn btn-khoury"
-                            th:text="${submitLabel}">
-                        Create Product
-                    </button>
+                    <div class="invalid-feedback" th:errors="*{image}">
+                      Product image error
+                    </div>
 
+                    <div class="form-text">
+                      JPG, PNG, or WebP. Maximum size: 5 MB.
+                    </div>
+                  </div>
+
+                  <div
+                    th:if="${!#strings.isEmpty(currentImageUrl)}"
+                    class="form-check admin-product-remove-image"
+                  >
+                    <input
+                      id="removeImage"
+                      type="checkbox"
+                      class="form-check-input"
+                      th:field="*{removeImage}"
+                    />
+
+                    <label for="removeImage" class="form-check-label">
+                      Remove the current image
+                    </label>
+                  </div>
                 </div>
+              </div>
+            </div>
 
-            </form>
+            <!-- Actions -->
+            <div class="admin-form-actions">
+              <a class="btn btn-outline-secondary" th:href="@{/admin/products}">
+                Cancel
+              </a>
 
+              <button
+                type="submit"
+                class="btn btn-khoury"
+                th:text="${submitLabel}"
+              >
+                Create Product
+              </button>
+            </div>
+          </form>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+    <script th:inline="javascript">
+    const productImageInput =
+        document.getElementById("image");
 
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+    const productImagePreview =
+        document.getElementById("productImagePreview");
 
-</body>
+    const removeImageCheckbox =
+        document.getElementById("removeImage");
+
+    const fallbackImageUrl =
+        /*[[@{/images/products/product-fallback.png}]]*/ "";
+
+    if (productImageInput && productImagePreview) {
+        productImageInput.addEventListener("change", function () {
+            const selectedFile = this.files[0];
+
+            if (!selectedFile) {
+                return;
+            }
+
+            productImagePreview.src =
+                URL.createObjectURL(selectedFile);
+
+            if (removeImageCheckbox) {
+                removeImageCheckbox.checked = false;
+            }
+        });
+    }
+
+    if (removeImageCheckbox && productImagePreview) {
+        removeImageCheckbox.addEventListener("change", function () {
+            if (this.checked) {
+                productImagePreview.src = fallbackImageUrl;
+                productImageInput.value = "";
+            }
+        });
+    }
+</script>
+  </body>
 </html>

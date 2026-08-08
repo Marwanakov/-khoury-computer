@@ -322,24 +322,23 @@
 
 .admin-product-image {
     display: flex;
-    width: 58px;
-    height: 58px;
-    flex: 0 0 58px;
+    width: 62px;
+    height: 62px;
+    flex: 0 0 62px;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    color: #94a3b8;
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-align: center;
-    background-color: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.75rem;
+    background-color: #f8fafc;
+    border: 1px solid #dbe3ef;
+    border-radius: 0.8rem;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.08);
 }
 
 .admin-product-image img {
+    display: block;
     width: 100%;
     height: 100%;
+    padding: 0.2rem;
     object-fit: contain;
 }
 
@@ -738,5 +737,70 @@
 
     .admin-form-actions .btn {
         width: 100%;
+    }
+}
+
+/* =========================
+   Product Image Upload
+========================= */
+
+.admin-product-image-upload {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    align-items: center;
+    gap: 2rem;
+}
+
+.admin-product-image-preview {
+    width: 260px;
+    height: 230px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.12),
+            transparent 42%
+        ),
+        #f8fafc;
+    border: 1px solid #dbe3ef;
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.admin-product-image-preview img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.75rem;
+}
+
+.admin-product-image-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.admin-product-remove-image {
+    padding: 1rem 1rem 1rem 2.6rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.85rem;
+}
+
+.admin-product-remove-image .form-check-label {
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+@media (max-width: 767.98px) {
+    .admin-product-image-upload {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-product-image-preview {
+        width: 100%;
+        max-width: 360px;
     }
 }
