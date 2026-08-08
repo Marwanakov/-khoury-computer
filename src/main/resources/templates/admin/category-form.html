@@ -1,149 +1,238 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head(${formTitle}, '/css/pages/admin-categories.css')}"
+  >
+  </head>
 
-<head th:replace="~{fragments/head :: head(${formTitle}, '/css/pages/admin-categories.css')}">
-</head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<body>
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<main class="admin-category-form-page">
-
-    <section class="admin-category-form-header">
+    <main class="admin-category-form-page">
+      <section class="admin-category-form-header">
         <div class="container">
+          <a class="admin-category-back-link" th:href="@{/admin/categories}">
+            &larr; Manage Categories
+          </a>
 
-            <a class="admin-category-back-link"
-               th:href="@{/admin/categories}">
-                &larr; Manage Categories
-            </a>
+          <span class="admin-categories-label"> Category management </span>
 
-            <span class="admin-categories-label">
-                Category management
-            </span>
+          <h1 th:text="${formTitle}">Add Category</h1>
 
-            <h1 th:text="${formTitle}">
-                Add Category
-            </h1>
-
-            <p th:text="${formDescription}">
-                Create a product category.
-            </p>
-
+          <p th:text="${formDescription}">Create a product category.</p>
         </div>
-    </section>
+      </section>
 
-    <section class="admin-category-form-content">
+      <section class="admin-category-form-content">
         <div class="container">
+          <form
+            class="admin-category-form-card"
+            th:action="${formAction}"
+            th:object="${categoryForm}"
+            method="post"
+            enctype="multipart/form-data"
+            novalidate
+          >
+            <div
+              th:if="${#fields.hasGlobalErrors()}"
+              class="alert alert-danger border-0 mb-4"
+            >
+              <p
+                th:each="error : ${#fields.globalErrors()}"
+                th:text="${error}"
+                class="mb-0"
+              >
+                Category could not be saved.
+              </p>
+            </div>
 
-            <form class="admin-category-form-card"
-                  th:action="${formAction}"
-                  th:object="${categoryForm}"
-                  method="post"
-                  novalidate>
+            <div class="admin-category-form-heading">
+              <span>Category information</span>
 
-                <div th:if="${#fields.hasGlobalErrors()}"
-                     class="alert alert-danger border-0 mb-4">
+              <h2>Catalog details</h2>
 
-                    <p th:each="error : ${#fields.globalErrors()}"
-                       th:text="${error}"
-                       class="mb-0">
-                        Category could not be saved.
-                    </p>
+              <p>This information and image will appear on the Home page.</p>
+            </div>
 
-                </div>
+            <div class="mb-4">
+              <label for="name" class="form-label"> Category name </label>
 
-                <div class="admin-category-form-heading">
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                th:field="*{name}"
+                th:errorclass="is-invalid"
+                maxlength="100"
+                placeholder="Example: Printers"
+              />
 
-                    <span>Category information</span>
+              <div class="invalid-feedback" th:errors="*{name}">
+                Category name error
+              </div>
 
-                    <h2>Catalog details</h2>
+              <div class="form-text">
+                Use a short and clear customer-facing name.
+              </div>
+            </div>
 
-                    <p>
-                        The name and description will appear on the
-                        Home page and in category navigation.
-                    </p>
+            <div class="mb-4">
+              <label for="description" class="form-label"> Description </label>
 
-                </div>
+              <textarea
+                id="description"
+                class="form-control"
+                th:field="*{description}"
+                th:errorclass="is-invalid"
+                rows="5"
+                maxlength="1000"
+                placeholder="Describe the products customers can find in this category."
+              ></textarea>
 
-                <div class="mb-4">
+              <div class="invalid-feedback" th:errors="*{description}">
+                Category description error
+              </div>
 
-                    <label for="name"
-                           class="form-label">
-                        Category name
-                    </label>
+              <div class="form-text">
+                This description appears on the Home page.
+              </div>
+            </div>
 
-                    <input id="name"
-                           type="text"
-                           class="form-control"
-                           th:field="*{name}"
-                           th:errorclass="is-invalid"
-                           maxlength="100"
-                           placeholder="Example: Printers">
-
-                    <div class="invalid-feedback"
-                         th:errors="*{name}">
-                        Category name error
-                    </div>
-
-                    <div class="form-text">
-                        Use a short and clear customer-facing name.
-                    </div>
-
-                </div>
-
+            <div class="admin-category-image-section">
+              <div class="admin-category-image-heading">
                 <div>
+                  <label for="image" class="form-label"> Category image </label>
 
-                    <label for="description"
-                           class="form-label">
-                        Description
+                  <p>Upload a clear image representing this category.</p>
+                </div>
+
+                <span class="admin-category-image-optional"> Optional </span>
+              </div>
+
+              <div class="admin-category-image-layout">
+                <div class="admin-category-image-preview">
+                  <img
+                    id="categoryImagePreview"
+                    th:if="${!#strings.isEmpty(currentImageUrl)}"
+                    th:src="${currentImageUrl}"
+                    alt="Category image preview"
+                  />
+
+                  <img
+                    id="categoryImagePreview"
+                    th:if="${#strings.isEmpty(currentImageUrl)}"
+                    th:src="@{/images/categories/category-fallback.png}"
+                    alt="Default category image"
+                  />
+                </div>
+
+                <div class="admin-category-image-controls">
+                  <input
+                    id="image"
+                    type="file"
+                    class="form-control"
+                    th:field="*{image}"
+                    th:errorclass="is-invalid"
+                    accept="image/jpeg,image/png,image/webp"
+                  />
+
+                  <div class="invalid-feedback" th:errors="*{image}">
+                    Category image error
+                  </div>
+
+                  <div class="form-text">
+                    JPG, PNG, or WebP. Maximum size: 5 MB.
+                  </div>
+
+                  <div
+                    class="form-check mt-3"
+                    th:if="${!#strings.isEmpty(currentImageUrl)}"
+                  >
+                    <input
+                      id="removeImage"
+                      type="checkbox"
+                      class="form-check-input"
+                      th:field="*{removeImage}"
+                    />
+
+                    <label for="removeImage" class="form-check-label">
+                      Remove the current image
                     </label>
-
-                    <textarea id="description"
-                              class="form-control"
-                              th:field="*{description}"
-                              th:errorclass="is-invalid"
-                              rows="5"
-                              maxlength="1000"
-                              placeholder="Describe the products customers can find in this category."></textarea>
-
-                    <div class="invalid-feedback"
-                         th:errors="*{description}">
-                        Category description error
-                    </div>
-
-                    <div class="form-text">
-                        This description will appear on the Home page
-                        category card.
-                    </div>
-
+                  </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="admin-category-form-actions">
+            <div class="admin-category-form-actions">
+              <a
+                class="btn btn-outline-secondary"
+                th:href="@{/admin/categories}"
+              >
+                Cancel
+              </a>
 
-                    <a class="btn btn-outline-secondary"
-                       th:href="@{/admin/categories}">
-                        Cancel
-                    </a>
-
-                    <button type="submit"
-                            class="btn btn-khoury"
-                            th:text="${submitLabel}">
-                        Save Category
-                    </button>
-
-                </div>
-
-            </form>
-
+              <button
+                type="submit"
+                class="btn btn-khoury"
+                th:text="${submitLabel}"
+              >
+                Save Category
+              </button>
+            </div>
+          </form>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+    <script th:inline="javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        const imageInput = document.getElementById("image");
 
-</body>
+        const preview = document.getElementById("categoryImagePreview");
+
+        const removeCheckbox = document.getElementById("removeImage");
+
+        const fallbackUrl =
+          /*[[@{/images/categories/category-fallback.png}]]*/ "";
+
+        if (!imageInput || !preview) {
+          return;
+        }
+
+        let selectedPreviewUrl = null;
+
+        imageInput.addEventListener("change", function () {
+          const selectedFile = imageInput.files[0];
+
+          if (!selectedFile) {
+            return;
+          }
+
+          if (selectedPreviewUrl) {
+            URL.revokeObjectURL(selectedPreviewUrl);
+          }
+
+          selectedPreviewUrl = URL.createObjectURL(selectedFile);
+
+          preview.src = selectedPreviewUrl;
+
+          if (removeCheckbox) {
+            removeCheckbox.checked = false;
+          }
+        });
+
+        if (removeCheckbox) {
+          removeCheckbox.addEventListener("change", function () {
+            if (removeCheckbox.checked) {
+              imageInput.value = "";
+              preview.src = fallbackUrl;
+            }
+          });
+        }
+      });
+    </script>
+  </body>
 </html>

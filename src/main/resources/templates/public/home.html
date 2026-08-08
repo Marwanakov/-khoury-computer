@@ -1,231 +1,256 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head('Home', '/css/pages/home.css')}"></head>
+  <head
+    th:replace="~{fragments/head :: head('Home', '/css/pages/home.css')}"
+  ></head>
 
-<body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<main>
-
-    <!-- Hero Section -->
-    <section class="home-hero">
+    <main>
+      <!-- Hero Section -->
+      <section class="home-hero">
         <div class="container">
-            <div class="row align-items-center g-5">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+              <span class="badge hero-label rounded-pill px-3 py-2 mb-3">
+                Local computer shop & repair support
+              </span>
 
-                <div class="col-lg-6">
-                    <span class="badge hero-label rounded-pill px-3 py-2 mb-3">
-                        Local computer shop & repair support
-                    </span>
+              <h1 class="hero-title mb-3">
+                Computers, accessories, and repair support in one place.
+              </h1>
 
-                    <h1 class="hero-title mb-3">
-                        Computers, accessories, and repair support in one place.
-                    </h1>
+              <p class="hero-text mb-4">
+                Browse laptops, screens, accessories, chargers, USB devices,
+                networking products, and gaming devices from Khoury Computer.
+              </p>
 
-                    <p class="hero-text mb-4">
-                        Browse laptops, screens, accessories, chargers, USB devices, networking products,
-                        and gaming devices from Khoury Computer.
-                    </p>
+              <div class="d-flex flex-column flex-sm-row gap-3">
+                <a class="btn btn-khoury btn-lg" th:href="@{/products}">
+                  Shop Products
+                </a>
 
-                    <div class="d-flex flex-column flex-sm-row gap-3">
-                        <a class="btn btn-khoury btn-lg" th:href="@{/products}">
-                            Shop Products
-                        </a>
-
-                        <a class="btn btn-outline-dark btn-lg rounded-pill px-4" th:href="@{/contact}">
-                            Repair Support
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="hero-visual-card">
-                        <div class="hero-device-card hero-device-main">
-                            <div class="hero-device-screen"></div>
-                            <div class="hero-device-line w-75"></div>
-                            <div class="hero-device-line w-50"></div>
-                        </div>
-
-                        <div class="hero-floating-card hero-floating-top">
-                            <span class="fw-bold">Laptops</span>
-                            <small class="text-muted">Work, study, gaming</small>
-                        </div>
-
-                        <div class="hero-floating-card hero-floating-bottom">
-                            <span class="fw-bold">Repair</span>
-                            <small class="text-muted">Contact the shop</small>
-                        </div>
-                    </div>
-                </div>
-
+                <a
+                  class="btn btn-outline-dark btn-lg rounded-pill px-4"
+                  th:href="@{/contact}"
+                >
+                  Repair Support
+                </a>
+              </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Service Badges -->
-    <section class="container mt-4">
+            <div class="col-lg-6">
+              <div class="hero-visual-card">
+                <img
+                  class="hero-visual-image"
+                  th:src="@{/images/home/computer-shop-hero.png}"
+                  alt="Laptop, computer accessories, components, and repair tools"
+                />
+
+                <div class="hero-visual-overlay"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Service Highlights -->
+      <section class="container mt-4">
         <div class="service-strip">
-            <div class="service-item">
-                <div class="service-icon">01</div>
-                <div>
-                    <h6>Local Support</h6>
-                    <p>Contact the shop directly.</p>
-                </div>
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M4 13a8 8 0 0 1 16 0"></path>
+                <path d="M4 13v5a2 2 0 0 0 2 2h2v-7H4z"></path>
+                <path d="M20 13v5a2 2 0 0 1-2 2h-2v-7h4z"></path>
+                <path d="M16 20c0 1.1-.9 2-2 2h-2"></path>
+              </svg>
             </div>
 
-            <div class="service-item">
-                <div class="service-icon">02</div>
-                <div>
-                    <h6>Repair Services</h6>
-                    <p>Laptop and computer support.</p>
-                </div>
+            <div>
+              <h6>Local Support</h6>
+              <p>Contact the shop directly.</p>
+            </div>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14.7 6.3a4 4 0 0 0-5-5L7.4 3.6l3 3-5.9 5.9a2.1 2.1 0 0 0 3 3l5.9-5.9 3 3 2.3-2.3a4 4 0 0 0 0-5.6"
+                ></path>
+                <path d="M14 14l7 7"></path>
+              </svg>
             </div>
 
-            <div class="service-item">
-                <div class="service-icon">03</div>
-                <div>
-                    <h6>Order Requests</h6>
-                    <p>Submit online, confirm later.</p>
-                </div>
+            <div>
+              <h6>Repair Services</h6>
+              <p>Laptop and computer support.</p>
+            </div>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 5h6"></path>
+                <path
+                  d="M9 3h6a2 2 0 0 1 2 2v1h2v16H5V6h2V5a2 2 0 0 1 2-2z"
+                ></path>
+                <path d="M9 13l2 2 4-4"></path>
+              </svg>
             </div>
 
-            <div class="service-item">
-                <div class="service-icon">04</div>
-                <div>
-                    <h6>Product Help</h6>
-                    <p>Ask before you buy.</p>
-                </div>
+            <div>
+              <h6>Order Requests</h6>
+              <p>Submit online, confirm later.</p>
             </div>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"
+                ></path>
+                <path d="M8 9h8"></path>
+                <path d="M8 13h5"></path>
+              </svg>
+            </div>
+
+            <div>
+              <h6>Product Help</h6>
+              <p>Ask before you buy.</p>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-   <!-- Shop By Category -->
-<section class="container py-5">
-
-    <div class="d-flex flex-column flex-md-row
-                justify-content-between align-items-md-end
-                gap-3 mb-4">
-
-        <div>
-            <h2 class="section-title mb-2">
-                Shop by category
-            </h2>
+      <!-- Shop By Category -->
+      <section class="container py-5">
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4"
+        >
+          <div>
+            <h2 class="section-title mb-2">Shop by category</h2>
 
             <p class="text-muted mb-0">
-                Browse the product categories available from
-                Khoury Computer.
+              Browse the product categories available from Khoury Computer.
             </p>
-        </div>
+          </div>
 
-        <a class="btn btn-outline-primary rounded-pill px-4"
-           th:href="@{/products}">
+          <a
+            class="btn btn-outline-primary rounded-pill px-4"
+            th:href="@{/products}"
+          >
             View All Products
-        </a>
-
-    </div>
-
-    <!-- No categories -->
-    <div th:if="${#lists.isEmpty(categories)}"
-         class="home-categories-empty">
-
-        <strong>No product categories are available yet.</strong>
-
-        <p>
-            Browse all products or contact the store for assistance.
-        </p>
-
-        <a class="btn btn-khoury"
-           th:href="@{/products}">
-            Browse Products
-        </a>
-
-    </div>
-
-    <!-- Dynamic categories -->
-    <div th:if="${!#lists.isEmpty(categories)}"
-         class="row g-4">
-
-        <div class="col-6 col-md-4 col-lg-3"
-             th:each="category : ${categories}">
-
-            <a class="category-card"
-               th:href="@{/products(
-                   categoryId=${category.id()}
-               )}">
-
-                <div class="category-card-icon"
-                     th:text="${#strings.toUpperCase(
-                         #strings.substring(
-                             category.name(),
-                             0,
-                             1
-                         )
-                     )}">
-                    C
-                </div>
-
-                <h5 th:text="${category.name()}">
-                    Category
-                </h5>
-
-                <p th:if="${!#strings.isEmpty(
-                    category.description()
-                )}"
-                   th:text="${category.description()}">
-                    Category description
-                </p>
-
-                <p th:if="${#strings.isEmpty(
-                    category.description()
-                )}"
-                   class="category-card-fallback">
-                    Browse products available in this category.
-                </p>
-
-            </a>
-
+          </a>
         </div>
 
-        <!-- Permanent repair-services card -->
-        <div class="col-6 col-md-4 col-lg-3">
+        <!-- No categories -->
+        <div
+          th:if="${#lists.isEmpty(categories)}"
+          class="home-categories-empty"
+        >
+          <strong>No product categories are available yet.</strong>
 
-            <a class="category-card category-service-card"
-               th:href="@{/contact}">
+          <p>Browse all products or contact the store for assistance.</p>
 
-                <div class="category-card-icon">RS</div>
-
-                <h5>Repair Services</h5>
-
-                <p>
-                    Contact us for laptop and computer repair.
-                </p>
-
-            </a>
-
+          <a class="btn btn-khoury" th:href="@{/products}"> Browse Products </a>
         </div>
 
-    </div>
+        <!-- Dynamic categories -->
+        <div th:if="${!#lists.isEmpty(categories)}" class="row g-4">
+          <div
+            class="col-6 col-md-4 col-lg-3"
+            th:each="category : ${categories}"
+          >
+            <a
+              class="category-card"
+              th:href="@{/products(categoryId=${category.id()})}"
+            >
+              <div class="category-card-media">
+                <img
+                  th:if="${!#strings.isEmpty(category.imageUrl())}"
+                  th:src="${category.imageUrl()}"
+                  th:alt="|${category.name()} category|"
+                  loading="lazy"
+                />
 
-</section>
+                <img
+                  th:if="${#strings.isEmpty(category.imageUrl())}"
+                  th:src="@{/images/categories/category-fallback.png}"
+                  th:alt="|${category.name()} category|"
+                  loading="lazy"
+                />
+              </div>
 
-    <!-- Featured products placeholder for later -->
-    <section class="container pb-5">
+              <div class="category-card-content">
+                <h5 th:text="${category.name()}">Category</h5>
+
+                <p
+                  th:if="${!#strings.isEmpty(category.description())}"
+                  th:text="${category.description()}"
+                >
+                  Category description
+                </p>
+
+                <p
+                  th:if="${#strings.isEmpty(category.description())}"
+                  class="category-card-fallback"
+                >
+                  Browse products available in this category.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured products placeholder for later -->
+      <section class="container pb-5">
         <div class="coming-section">
-            <div>
-                <h2 class="section-title mb-2">Featured products</h2>
-                <p class="text-muted mb-0">
-                    This section will show real products from the database later.
-                </p>
-            </div>
+          <div>
+            <h2 class="section-title mb-2">Featured products</h2>
+            <p class="text-muted mb-0">
+              This section will show real products from the database later.
+            </p>
+          </div>
 
-            <a class="btn btn-khoury" th:href="@{/products}">
-                Browse Products
-            </a>
+          <a class="btn btn-khoury" th:href="@{/products}"> Browse Products </a>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
-<div th:replace="~{fragments/footer :: bootstrapScript}"></div>
-</body>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+  </body>
 </html>

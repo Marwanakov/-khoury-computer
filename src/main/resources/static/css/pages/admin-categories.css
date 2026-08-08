@@ -304,18 +304,22 @@
     align-items: center;
     gap: 0.9rem;
 }
-
-.admin-category-icon {
-    display: flex;
-    width: 46px;
-    height: 46px;
-    flex: 0 0 46px;
-    align-items: center;
-    justify-content: center;
-    color: #1d4ed8;
-    font-weight: 950;
-    background-color: #dbeafe;
+.admin-category-thumbnail {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    overflow: hidden;
+    background-color: #eff6ff;
+    border: 1px solid #dbe3ef;
     border-radius: 0.85rem;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.08);
+}
+
+.admin-category-thumbnail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .admin-category-identity strong {
@@ -530,4 +534,84 @@
     background-color: #f1f5f9;
     border-radius: 0.65rem;
     white-space: nowrap;
+}
+
+/* =========================
+   Category Image Upload
+========================= */
+
+.admin-category-image-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.admin-category-image-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.admin-category-image-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.admin-category-image-optional {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 0.35rem 0.65rem;
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 850;
+    background-color: #f1f5f9;
+    border-radius: 999px;
+}
+
+.admin-category-image-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.admin-category-image-preview {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            145deg,
+            #eff6ff,
+            #f8fafc
+        );
+    border: 1px solid #dbe3ef;
+    border-radius: 1rem;
+}
+
+.admin-category-image-preview img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.admin-category-image-controls .form-check-label {
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 750;
+}
+
+@media (max-width: 767.98px) {
+    .admin-category-image-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-category-image-preview {
+        width: 100%;
+        max-width: 360px;
+    }
 }
