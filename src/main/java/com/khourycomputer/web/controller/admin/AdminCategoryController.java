@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.khourycomputer.application.exception.InvalidImageException;
+import com.khourycomputer.application.port.storage.ImageUpload;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -125,11 +131,16 @@ public class AdminCategoryController {
                 }
 
                 try {
+                        ImageUpload imageUpload = toImageUpload(
+                                        categoryForm.getImage());
+
                         CategoryResponse category = categoryApplicationService.createCategory(
                                         new CreateCategoryRequest(
                                                         categoryForm.getName().trim(),
                                                         normalizeDescription(
-                                                                        categoryForm.getDescription())));
+                                                                        categoryForm
+                                                                                        .getDescription())),
+                                        imageUpload);
 
                         redirectAttributes.addFlashAttribute(
                                         "successMessage",
@@ -138,13 +149,21 @@ public class AdminCategoryController {
 
                         return "redirect:/admin/categories";
 
+                } catch (InvalidImageException exception) {
+                        bindingResult.rejectValue(
+                                        "image",
+                                        "category.image.invalid",
+                                        exception.getMessage());
+
+                        prepareCreateForm(model);
+                        return "admin/category-form";
+
                 } catch (IllegalArgumentException exception) {
                         handleCategoryError(
                                         exception,
                                         bindingResult);
 
                         prepareCreateForm(model);
-
                         return "admin/category-form";
                 }
         }
@@ -162,10 +181,12 @@ public class AdminCategoryController {
                         form.setName(category.name());
                         form.setDescription(category.description());
 
-                        model.addAttribute("categoryForm", form);
+                        model.addAttribute(
+                                        "categoryForm",
+                                        form);
                 }
 
-                prepareEditForm(model, categoryId);
+                prepareEditForm(model, category);
 
                 return "admin/category-form";
         }
@@ -177,18 +198,32 @@ public class AdminCategoryController {
                         BindingResult bindingResult,
                         Model model,
                         RedirectAttributes redirectAttributes) {
+                CategoryResponse existingCategory = categoryApplicationService
+                                .getCategoryById(categoryId);
+
                 if (bindingResult.hasErrors()) {
-                        prepareEditForm(model, categoryId);
+                        prepareEditForm(
+                                        model,
+                                        existingCategory);
+
                         return "admin/category-form";
                 }
 
                 try {
+                        ImageUpload imageUpload = toImageUpload(
+                                        categoryForm.getImage());
+
                         CategoryResponse category = categoryApplicationService.updateCategory(
                                         categoryId,
                                         new UpdateCategoryRequest(
-                                                        categoryForm.getName().trim(),
+                                                        categoryForm
+                                                                        .getName()
+                                                                        .trim(),
                                                         normalizeDescription(
-                                                                        categoryForm.getDescription())));
+                                                                        categoryForm
+                                                                                        .getDescription())),
+                                        imageUpload,
+                                        categoryForm.isRemoveImage());
 
                         redirectAttributes.addFlashAttribute(
                                         "successMessage",
@@ -197,12 +232,26 @@ public class AdminCategoryController {
 
                         return "redirect:/admin/categories";
 
+                } catch (InvalidImageException exception) {
+                        bindingResult.rejectValue(
+                                        "image",
+                                        "category.image.invalid",
+                                        exception.getMessage());
+
+                        prepareEditForm(
+                                        model,
+                                        existingCategory);
+
+                        return "admin/category-form";
+
                 } catch (IllegalArgumentException exception) {
                         handleCategoryError(
                                         exception,
                                         bindingResult);
 
-                        prepareEditForm(model, categoryId);
+                        prepareEditForm(
+                                        model,
+                                        existingCategory);
 
                         return "admin/category-form";
                 }
@@ -217,53 +266,74 @@ public class AdminCategoryController {
         }
 
         @PostMapping("/admin/categories/{categoryId}/delete")
-public String deleteCategory(
-        @PathVariable Long categoryId,
-        RedirectAttributes redirectAttributes
-) {
-    try {
-        CategoryResponse category =
-                categoryApplicationService
-                        .getCategoryById(categoryId);
+        public String deleteCategory(
+                        @PathVariable Long categoryId,
+                        RedirectAttributes redirectAttributes) {
+                try {
+                        CategoryResponse category = categoryApplicationService
+                                        .getCategoryById(categoryId);
 
-        categoryApplicationService.deleteCategory(categoryId);
+                        categoryApplicationService.deleteCategory(categoryId);
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Category \"" + category.name()
-                        + "\" was deleted successfully."
-        );
+                        redirectAttributes.addFlashAttribute(
+                                        "successMessage",
+                                        "Category \"" + category.name()
+                                                        + "\" was deleted successfully.");
 
-    } catch (IllegalStateException exception) {
-        redirectAttributes.addFlashAttribute(
-                "errorMessage",
-                exception.getMessage()
-        );
-    }
+                } catch (IllegalStateException exception) {
+                        redirectAttributes.addFlashAttribute(
+                                        "errorMessage",
+                                        exception.getMessage());
+                }
 
-    return "redirect:/admin/categories";
-}
+                return "redirect:/admin/categories";
+        }
 
         private void prepareCreateForm(Model model) {
-                model.addAttribute("formTitle", "Add Category");
+                model.addAttribute(
+                                "formTitle",
+                                "Add Category");
+
                 model.addAttribute(
                                 "formDescription",
                                 "Create a new product category for the store.");
-                model.addAttribute("submitLabel", "Create Category");
-                model.addAttribute("formAction", "/admin/categories");
+
+                model.addAttribute(
+                                "submitLabel",
+                                "Create Category");
+
+                model.addAttribute(
+                                "formAction",
+                                "/admin/categories");
+
+                model.addAttribute(
+                                "currentImageUrl",
+                                "");
         }
 
         private void prepareEditForm(
                         Model model,
-                        Long categoryId) {
-                model.addAttribute("formTitle", "Edit Category");
+                        CategoryResponse category) {
+                model.addAttribute(
+                                "formTitle",
+                                "Edit Category");
+
                 model.addAttribute(
                                 "formDescription",
-                                "Update the category name and description.");
-                model.addAttribute("submitLabel", "Save Changes");
+                                "Update the category information and storefront image.");
+
+                model.addAttribute(
+                                "submitLabel",
+                                "Save Changes");
+
                 model.addAttribute(
                                 "formAction",
-                                "/admin/categories/" + categoryId);
+                                "/admin/categories/"
+                                                + category.id());
+
+                model.addAttribute(
+                                "currentImageUrl",
+                                category.imageUrl());
         }
 
         private void handleCategoryError(
@@ -314,5 +384,23 @@ public String deleteCategory(
                 return description == null
                                 ? ""
                                 : description.trim();
+        }
+
+        private ImageUpload toImageUpload(
+                        MultipartFile multipartFile) {
+                if (multipartFile == null
+                                || multipartFile.isEmpty()) {
+                        return ImageUpload.empty();
+                }
+
+                try {
+                        return new ImageUpload(
+                                        multipartFile.getBytes());
+
+                } catch (IOException exception) {
+                        throw new InvalidImageException(
+                                        "The selected image could not be read.",
+                                        exception);
+                }
         }
 }

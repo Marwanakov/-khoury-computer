@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryMapper {
 
-    public Category toDomain(CategoryEntity categoryEntity) {
+    public Category toDomain(
+            CategoryEntity categoryEntity
+    ) {
         if (categoryEntity == null) {
             return null;
         }
@@ -15,7 +17,8 @@ public class CategoryMapper {
         return new Category(
                 categoryEntity.id(),
                 categoryEntity.name(),
-                categoryEntity.description()
+                categoryEntity.description(),
+                categoryEntity.imageUrl()
         );
     }
 
@@ -27,7 +30,8 @@ public class CategoryMapper {
         return new CategoryEntity(
                 category.getId(),
                 category.getName(),
-                category.getDescription()
+                category.getDescription(),
+                category.getImageUrl()
         );
     }
 }

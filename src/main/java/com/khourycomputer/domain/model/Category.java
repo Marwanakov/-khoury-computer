@@ -7,11 +7,18 @@ public class Category {
     private Long id;
     private String name;
     private String description;
+    private String imageUrl;
 
-    public Category(Long id, String name, String description) {
+    public Category(
+            Long id,
+            String name,
+            String description,
+            String imageUrl
+    ) {
         setId(id);
         setName(name);
         setDescription(description);
+        setImageUrl(imageUrl);
     }
 
     public Long getId() {
@@ -26,6 +33,10 @@ public class Category {
         return description;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public void rename(String name) {
         setName(name);
     }
@@ -34,21 +45,33 @@ public class Category {
         setDescription(description);
     }
 
+    public void changeImageUrl(String imageUrl) {
+        setImageUrl(imageUrl);
+    }
+
     private void setId(Long id) {
         this.id = id;
     }
 
-    // name cannot be empty because a category without a name makes no sense.
     private void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Category name cannot be empty.");
+            throw new IllegalArgumentException(
+                    "Category name cannot be empty."
+            );
         }
 
         this.name = name.trim();
     }
 
-    // description can be empty, so we safely convert null to "".
     private void setDescription(String description) {
-        this.description = Objects.requireNonNullElse(description, "").trim();
+        this.description = Objects
+                .requireNonNullElse(description, "")
+                .trim();
+    }
+
+    private void setImageUrl(String imageUrl) {
+        this.imageUrl = Objects
+                .requireNonNullElse(imageUrl, "")
+                .trim();
     }
 }

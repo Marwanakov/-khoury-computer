@@ -2,6 +2,7 @@ package com.khourycomputer.web.viewmodel.admin;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 public class AdminCategoryForm {
 
@@ -18,6 +19,13 @@ public class AdminCategoryForm {
     )
     private String description;
 
+    /*
+     * MultipartFile stays exclusively in the web layer.
+     */
+    private MultipartFile image;
+
+    private boolean removeImage;
+
     public String getName() {
         return name;
     }
@@ -32,5 +40,21 @@ public class AdminCategoryForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
+
+    public boolean isRemoveImage() {
+        return removeImage;
+    }
+
+    public void setRemoveImage(boolean removeImage) {
+        this.removeImage = removeImage;
     }
 }
