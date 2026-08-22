@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 
 @Configuration
 public class SecurityConfig {
@@ -15,7 +16,14 @@ public class SecurityConfig {
                         HttpSecurity http,
                         PendingCartAuthenticationSuccessHandler successHandler) throws Exception {
 
+                XorCsrfTokenRequestAttributeHandler csrfRequestHandler = new XorCsrfTokenRequestAttributeHandler();
+
+                csrfRequestHandler.setCsrfRequestAttributeName(null);
+
                 return http
+
+                                .csrf(csrf -> csrf
+                                                .csrfTokenRequestHandler(csrfRequestHandler))
                                 .authorizeHttpRequests(auth -> auth
 
                                                 // Public pages and resources
