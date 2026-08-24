@@ -126,12 +126,6 @@
     align-items: center;
 }
 
-.quantity-input {
-    max-width: 90px;
-    border-radius: 999px;
-    text-align: center;
-}
-
 @media (max-width: 767px) {
     .product-details-image-card,
     .product-details-image,
@@ -154,10 +148,6 @@
 
     .product-details-actions .btn {
         width: 100%;
-    }
-
-    .quantity-input {
-        max-width: 100%;
     }
 }
 
@@ -186,20 +176,6 @@
     gap: 0.75rem;
 }
 
-.product-add-cart-form .quantity-input {
-    width: 82px;
-    height: 48px;
-    padding: 0.65rem;
-    text-align: center;
-    border-color: #dbe2ea;
-    border-radius: 0.75rem;
-}
-
-.product-add-cart-form .quantity-input:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12);
-}
-
 .product-add-cart-form .btn {
     min-width: 145px;
     height: 48px;
@@ -215,5 +191,113 @@
 
     .product-add-cart-form .btn {
         flex: 1;
+    }
+}
+
+/* =========================
+   Number Stepper
+========================= */
+
+.number-stepper {
+    display: grid;
+    grid-template-columns: 38px 52px 38px;
+    width: 128px;
+    height: 42px;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #dbe2ea;
+    border-radius: 0.75rem;
+}
+
+.number-stepper:focus-within {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 0.18rem rgba(37, 99, 235, 0.12);
+}
+
+.number-stepper-btn {
+    display: flex;
+    width: 38px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #1d4ed8;
+    font-size: 1.05rem;
+    font-weight: 900;
+    line-height: 1;
+    background-color: #eff6ff;
+    border: 0;
+    cursor: pointer;
+}
+
+.number-stepper-btn:hover {
+    color: #ffffff;
+    background-color: #2563eb;
+}
+
+.number-stepper-btn:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+}
+
+.number-stepper-input.form-control {
+    width: 52px;
+    min-width: 0;
+    min-height: 0;
+    height: 40px;
+    padding: 0.25rem;
+    text-align: center;
+    border: 0;
+    border-right: 1px solid #dbe2ea;
+    border-left: 1px solid #dbe2ea;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.number-stepper-input.form-control:focus {
+    border-color: #dbe2ea;
+    box-shadow: none;
+}
+
+.number-stepper-input::-webkit-inner-spin-button,
+.number-stepper-input::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+}
+
+.number-stepper-input {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+@media (max-width: 767px) {
+    .product-details-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .product-details-actions form {
+        width: 100%;
+    }
+
+    .product-details-actions .product-add-cart-form {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .product-add-cart-form .btn {
+        width: auto;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .product-details-actions > .btn {
+        width: auto;
+        min-width: 160px;
+        padding-right: 1.25rem;
+        padding-left: 1.25rem;
     }
 }

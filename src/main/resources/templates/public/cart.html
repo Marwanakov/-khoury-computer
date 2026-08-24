@@ -140,13 +140,34 @@
                         th:value="${item.productId()}"
                       />
 
-                      <input
-                        type="number"
-                        name="quantity"
-                        min="1"
-                        class="form-control cart-quantity-input"
-                        th:value="${item.quantity()}"
-                      />
+                      <div class="number-stepper">
+                        <button
+                          type="button"
+                          class="number-stepper-btn"
+                          data-stepper-action="decrease"
+                          aria-label="Decrease quantity"
+                        >
+                          &minus;
+                        </button>
+
+                        <input
+                          type="number"
+                          name="quantity"
+                          min="1"
+                          step="1"
+                          class="form-control number-stepper-input cart-quantity-input"
+                          th:value="${item.quantity()}"
+                        />
+
+                        <button
+                          type="button"
+                          class="number-stepper-btn"
+                          data-stepper-action="increase"
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
+                      </div>
 
                       <button
                         type="submit"
@@ -248,5 +269,6 @@
 
     <div th:replace="~{fragments/footer :: footer}"></div>
     <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+    <script th:src="@{/js/number-stepper.js}"></script>
   </body>
 </html>

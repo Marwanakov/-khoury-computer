@@ -165,16 +165,36 @@
                     Stock quantity
                   </label>
 
-                  <input
-                    id="stockQuantity"
-                    type="number"
-                    class="form-control"
-                    th:field="*{stockQuantity}"
-                    th:errorclass="is-invalid"
-                    min="0"
-                    step="1"
-                    placeholder="0"
-                  />
+                  <div class="number-stepper">
+                    <button
+                      type="button"
+                      class="number-stepper-btn"
+                      data-stepper-action="decrease"
+                      aria-label="Decrease stock quantity"
+                    >
+                      &minus;
+                    </button>
+
+                    <input
+                      id="stockQuantity"
+                      type="number"
+                      class="form-control number-stepper-input"
+                      th:field="*{stockQuantity}"
+                      th:errorclass="is-invalid"
+                      min="0"
+                      step="1"
+                      placeholder="0"
+                    />
+
+                    <button
+                      type="button"
+                      class="number-stepper-btn"
+                      data-stepper-action="increase"
+                      aria-label="Increase stock quantity"
+                    >
+                      +
+                    </button>
+                  </div>
 
                   <div class="invalid-feedback" th:errors="*{stockQuantity}">
                     Stock quantity error
@@ -349,43 +369,42 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
     <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
     <script th:inline="javascript">
-    const productImageInput =
-        document.getElementById("image");
+      const productImageInput = document.getElementById("image");
 
-    const productImagePreview =
-        document.getElementById("productImagePreview");
+      const productImagePreview = document.getElementById(
+        "productImagePreview",
+      );
 
-    const removeImageCheckbox =
-        document.getElementById("removeImage");
+      const removeImageCheckbox = document.getElementById("removeImage");
 
-    const fallbackImageUrl =
+      const fallbackImageUrl =
         /*[[@{/images/products/product-fallback.png}]]*/ "";
 
-    if (productImageInput && productImagePreview) {
+      if (productImageInput && productImagePreview) {
         productImageInput.addEventListener("change", function () {
-            const selectedFile = this.files[0];
+          const selectedFile = this.files[0];
 
-            if (!selectedFile) {
-                return;
-            }
+          if (!selectedFile) {
+            return;
+          }
 
-            productImagePreview.src =
-                URL.createObjectURL(selectedFile);
+          productImagePreview.src = URL.createObjectURL(selectedFile);
 
-            if (removeImageCheckbox) {
-                removeImageCheckbox.checked = false;
-            }
+          if (removeImageCheckbox) {
+            removeImageCheckbox.checked = false;
+          }
         });
-    }
+      }
 
-    if (removeImageCheckbox && productImagePreview) {
+      if (removeImageCheckbox && productImagePreview) {
         removeImageCheckbox.addEventListener("change", function () {
-            if (this.checked) {
-                productImagePreview.src = fallbackImageUrl;
-                productImageInput.value = "";
-            }
+          if (this.checked) {
+            productImagePreview.src = fallbackImageUrl;
+            productImageInput.value = "";
+          }
         });
-    }
-</script>
+      }
+    </script>
+    <script th:src="@{/js/number-stepper.js}"></script>
   </body>
 </html>
