@@ -105,6 +105,7 @@ public class CartController {
                         @RequestParam Long productId,
                         @RequestParam int quantity,
                         RedirectAttributes redirectAttributes) {
+
                 Long currentUserId = currentUserService.getCurrentUserId();
 
                 try {
@@ -113,10 +114,6 @@ public class CartController {
                                         new UpdateCartItemQuantityRequest(
                                                         productId,
                                                         quantity));
-
-                        redirectAttributes.addFlashAttribute(
-                                        "successMessage",
-                                        "Cart quantity updated successfully.");
 
                 } catch (IllegalArgumentException exception) {
                         redirectAttributes.addFlashAttribute(

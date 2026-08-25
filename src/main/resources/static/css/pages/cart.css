@@ -180,15 +180,19 @@
     gap: 0.5rem;
 }
 
+.cart-quantity-form.is-updating {
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+.cart-quantity-form.is-updating .number-stepper {
+    cursor: wait;
+}
+
 .cart-quantity-form .number-stepper {
     flex: 0 0 128px;
 }
 
-.cart-quantity-form .btn {
-    flex-shrink: 0;
-    padding-right: 0.85rem;
-    padding-left: 0.85rem;
-}
 
 
 .cart-item-subtotal {
