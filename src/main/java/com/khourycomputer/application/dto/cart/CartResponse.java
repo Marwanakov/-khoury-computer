@@ -9,4 +9,11 @@ public record CartResponse(
         List<CartItemResponse> items,
         BigDecimal totalPrice
 ) {
+
+    public boolean hasStockIssues() {
+        return items.stream()
+                .anyMatch(item ->
+                        item.quantity() > item.stockQuantity()
+                                || item.stockQuantity() <= 0);
+    }
 }

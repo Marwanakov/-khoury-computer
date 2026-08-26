@@ -77,7 +77,14 @@
         >
           <div class="col-lg-8">
             <div class="d-flex flex-column gap-3">
-              <div class="cart-item-card" th:each="item : ${cart.items()}">
+              <div
+                class="cart-item-card"
+                th:each="item : ${cart.items()}"
+                th:data-product-url="@{/products/{id}(id=${item.productId()})}"
+                th:aria-label="|View ${item.productName()} details|"
+                role="link"
+                tabindex="0"
+              >
                 <a
                   class="cart-item-image-link"
                   th:href="@{/products/{id}(id=${item.productId()})}"
@@ -107,14 +114,6 @@
                       Product name
                     </a>
                   </h5>
-
-                  <a
-                    class="cart-view-product-link"
-                    th:href="@{/products/{id}(id=${item.productId()})}"
-                  >
-                    View Product
-                    <span aria-hidden="true">&rarr;</span>
-                  </a>
 
                   <div class="cart-unit-price mb-3">
                     <span class="cart-price-label">Unit price</span>
@@ -154,6 +153,7 @@
                           type="number"
                           name="quantity"
                           min="1"
+                          th:max="${item.stockQuantity()}"
                           step="1"
                           class="form-control number-stepper-input cart-quantity-input"
                           th:value="${item.quantity()}"
@@ -185,6 +185,33 @@
                       </button>
                     </form>
                   </div>
+
+                  <p
+                    th:if="${item.stockQuantity() > 0
+           and item.quantity() <= item.stockQuantity()
+           and item.stockQuantity() <= 5}"
+                    class="cart-stock-message cart-stock-low"
+                    th:text="|Only ${item.stockQuantity()} left|"
+                  >
+                    Only 3 left
+                  </p>
+
+                  <p
+                    th:if="${item.stockQuantity() > 0
+           and item.quantity() > item.stockQuantity()}"
+                    class="cart-stock-message cart-stock-invalid"
+                    th:text="|Only ${item.stockQuantity()} available. Reduce the quantity to continue.|"
+                  >
+                    Only 2 available. Reduce the quantity to continue.
+                  </p>
+
+                  <p
+                    th:if="${item.stockQuantity() == 0}"
+                    class="cart-stock-message cart-stock-out"
+                  >
+                    This product is sold out. Remove it from your cart to
+                    continue.
+                  </p>
                 </div>
 
                 <div class="cart-item-subtotal">
@@ -233,8 +260,21 @@
                 </strong>
               </div>
 
+              <div
+                th:if="${cart.hasStockIssues()}"
+                class="alert alert-warning border-0 small"
+                role="alert"
+              >
+                Update or remove the highlighted cart items before submitting
+                your order.
+              </div>
+
               <form th:action="@{/orders/submit}" method="post" class="mt-4">
-                <button type="submit" class="btn btn-khoury w-100">
+                <button
+                  type="submit"
+                  class="btn btn-khoury w-100"
+                  th:disabled="${cart.hasStockIssues()}"
+                >
                   Submit Order Request
                 </button>
               </form>

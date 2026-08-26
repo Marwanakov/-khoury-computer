@@ -886,3 +886,14 @@
 .admin-product-form-card .number-stepper {
     margin-top: 0.1rem;
 }
+
+.number-stepper-btn:disabled {
+    color: #94a3b8;
+    background-color: #f1f5f9;
+    cursor: not-allowed;
+}
+
+.number-stepper-btn:disabled:hover {
+    color: #94a3b8;
+    background-color: #f1f5f9;
+}

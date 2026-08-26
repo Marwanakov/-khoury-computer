@@ -9,6 +9,6 @@ public record CartItemResponse(
         String imageUrl,
         BigDecimal unitPrice,
         int quantity,
-        BigDecimal subtotal
-) {
+        BigDecimal subtotal,
+        int stockQuantity) {
 }
