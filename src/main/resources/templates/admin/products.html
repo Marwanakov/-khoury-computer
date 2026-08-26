@@ -137,19 +137,13 @@
                   <option value="">All statuses</option>
 
                   <option
-                    th:each="availabilityStatus
-                                    : ${availabilityStatuses}"
+                    th:each="availabilityStatus : ${availabilityStatuses}"
                     th:value="${availabilityStatus}"
-                    th:text="${#strings.replace(
-                                    availabilityStatus.name(),
-                                    '_',
-                                    ' '
-                                )}"
+                    th:text="${availabilityStatus.displayName}"
                     th:selected="${selectedStatus != null
-                                    and selectedStatus
-                                        == availabilityStatus}"
+                                    and selectedStatus == availabilityStatus}"
                   >
-                    AVAILABLE
+                    Available
                   </option>
                 </select>
               </div>
@@ -310,13 +304,9 @@
                                             == 'LOW_STOCK'
                                     } ? ' status-low-stock'
                                       : ' status-sold-out')"
-                        th:text="${#strings.replace(
-                                        product.availabilityStatus().name(),
-                                        '_',
-                                        ' '
-                                    )}"
+                        th:text="${product.availabilityStatus().displayName}"
                       >
-                        AVAILABLE
+                        Available
                       </span>
                     </td>
 

@@ -58,7 +58,7 @@
                     class="badge product-status-badge"
                     th:classappend="${product.availabilityStatus().name() == 'AVAILABLE'} ? ' status-available' :
                                                   (${product.availabilityStatus().name() == 'LOW_STOCK'} ? ' status-low-stock' : ' status-sold-out')"
-                    th:text="${product.availabilityStatus()}"
+                    th:text="${product.availabilityStatus().displayName}"
                   >
                     AVAILABLE
                   </span>
@@ -94,8 +94,29 @@
 
                 <div class="product-details-meta">
                   <div>
-                    <span class="meta-label">Stock</span>
-                    <strong th:text="${product.stockQuantity()}">0</strong>
+                    <span class="meta-label">Stock status</span>
+
+                    <strong
+                      th:if="${product.availabilityStatus().name() == 'AVAILABLE'}"
+                      class="product-stock-available"
+                    >
+                      In stock
+                    </strong>
+
+                    <strong
+                      th:if="${product.availabilityStatus().name() == 'LOW_STOCK'}"
+                      class="product-stock-low"
+                      th:text="|Only ${product.stockQuantity()} left|"
+                    >
+                      Only 3 left
+                    </strong>
+
+                    <strong
+                      th:if="${product.availabilityStatus().name() == 'SOLD_OUT'}"
+                      class="product-stock-out"
+                    >
+                      No stock remaining
+                    </strong>
                   </div>
 
                   <div>
@@ -105,9 +126,11 @@
 
                   <div>
                     <span class="meta-label">Availability</span>
-                    <strong th:text="${product.availabilityStatus()}"
-                      >AVAILABLE</strong
+                    <strong
+                      th:text="${product.availabilityStatus().displayName}"
                     >
+                      Available
+                    </strong>
                   </div>
                 </div>
 

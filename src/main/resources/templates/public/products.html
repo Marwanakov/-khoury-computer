@@ -123,7 +123,7 @@
 
                                 <label class="form-check-label"
                                        th:for="${'status-' + availabilityStatus.name()}"
-                                       th:text="${availabilityStatus}">
+                                        th:text="${availabilityStatus.displayName}">
                                     AVAILABLE
                                 </label>
                             </div>
@@ -216,7 +216,7 @@
                                         <span class="badge product-status-badge"
                                               th:classappend="${product.availabilityStatus().name() == 'AVAILABLE'} ? ' status-available' :
                                                               (${product.availabilityStatus().name() == 'LOW_STOCK'} ? ' status-low-stock' : ' status-sold-out')"
-                                              th:text="${product.availabilityStatus()}">
+                                              th:text="${product.availabilityStatus().displayName}">
                                             AVAILABLE
                                         </span>
                                     </div>
