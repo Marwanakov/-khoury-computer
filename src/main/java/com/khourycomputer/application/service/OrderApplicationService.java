@@ -21,6 +21,7 @@ import com.khourycomputer.domain.model.Product;
 import com.khourycomputer.domain.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Comparator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,6 +58,8 @@ public class OrderApplicationService {
         if (cart.isEmpty()) {
             throw new IllegalArgumentException("Cannot submit an empty cart.");
         }
+
+        validateCartStock(cart);
 
         Order order = new Order(
                 null,
@@ -107,6 +110,9 @@ public class OrderApplicationService {
 
         return orderRepository.findByUserId(userId)
                 .stream()
+                .sorted(
+                        Comparator.comparing(Order::getCreatedAt)
+                                .reversed())
                 .map(this::toResponse)
                 .toList();
     }
@@ -175,6 +181,38 @@ public class OrderApplicationService {
         }
 
         return toResponse(orderRepository.save(order));
+    }
+
+    private void validateCartStock(Cart cart) {
+        for (CartItem item : cart.getItems()) {
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new ProductNotFoundException(item.getProductId()));
+
+            int availableStock = product.getStockQuantity();
+
+            if (item.getQuantity() <= availableStock) {
+                continue;
+            }
+
+            String message;
+
+            if (availableStock == 0) {
+                message = product.getName()
+                        + " is currently sold out. Remove it from your cart to continue.";
+            } else if (availableStock == 1) {
+                message = "Only 1 unit of "
+                        + product.getName()
+                        + " is currently available. Reduce the cart quantity to continue.";
+            } else {
+                message = "Only "
+                        + availableStock
+                        + " units of "
+                        + product.getName()
+                        + " are currently available. Reduce the cart quantity to continue.";
+            }
+
+            throw new IllegalArgumentException(message);
+        }
     }
 
     private CustomerInfo createCustomerInfoSnapshot(User user) {
@@ -265,17 +303,16 @@ public class OrderApplicationService {
                 order.getTotalPrice());
     }
 
-  private OrderItemResponse toItemResponse(OrderItem item) {
-    return new OrderItemResponse(
-            item.getId(),
-            item.getProductId(),
-            item.getProductName(),
-            findCurrentProductImageUrl(item.getProductId()),
-            item.getUnitPrice(),
-            item.getQuantity(),
-            item.getSubtotal()
-    );
-}
+    private OrderItemResponse toItemResponse(OrderItem item) {
+        return new OrderItemResponse(
+                item.getId(),
+                item.getProductId(),
+                item.getProductName(),
+                findCurrentProductImageUrl(item.getProductId()),
+                item.getUnitPrice(),
+                item.getQuantity(),
+                item.getSubtotal());
+    }
 
     private AddressResponse toAddressResponse(Address address) {
         return new AddressResponse(
@@ -285,8 +322,8 @@ public class OrderApplicationService {
     }
 
     private String findCurrentProductImageUrl(Long productId) {
-    return productRepository.findById(productId)
-            .map(Product::getImageUrl)
-            .orElse("");
-}
+        return productRepository.findById(productId)
+                .map(Product::getImageUrl)
+                .orElse("");
+    }
 }
