@@ -6,6 +6,7 @@ import java.util.Set;
 public record UpdateProductRequest(
         String name,
         String description,
+        String specifications,
         BigDecimal price,
         String brand,
         int stockQuantity,

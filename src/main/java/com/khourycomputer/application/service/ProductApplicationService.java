@@ -56,6 +56,7 @@ public class ProductApplicationService {
                 null,
                 request.name(),
                 request.description(),
+                cleanSpecifications(request.specifications()),
                 request.price(),
                 request.brand(),
                 request.stockQuantity(),
@@ -99,6 +100,7 @@ public class ProductApplicationService {
                 existingProduct.getId(),
                 request.name(),
                 request.description(),
+                cleanSpecifications(request.specifications()),
                 request.price(),
                 request.brand(),
                 request.stockQuantity(),
@@ -288,6 +290,7 @@ public class ProductApplicationService {
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
+                product.getSpecifications(),
                 product.getPrice(),
                 product.getBrand(),
                 product.getStockQuantity(),
@@ -411,5 +414,46 @@ public class ProductApplicationService {
                         imageStorage.delete(imageUrl);
                     }
                 });
+    }
+
+    private String cleanSpecifications(String specifications) {
+        if (specifications == null || specifications.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Technical specifications are required.");
+        }
+
+        List<String> cleanedLines = specifications
+                .lines()
+                .map(String::trim)
+                .filter(line -> !line.isBlank())
+                .toList();
+
+        for (String line : cleanedLines) {
+            int separatorIndex = line.indexOf(':');
+
+            if (separatorIndex <= 0
+                    || separatorIndex >= line.length() - 1) {
+                throw new IllegalArgumentException(
+                        "Each specification must use the format "
+                                + "\"Label: Value\". Invalid line: "
+                                + line);
+            }
+
+            String label = line
+                    .substring(0, separatorIndex)
+                    .trim();
+
+            String value = line
+                    .substring(separatorIndex + 1)
+                    .trim();
+
+            if (label.isBlank() || value.isBlank()) {
+                throw new IllegalArgumentException(
+                        "Each specification must include both "
+                                + "a label and a value.");
+            }
+        }
+
+        return String.join(System.lineSeparator(), cleanedLines);
     }
 }

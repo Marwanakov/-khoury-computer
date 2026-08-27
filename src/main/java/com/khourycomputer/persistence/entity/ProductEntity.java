@@ -17,6 +17,8 @@ public record ProductEntity(
 
         String description,
 
+        String specifications,
+
         BigDecimal price,
 
         String brand,

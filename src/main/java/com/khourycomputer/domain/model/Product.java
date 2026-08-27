@@ -13,6 +13,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
+    private String specifications;
     private BigDecimal price;
     private String brand;
     private int stockQuantity;
@@ -25,17 +26,18 @@ public class Product {
             Long id,
             String name,
             String description,
+            String specifications,
             BigDecimal price,
             String brand,
             int stockQuantity,
             ProductAvailabilityStatus availabilityStatus,
             String imageUrl,
             Long categoryId,
-            Set<String> tags
-    ) {
+            Set<String> tags) {
         setId(id);
         setName(name);
         setDescription(description);
+        setSpecifications(specifications);
         setPrice(price);
         setBrand(brand);
         setStockQuantity(stockQuantity);
@@ -55,6 +57,10 @@ public class Product {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getSpecifications() {
+        return specifications;
     }
 
     public BigDecimal getPrice() {
@@ -90,34 +96,33 @@ public class Product {
     }
 
     public void changeStockQuantity(int stockQuantity) {
-    setStockQuantity(stockQuantity);
-    refreshAvailabilityStatus();
-    }   
-
-    public void reduceStock(int quantity) {
-    validateStockAdjustmentQuantity(quantity);
-
-    if (stockQuantity < quantity) {
-        throw new IllegalStateException(
-                "Insufficient stock for product \""
-                        + name
-                        + "\". Requested: "
-                        + quantity
-                        + ", available: "
-                        + stockQuantity
-                        + "."
-        );
+        setStockQuantity(stockQuantity);
+        refreshAvailabilityStatus();
     }
 
-    stockQuantity -= quantity;
-    refreshAvailabilityStatus();
+    public void reduceStock(int quantity) {
+        validateStockAdjustmentQuantity(quantity);
+
+        if (stockQuantity < quantity) {
+            throw new IllegalStateException(
+                    "Insufficient stock for product \""
+                            + name
+                            + "\". Requested: "
+                            + quantity
+                            + ", available: "
+                            + stockQuantity
+                            + ".");
+        }
+
+        stockQuantity -= quantity;
+        refreshAvailabilityStatus();
     }
 
     public void restoreStock(int quantity) {
-    validateStockAdjustmentQuantity(quantity);
+        validateStockAdjustmentQuantity(quantity);
 
-    stockQuantity += quantity;
-    refreshAvailabilityStatus();
+        stockQuantity += quantity;
+        refreshAvailabilityStatus();
     }
 
     public void markAsSoldOut() {
@@ -138,6 +143,12 @@ public class Product {
 
     private void setDescription(String description) {
         this.description = Objects.requireNonNullElse(description, "").trim();
+    }
+
+    private void setSpecifications(String specifications) {
+        this.specifications = Objects
+                .requireNonNullElse(specifications, "")
+                .trim();
     }
 
     private void setPrice(BigDecimal price) {
@@ -163,8 +174,7 @@ public class Product {
     private void setAvailabilityStatus(ProductAvailabilityStatus availabilityStatus) {
         this.availabilityStatus = Objects.requireNonNullElse(
                 availabilityStatus,
-                ProductAvailabilityStatus.AVAILABLE
-        );
+                ProductAvailabilityStatus.AVAILABLE);
     }
 
     private void setImageUrl(String imageUrl) {
@@ -184,27 +194,23 @@ public class Product {
     }
 
     private void validateStockAdjustmentQuantity(int quantity) {
-    if (quantity <= 0) {
-        throw new IllegalArgumentException(
-                "Stock adjustment quantity must be greater than zero."
-        );
-    }
-}
-
-private void refreshAvailabilityStatus() {
-    if (stockQuantity == 0) {
-        availabilityStatus =
-                ProductAvailabilityStatus.SOLD_OUT;
-        return;
+        if (quantity <= 0) {
+            throw new IllegalArgumentException(
+                    "Stock adjustment quantity must be greater than zero.");
+        }
     }
 
-    if (stockQuantity <= LOW_STOCK_LIMIT) {
-        availabilityStatus =
-                ProductAvailabilityStatus.LOW_STOCK;
-        return;
-    }
+    private void refreshAvailabilityStatus() {
+        if (stockQuantity == 0) {
+            availabilityStatus = ProductAvailabilityStatus.SOLD_OUT;
+            return;
+        }
 
-    availabilityStatus =
-            ProductAvailabilityStatus.AVAILABLE;
-}
+        if (stockQuantity <= LOW_STOCK_LIMIT) {
+            availabilityStatus = ProductAvailabilityStatus.LOW_STOCK;
+            return;
+        }
+
+        availabilityStatus = ProductAvailabilityStatus.AVAILABLE;
+    }
 }

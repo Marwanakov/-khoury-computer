@@ -19,13 +19,13 @@ public class AdminProductForm {
     @Size(max = 5000, message = "Description cannot exceed 5000 characters.")
     private String description;
 
+    @NotBlank(message = "Technical specifications are required.")
+    @Size(max = 10000, message = "Technical specifications cannot exceed 10000 characters.")
+    private String specifications;
+
     @NotNull(message = "Price is required.")
     @DecimalMin(value = "0.00", message = "Price cannot be negative.")
-    @Digits(
-            integer = 8,
-            fraction = 2,
-            message = "Price must contain at most 8 whole digits and 2 decimal places."
-    )
+    @Digits(integer = 8, fraction = 2, message = "Price must contain at most 8 whole digits and 2 decimal places.")
     private BigDecimal price;
 
     @NotBlank(message = "Brand is required.")
@@ -60,6 +60,14 @@ public class AdminProductForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSpecifications() {
+        return specifications;
+    }
+
+    public void setSpecifications(String specifications) {
+        this.specifications = specifications;
     }
 
     public BigDecimal getPrice() {
