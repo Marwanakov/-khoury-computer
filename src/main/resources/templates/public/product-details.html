@@ -20,7 +20,17 @@
           </div>
 
           <div class="mb-4">
-            <a class="product-back-link d-inline-block" th:href="@{/products}">
+            <a
+              class="product-back-link d-inline-block"
+              th:href="@{/products(
+      keyword=${param.keyword != null ? param.keyword[0] : null},
+      categoryId=${param.categoryId != null ? param.categoryId[0] : null},
+      brand=${param.brand != null ? param.brand[0] : null},
+      status=${param.status != null ? param.status[0] : null},
+      minPrice=${param.minPrice != null ? param.minPrice[0] : null},
+      maxPrice=${param.maxPrice != null ? param.maxPrice[0] : null}
+    )}"
+            >
               &larr; Back to Products
             </a>
           </div>
@@ -150,6 +160,47 @@
                     </span>
                   </div>
                 </div>
+
+                <details
+                  th:if="${!product.specificationItems().isEmpty()}"
+                  class="product-specifications mt-4"
+                  open
+                >
+                  <summary class="product-specifications-summary">
+                    <span>
+                      <span class="product-specifications-label">
+                        Product information
+                      </span>
+
+                      <strong>Technical specifications</strong>
+                    </span>
+
+                    <span
+                      class="product-specifications-chevron"
+                      aria-hidden="true"
+                    ></span>
+                  </summary>
+
+                  <div class="product-specifications-content">
+                    <div class="table-responsive">
+                      <table class="table product-specifications-table">
+                        <tbody>
+                          <tr
+                            th:each="specification : ${product.specificationItems()}"
+                          >
+                            <th scope="row" th:text="${specification.label()}">
+                              Processor
+                            </th>
+
+                            <td th:text="${specification.value()}">
+                              Intel Core i5
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </details>
 
                 <div class="product-details-actions mt-5">
                   <!-- This form will work after we build CartController in Phase 4.3 -->
