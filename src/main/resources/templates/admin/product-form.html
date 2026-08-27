@@ -111,7 +111,7 @@
                   th:errorclass="is-invalid"
                   rows="6"
                   maxlength="5000"
-                  placeholder="Describe the product, its specifications, and important features."
+                  placeholder="Describe the product, its purpose, and who it is suitable for."
                 ></textarea>
 
                 <div class="invalid-feedback" th:errors="*{description}">
@@ -121,6 +121,39 @@
                 <div class="form-text">
                   Write a clear description that helps customers understand the
                   product.
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <label for="specifications" class="form-label">
+                  Technical specifications
+                </label>
+
+                <textarea
+                  id="specifications"
+                  class="form-control admin-specifications-input"
+                  th:field="*{specifications}"
+                  th:errorclass="is-invalid"
+                  rows="8"
+                  maxlength="10000"
+                  required
+                  placeholder="Processor: Intel Core i5&#10;RAM: 16 GB&#10;Storage: 512 GB SSD&#10;Screen: 14-inch Full HD&#10;Warranty: 1 year"
+                ></textarea>
+
+                <div class="invalid-feedback" th:errors="*{specifications}">
+                  Specifications error
+                </div>
+
+                <div class="form-text">
+                  Enter one specification per line using
+                  <strong>Label: Value</strong>. Empty lines are ignored.
+                </div>
+
+                <div class="admin-specifications-example">
+                  <span>Example</span>
+                  <code>Processor: Intel Core i5</code>
+                  <code>RAM: 16 GB</code>
+                  <code>Storage: 512 GB SSD</code>
                 </div>
               </div>
             </div>

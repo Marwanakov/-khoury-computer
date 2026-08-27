@@ -897,3 +897,48 @@
     color: #94a3b8;
     background-color: #f1f5f9;
 }
+
+/* =========================
+   Specifications Input
+========================= */
+
+.admin-product-form-card
+.admin-specifications-input.form-control {
+    min-height: 210px;
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+.admin-specifications-example {
+    display: flex;
+    margin-top: 0.85rem;
+    padding: 0.9rem 1rem;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: #475569;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.8rem;
+}
+
+.admin-specifications-example span {
+    margin-bottom: 0.2rem;
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.admin-specifications-example code {
+    color: #334155;
+    font-size: 0.8rem;
+}
