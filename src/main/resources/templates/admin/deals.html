@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Manage Deals', '/css/pages/admin-deals.css')}"
+  >
+  </head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="admin-deals-page">
+      <section class="admin-deals-header">
+        <div class="container">
+          <div class="admin-deals-header-layout">
+            <div>
+              <a class="admin-deals-back-link" th:href="@{/admin}">
+                &larr; Admin Dashboard
+              </a>
+
+              <span class="admin-deals-label"> Promotion management </span>
+
+              <h1>Manage Deals</h1>
+
+              <p>
+                Create genuine offers, schedule upcoming promotions, and choose
+                which deals customers see on the Home page.
+              </p>
+            </div>
+
+            <a
+              class="btn btn-khoury admin-add-deal-button"
+              th:href="@{/admin/deals/new}"
+            >
+              Create Deal
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-deals-content">
+        <div class="container">
+          <!-- Success message -->
+          <div
+            th:if="${successMessage != null}"
+            class="alert alert-success alert-dismissible fade show border-0 mb-4"
+            role="status"
+          >
+            <span th:text="${successMessage}">
+              Deal saved successfully.
+            </span>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Error message -->
+          <div
+            th:if="${errorMessage != null}"
+            class="alert alert-danger alert-dismissible fade show border-0 mb-4"
+            role="alert"
+          >
+            <span th:text="${errorMessage}">
+              The deal could not be updated.
+            </span>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Summary -->
+          <div class="admin-deal-summary-grid">
+            <div class="admin-deal-summary-card">
+              <span>Total deals</span>
+              <strong th:text="${totalDealCount}">0</strong>
+            </div>
+
+            <div class="admin-deal-summary-card summary-deal-active">
+              <span>Active</span>
+              <strong th:text="${activeDealCount}">0</strong>
+            </div>
+
+            <div class="admin-deal-summary-card summary-deal-scheduled">
+              <span>Scheduled</span>
+              <strong th:text="${scheduledDealCount}">0</strong>
+            </div>
+
+            <div class="admin-deal-summary-card summary-deal-expired">
+              <span>Expired</span>
+              <strong th:text="${expiredDealCount}">0</strong>
+            </div>
+
+            <div class="admin-deal-summary-card summary-deal-featured">
+              <span>Featured now</span>
+              <strong th:text="${featuredDealCount}">0</strong>
+            </div>
+          </div>
+
+          <!-- Empty state -->
+          <div
+            th:if="${totalDealCount == 0}"
+            class="admin-deals-empty"
+          >
+            <div class="admin-deals-empty-icon">%</div>
+
+            <h2>No deals created yet</h2>
+
+            <p>
+              Create your first promotion and give customers a clear reason to
+              buy now.
+            </p>
+
+            <a class="btn btn-khoury" th:href="@{/admin/deals/new}">
+              Create First Deal
+            </a>
+          </div>
+
+          <div th:unless="${totalDealCount == 0}">
+            <!-- Active deals -->
+            <section class="admin-deal-section">
+              <div class="admin-deal-section-heading">
+                <div>
+                  <span>Running now</span>
+                  <h2>Active Deals</h2>
+                </div>
+
+                <span
+                  class="admin-deal-section-count"
+                  th:text="${activeDealCount}"
+                >
+                  0
+                </span>
+              </div>
+
+              <div
+                th:if="${#lists.isEmpty(activeDeals)}"
+                class="admin-deal-section-empty"
+              >
+                There are no active deals right now.
+              </div>
+
+              <div
+                th:unless="${#lists.isEmpty(activeDeals)}"
+                class="admin-deal-card-grid"
+              >
+                <article
+                  class="admin-deal-card active-deal-card"
+                  th:each="deal : ${activeDeals}"
+                >
+                  <div class="admin-deal-card-top">
+                    <div>
+                      <span class="admin-deal-status status-active">
+                        Active
+                      </span>
+
+                      <span
+                        th:if="${deal.featured()}"
+                        class="admin-deal-featured-badge"
+                      >
+                        Featured
+                      </span>
+                    </div>
+
+                    <span class="admin-deal-discount">
+                      <strong th:text="${deal.discountPercentage()}">10</strong>%
+                      off
+                    </span>
+                  </div>
+
+                  <div class="admin-deal-product">
+                    <span>Product</span>
+
+                    <h3 th:text="${deal.productName()}">
+                      Product name
+                    </h3>
+                  </div>
+
+                  <div class="admin-deal-prices">
+                    <div>
+                      <span>Regular price</span>
+
+                      <strong class="admin-regular-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.regularPrice(),
+                              0,
+                              0
+                          )}"
+                        >
+                          2799
+                        </span>
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Deal price</span>
+
+                      <strong class="admin-deal-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.dealPrice(),
+                              0,
+                              0
+                          )}"
+                        >
+                          2499
+                        </span>
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Customer saves</span>
+
+                      <strong class="admin-saving-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.savingsAmount(),
+                              0,
+                              0
+                          )}"
+                        >
+                          300
+                        </span>
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="admin-deal-schedule">
+                    <div>
+                      <span>Started</span>
+
+                      <strong
+                        th:text="${#temporals.format(
+                            deal.startsAt(),
+                            'dd MMM yyyy, HH:mm'
+                        )}"
+                      >
+                        28 Aug 2026, 10:00
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Ends</span>
+
+                      <strong
+                        th:text="${#temporals.format(
+                            deal.endsAt(),
+                            'dd MMM yyyy, HH:mm'
+                        )}"
+                      >
+                        04 Sep 2026, 10:00
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="admin-deal-actions">
+                    <a
+                      class="btn btn-sm btn-outline-secondary"
+                      th:href="@{/products/{id}(id=${deal.productId()})}"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      View Product
+                    </a>
+
+                    <a
+                      class="btn btn-sm btn-outline-primary"
+                      th:href="@{/admin/deals/{id}/edit(id=${deal.id()})}"
+                    >
+                      Edit
+                    </a>
+
+                    <form
+                      th:action="@{/admin/deals/{id}/end(id=${deal.id()})}"
+                      method="post"
+                      onsubmit="return confirm('End this deal now?');"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-warning"
+                      >
+                        End Deal
+                      </button>
+                    </form>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <!-- Scheduled deals -->
+            <section class="admin-deal-section">
+              <div class="admin-deal-section-heading">
+                <div>
+                  <span>Coming soon</span>
+                  <h2>Scheduled Deals</h2>
+                </div>
+
+                <span
+                  class="admin-deal-section-count"
+                  th:text="${scheduledDealCount}"
+                >
+                  0
+                </span>
+              </div>
+
+              <div
+                th:if="${#lists.isEmpty(scheduledDeals)}"
+                class="admin-deal-section-empty"
+              >
+                There are no scheduled deals.
+              </div>
+
+              <div
+                th:unless="${#lists.isEmpty(scheduledDeals)}"
+                class="admin-deal-card-grid"
+              >
+                <article
+                  class="admin-deal-card scheduled-deal-card"
+                  th:each="deal : ${scheduledDeals}"
+                >
+                  <div class="admin-deal-card-top">
+                    <div>
+                      <span class="admin-deal-status status-scheduled">
+                        Scheduled
+                      </span>
+
+                      <span
+                        th:if="${deal.featured()}"
+                        class="admin-deal-featured-badge"
+                      >
+                        Featured
+                      </span>
+                    </div>
+
+                    <span class="admin-deal-discount">
+                      <strong th:text="${deal.discountPercentage()}">10</strong>%
+                      off
+                    </span>
+                  </div>
+
+                  <div class="admin-deal-product">
+                    <span>Product</span>
+                    <h3 th:text="${deal.productName()}">Product name</h3>
+                  </div>
+
+                  <div class="admin-deal-prices">
+                    <div>
+                      <span>Regular price</span>
+
+                      <strong class="admin-regular-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.regularPrice(),
+                              0,
+                              0
+                          )}"
+                        >
+                          2799
+                        </span>
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Deal price</span>
+
+                      <strong class="admin-deal-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.dealPrice(),
+                              0,
+                              0
+                          )}"
+                        >
+                          2499
+                        </span>
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Customer saves</span>
+
+                      <strong class="admin-saving-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.savingsAmount(),
+                              0,
+                              0
+                          )}"
+                        >
+                          300
+                        </span>
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="admin-deal-schedule">
+                    <div>
+                      <span>Starts</span>
+
+                      <strong
+                        th:text="${#temporals.format(
+                            deal.startsAt(),
+                            'dd MMM yyyy, HH:mm'
+                        )}"
+                      >
+                        28 Aug 2026, 10:00
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Ends</span>
+
+                      <strong
+                        th:text="${#temporals.format(
+                            deal.endsAt(),
+                            'dd MMM yyyy, HH:mm'
+                        )}"
+                      >
+                        04 Sep 2026, 10:00
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="admin-deal-actions">
+                    <a
+                      class="btn btn-sm btn-outline-primary"
+                      th:href="@{/admin/deals/{id}/edit(id=${deal.id()})}"
+                    >
+                      Edit
+                    </a>
+
+                    <form
+                      th:action="@{/admin/deals/{id}/delete(id=${deal.id()})}"
+                      method="post"
+                      onsubmit="return confirm('Delete this scheduled deal permanently?');"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-danger"
+                      >
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <!-- Expired deals -->
+            <section class="admin-deal-section">
+              <div class="admin-deal-section-heading">
+                <div>
+                  <span>Promotion history</span>
+                  <h2>Expired Deals</h2>
+                </div>
+
+                <span
+                  class="admin-deal-section-count"
+                  th:text="${expiredDealCount}"
+                >
+                  0
+                </span>
+              </div>
+
+              <div
+                th:if="${#lists.isEmpty(expiredDeals)}"
+                class="admin-deal-section-empty"
+              >
+                There are no expired deals.
+              </div>
+
+              <div
+                th:unless="${#lists.isEmpty(expiredDeals)}"
+                class="admin-deal-card-grid"
+              >
+                <article
+                  class="admin-deal-card expired-deal-card"
+                  th:each="deal : ${expiredDeals}"
+                >
+                  <div class="admin-deal-card-top">
+                    <div>
+                      <span class="admin-deal-status status-expired">
+                        Expired
+                      </span>
+                    </div>
+
+                    <span class="admin-deal-discount">
+                      <strong th:text="${deal.discountPercentage()}">10</strong>%
+                      off
+                    </span>
+                  </div>
+
+                  <div class="admin-deal-product">
+                    <span>Product</span>
+                    <h3 th:text="${deal.productName()}">Product name</h3>
+                  </div>
+
+                  <div class="admin-deal-prices">
+                    <div>
+                      <span>Regular price</span>
+
+                      <strong class="admin-regular-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.regularPrice(),
+                              0,
+                              0
+                          )}"
+                        >
+                          2799
+                        </span>
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Deal price</span>
+
+                      <strong class="admin-deal-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.dealPrice(),
+                              0,
+                              0
+                          )}"
+                        >
+                          2499
+                        </span>
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Customer saved</span>
+
+                      <strong class="admin-saving-price">
+                        ₪<span
+                          th:text="${#numbers.formatDecimal(
+                              deal.savingsAmount(),
+                              0,
+                              0
+                          )}"
+                        >
+                          300
+                        </span>
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="admin-deal-schedule">
+                    <div>
+                      <span>Started</span>
+
+                      <strong
+                        th:text="${#temporals.format(
+                            deal.startsAt(),
+                            'dd MMM yyyy, HH:mm'
+                        )}"
+                      >
+                        20 Aug 2026, 10:00
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Ended</span>
+
+                      <strong
+                        th:text="${#temporals.format(
+                            deal.endsAt(),
+                            'dd MMM yyyy, HH:mm'
+                        )}"
+                      >
+                        27 Aug 2026, 10:00
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="admin-deal-actions">
+                    <a
+                      class="btn btn-sm btn-outline-secondary"
+                      th:href="@{/products/{id}(id=${deal.productId()})}"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      View Product
+                    </a>
+
+                    <form
+                      th:action="@{/admin/deals/{id}/delete(id=${deal.id()})}"
+                      method="post"
+                      onsubmit="return confirm('Delete this expired deal permanently?');"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-danger"
+                      >
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>

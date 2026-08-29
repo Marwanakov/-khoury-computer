@@ -174,3 +174,28 @@
         padding: 1.5rem;
     }
 }
+
+/* =========================
+   Deals Dashboard Card
+========================= */
+
+.admin-dashboard-deals-card {
+    border-color: #fde68a;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.13),
+            transparent 42%
+        ),
+        #ffffff;
+}
+
+.admin-dashboard-deals-card:hover {
+    border-color: #f59e0b;
+    box-shadow: 0 22px 55px rgba(245, 158, 11, 0.14);
+}
+
+.admin-card-deals-label {
+    color: #92400e;
+    background-color: #fef3c7;
+}

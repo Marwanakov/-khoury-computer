@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head(${formTitle}, '/css/pages/admin-deals.css')}"
+  >
+  </head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="admin-deal-form-page">
+      <section class="admin-deal-form-header">
+        <div class="container">
+          <a class="admin-deals-back-link" th:href="@{/admin/deals}">
+            &larr; Manage Deals
+          </a>
+
+          <span class="admin-deals-label"> Promotion management </span>
+
+          <h1 th:text="${formTitle}">Create Deal</h1>
+
+          <p th:text="${formDescription}">
+            Create a limited-time product offer.
+          </p>
+        </div>
+      </section>
+
+      <section class="admin-deal-form-content">
+        <div class="container">
+          <form
+            class="admin-deal-form-card"
+            th:action="${formAction}"
+            th:object="${dealForm}"
+            method="post"
+            novalidate
+          >
+            <!-- Global errors -->
+            <div
+              th:if="${#fields.hasGlobalErrors()}"
+              class="alert alert-danger border-0 mb-4"
+            >
+              <p
+                th:each="error : ${#fields.globalErrors()}"
+                th:text="${error}"
+                class="mb-0"
+              >
+                The deal could not be saved.
+              </p>
+            </div>
+
+            <!-- Product selection -->
+            <div class="admin-deal-form-section">
+              <div class="admin-deal-form-heading">
+                <span>Deal product</span>
+
+                <h2>Select the product</h2>
+
+                <p th:unless="${editing}">
+                  Choose the product that customers will receive at a discounted
+                  price.
+                </p>
+
+                <p th:if="${editing}">
+                  The product cannot be changed after a deal is created. You can
+                  still update its price, schedule, and featured status.
+                </p>
+              </div>
+
+              <!-- Create mode -->
+              <div th:unless="${editing}">
+                <label for="productId" class="form-label"> Product </label>
+
+                <select
+                  id="productId"
+                  class="form-select"
+                  th:field="*{productId}"
+                  th:errorclass="is-invalid"
+                >
+                  <option value="">Select a product</option>
+
+                  <option
+                    th:each="product : ${products}"
+                    th:value="${product.id()}"
+                    th:text="|${product.name()} — ₪${#numbers.formatDecimal(product.price(), 0, 0)}|"
+                    th:attr="data-price=${product.price()}"
+                  >
+                    Product — ₪0
+                  </option>
+                </select>
+
+                <div class="invalid-feedback" th:errors="*{productId}">
+                  Product error
+                </div>
+
+                <div class="form-text">
+                  A product cannot have two deals whose schedules overlap.
+                </div>
+              </div>
+
+              <!-- Edit mode -->
+              <div th:if="${editing}" class="admin-selected-deal-product">
+                <input type="hidden" th:field="*{productId}" />
+
+                <div>
+                  <span>Product</span>
+
+                  <strong th:text="${deal.productName()}">
+                    Product name
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Regular price</span>
+
+                  <strong>
+                    ₪<span
+                      th:text="${#numbers.formatDecimal(
+                          deal.regularPrice(),
+                          0,
+                          0
+                      )}"
+                    >
+                      0
+                    </span>
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <hr class="admin-deal-form-divider" />
+
+            <!-- Pricing -->
+            <div class="admin-deal-form-section">
+              <div class="admin-deal-form-heading">
+                <span>Offer pricing</span>
+
+                <h2>Set the deal price</h2>
+
+                <p>
+                  The deal price must be greater than zero and lower than the
+                  product's regular price.
+                </p>
+              </div>
+
+              <div class="admin-deal-price-layout">
+                <div>
+                  <label for="dealPrice" class="form-label">
+                    Deal price (₪)
+                  </label>
+
+                  <input
+                    id="dealPrice"
+                    type="number"
+                    class="form-control"
+                    th:field="*{dealPrice}"
+                    th:errorclass="is-invalid"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Example: 2499"
+                  />
+
+                  <div class="invalid-feedback" th:errors="*{dealPrice}">
+                    Deal price error
+                  </div>
+                </div>
+
+                <div class="admin-deal-price-preview">
+                  <span>Offer preview</span>
+
+                  <div class="admin-deal-preview-prices">
+                    <span id="regularPricePreview">Select a product</span>
+
+                    <strong id="dealPricePreview">₪0</strong>
+                  </div>
+
+                  <p id="dealSavingsPreview">
+                    Enter a deal price to calculate the customer's savings.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <hr class="admin-deal-form-divider" />
+
+            <!-- Schedule -->
+            <div class="admin-deal-form-section">
+              <div class="admin-deal-form-heading">
+                <span>Deal schedule</span>
+
+                <h2>Choose when the offer runs</h2>
+
+                <p>
+                  Scheduled deals become active automatically and expire at the
+                  selected end time.
+                </p>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="startsAt" class="form-label"> Starts at </label>
+
+                  <input
+                    id="startsAt"
+                    type="datetime-local"
+                    class="form-control"
+                    th:field="*{startsAt}"
+                    th:errorclass="is-invalid"
+                  />
+
+                  <div class="invalid-feedback" th:errors="*{startsAt}">
+                    Start time error
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="endsAt" class="form-label"> Ends at </label>
+
+                  <input
+                    id="endsAt"
+                    type="datetime-local"
+                    class="form-control"
+                    th:field="*{endsAt}"
+                    th:errorclass="is-invalid"
+                  />
+
+                  <div class="invalid-feedback" th:errors="*{endsAt}">
+                    End time error
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-deal-schedule-note">
+                The end date and time must be later than the start date and
+                time.
+              </div>
+            </div>
+
+            <hr class="admin-deal-form-divider" />
+
+            <!-- Homepage feature -->
+            <div class="admin-deal-form-section">
+              <div class="admin-deal-form-heading">
+                <span>Homepage promotion</span>
+
+                <h2>Feature this deal</h2>
+
+                <p>
+                  Featured active deals can appear in the Deals section on the
+                  Home page.
+                </p>
+              </div>
+
+              <label class="admin-featured-deal-option" for="featured">
+                <input
+                  id="featured"
+                  type="checkbox"
+                  class="form-check-input"
+                  th:field="*{featured}"
+                />
+
+                <span>
+                  <strong>Feature this deal on the Home page</strong>
+
+                  <small>
+                    Use this for your strongest offers. Not every deal should be
+                    featured.
+                  </small>
+                </span>
+              </label>
+            </div>
+
+            <!-- Actions -->
+            <div class="admin-deal-form-actions">
+              <a class="btn btn-outline-secondary" th:href="@{/admin/deals}">
+                Cancel
+              </a>
+
+              <button
+                type="submit"
+                class="btn btn-khoury"
+                th:text="${submitLabel}"
+              >
+                Create Deal
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+
+    <script th:inline="javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        const productSelect = document.getElementById("productId");
+
+        const dealPriceInput = document.getElementById("dealPrice");
+
+        const regularPricePreview = document.getElementById(
+          "regularPricePreview",
+        );
+
+        const dealPricePreview = document.getElementById("dealPricePreview");
+
+        const savingsPreview = document.getElementById("dealSavingsPreview");
+
+        const editing = /*[[${editing}]]*/ false;
+
+        const editingRegularPrice = /*[[${editing ? deal.regularPrice() : 0}]]*/ 0;
+
+        function formatMoney(value) {
+          return new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2,
+          }).format(value);
+        }
+
+        function getRegularPrice() {
+          if (editing) {
+            return Number(editingRegularPrice);
+          }
+
+          if (!productSelect) {
+            return 0;
+          }
+
+          const selectedOption =
+            productSelect.options[productSelect.selectedIndex];
+
+          return Number(selectedOption?.dataset.price || 0);
+        }
+
+        function updatePricePreview() {
+          const regularPrice = getRegularPrice();
+          const dealPrice = Number(dealPriceInput?.value || 0);
+
+          savingsPreview.classList.remove("is-valid", "is-invalid");
+
+          if (regularPrice <= 0) {
+            regularPricePreview.textContent = "Select a product";
+
+            dealPricePreview.textContent =
+              dealPrice > 0 ? "₪" + formatMoney(dealPrice) : "₪0";
+
+            savingsPreview.textContent =
+              "Select a product to calculate the customer's savings.";
+
+            return;
+          }
+
+          regularPricePreview.textContent = "₪" + formatMoney(regularPrice);
+
+          dealPricePreview.textContent =
+            dealPrice > 0 ? "₪" + formatMoney(dealPrice) : "₪0";
+
+          if (dealPrice <= 0) {
+            savingsPreview.textContent =
+              "Enter a deal price to calculate the customer's savings.";
+
+            return;
+          }
+
+          if (dealPrice >= regularPrice) {
+            savingsPreview.textContent =
+              "The deal price must be lower than the regular price.";
+
+            savingsPreview.classList.add("is-invalid");
+
+            return;
+          }
+
+          const savings = regularPrice - dealPrice;
+
+          const discountPercentage = Math.round((savings / regularPrice) * 100);
+
+          savingsPreview.textContent =
+            "Customer saves ₪" +
+            formatMoney(savings) +
+            " — " +
+            discountPercentage +
+            "% off.";
+
+          savingsPreview.classList.add("is-valid");
+        }
+
+        if (productSelect) {
+          productSelect.addEventListener("change", updatePricePreview);
+        }
+
+        if (dealPriceInput) {
+          dealPriceInput.addEventListener("input", updatePricePreview);
+        }
+
+        updatePricePreview();
+      });
+    </script>
+  </body>
+</html>
