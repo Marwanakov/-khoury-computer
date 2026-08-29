@@ -17,7 +17,8 @@ public class HomeController {
     public HomeController(
             CategoryApplicationService categoryApplicationService
     ) {
-        this.categoryApplicationService = categoryApplicationService;
+        this.categoryApplicationService =
+                categoryApplicationService;
     }
 
     @GetMapping("/")
@@ -33,7 +34,10 @@ public class HomeController {
                         )
                         .toList();
 
-        model.addAttribute("categories", categories);
+        model.addAttribute(
+                "categories",
+                categories
+        );
 
         return "public/home";
     }

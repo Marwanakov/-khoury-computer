@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Deals', '/css/pages/deals.css')}"
+  >
+  </head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="deals-page">
+      <section class="deals-hero">
+        <div class="container">
+          <span class="deals-hero-label">Limited-time savings</span>
+
+          <h1>Current Deals</h1>
+
+          <p>
+            Explore genuine discounts selected by Khoury Computer. These offers
+            are available for a limited time.
+          </p>
+        </div>
+      </section>
+
+      <section class="deals-content">
+        <div class="container">
+          <!-- No active deals -->
+          <div
+            th:if="${#lists.isEmpty(deals)}"
+            class="deals-empty"
+          >
+            <div class="deals-empty-icon">%</div>
+
+            <h2>No active deals right now</h2>
+
+            <p>
+              New offers will appear here when they become available. You can
+              still browse the complete product catalog.
+            </p>
+
+            <a class="btn btn-khoury" th:href="@{/products}">
+              Browse Products
+            </a>
+          </div>
+
+          <!-- Active deal grid -->
+          <div
+            th:if="${!#lists.isEmpty(deals)}"
+            class="deals-grid"
+          >
+            <a
+              class="deal-product-card"
+              th:each="deal : ${deals}"
+              th:href="@{/products/{id}(id=${deal.productId()})}"
+              th:aria-label="|View deal for ${deal.productName()}|"
+            >
+              <div class="deal-product-media">
+                <img
+                  th:if="${!#strings.isEmpty(deal.imageUrl())}"
+                  th:src="${deal.imageUrl()}"
+                  th:alt="${deal.productName()}"
+                  loading="lazy"
+                />
+
+                <img
+                  th:if="${#strings.isEmpty(deal.imageUrl())}"
+                  th:src="@{/images/products/product-fallback.png}"
+                  th:alt="|Default image for ${deal.productName()}|"
+                  class="deal-product-fallback-image"
+                  loading="lazy"
+                />
+
+                <span class="deal-discount-badge">
+                  <strong th:text="${deal.discountPercentage()}">15</strong>%
+                  OFF
+                </span>
+
+                <span
+                  th:if="${deal.featured()}"
+                  class="deal-featured-badge"
+                >
+                  Featured
+                </span>
+              </div>
+
+              <div class="deal-product-content">
+                <span class="deal-product-label">Special offer</span>
+
+                <h2 th:text="${deal.productName()}">
+                  Lenovo IdeaPad
+                </h2>
+
+                <div class="deal-price-comparison">
+                  <div>
+                    <span>Deal price</span>
+
+                    <strong class="deal-current-price">
+                      <span class="deal-currency">₪</span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+                            deal.dealPrice(),
+                            0,
+                            0
+                        )}"
+                      >
+                        2499
+                      </span>
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Regular price</span>
+
+                    <strong class="deal-regular-price">
+                      <span class="deal-currency">₪</span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+                            deal.regularPrice(),
+                            0,
+                            0
+                        )}"
+                      >
+                        2799
+                      </span>
+                    </strong>
+                  </div>
+                </div>
+
+                <div class="deal-saving-banner">
+                  <span>You save</span>
+
+                  <strong>
+                    <span class="deal-currency">₪</span>
+
+                    <span
+                      th:text="${#numbers.formatDecimal(
+                          deal.savingsAmount(),
+                          0,
+                          0
+                      )}"
+                    >
+                      300
+                    </span>
+                  </strong>
+                </div>
+
+                <div class="deal-product-footer">
+                  <div>
+                    <span>Offer ends</span>
+
+                    <strong
+                      th:text="${#temporals.format(
+                          deal.endsAt(),
+                          'dd MMM yyyy, HH:mm'
+                      )}"
+                    >
+                      30 Sep 2026, 18:00
+                    </strong>
+                  </div>
+
+                  <span class="deal-view-product">
+                    View Product
+                    <span aria-hidden="true">&rarr;</span>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div
+            th:if="${!#lists.isEmpty(deals)}"
+            class="deals-catalog-link"
+          >
+            <div>
+              <strong>Looking for something else?</strong>
+
+              <p>
+                Browse all products available from Khoury Computer.
+              </p>
+            </div>
+
+            <a class="btn btn-outline-dark" th:href="@{/products}">
+              View Full Catalog
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>
