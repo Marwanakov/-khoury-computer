@@ -13,7 +13,6 @@ import com.khourycomputer.application.repository.UserRepository;
 import com.khourycomputer.domain.enums.OrderStatus;
 import com.khourycomputer.domain.model.Address;
 import com.khourycomputer.domain.model.Cart;
-import com.khourycomputer.domain.model.CartItem;
 import com.khourycomputer.domain.model.CustomerInfo;
 import com.khourycomputer.domain.model.Order;
 import com.khourycomputer.domain.model.OrderItem;
@@ -21,6 +20,11 @@ import com.khourycomputer.domain.model.Product;
 import com.khourycomputer.domain.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.khourycomputer.application.exception.CartPriceChangedException;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 import java.time.LocalDateTime;
@@ -33,16 +37,23 @@ public class OrderApplicationService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final ProductPricingService productPricingService;
 
     public OrderApplicationService(
             OrderRepository orderRepository,
             CartRepository cartRepository,
             UserRepository userRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository,
+            ProductPricingService productPricingService) {
         this.orderRepository = orderRepository;
+
         this.cartRepository = cartRepository;
+
         this.userRepository = userRepository;
+
         this.productRepository = productRepository;
+
+        this.productPricingService = productPricingService;
     }
 
     // User story: customer submits an order request so the store can contact him
@@ -50,22 +61,25 @@ public class OrderApplicationService {
     @Transactional
     public SubmitOrderResponse submitOrder(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "User not found."));
 
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found."));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Cart not found."));
 
         if (cart.isEmpty()) {
-            throw new IllegalArgumentException("Cannot submit an empty cart.");
+            throw new IllegalArgumentException(
+                    "Cannot submit an empty cart.");
         }
 
-        validateCartStock(cart);
+        List<OrderItem> validatedOrderItems = createValidatedOrderItems(cart);
 
         Order order = new Order(
                 null,
                 user.getId(),
                 createCustomerInfoSnapshot(user),
-                createOrderItemsFromCart(cart),
+                validatedOrderItems,
                 OrderStatus.PENDING,
                 LocalDateTime.now());
 
@@ -75,7 +89,8 @@ public class OrderApplicationService {
 
         return new SubmitOrderResponse(
                 toResponse(savedOrder),
-                "Your order request was submitted successfully. The store will contact you soon to confirm it.");
+                "Your order request was submitted successfully. "
+                        + "The store will contact you soon to confirm it.");
     }
 
     @Transactional(readOnly = true)
@@ -183,37 +198,6 @@ public class OrderApplicationService {
         return toResponse(orderRepository.save(order));
     }
 
-    private void validateCartStock(Cart cart) {
-        for (CartItem item : cart.getItems()) {
-            Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new ProductNotFoundException(item.getProductId()));
-
-            int availableStock = product.getStockQuantity();
-
-            if (item.getQuantity() <= availableStock) {
-                continue;
-            }
-
-            String message;
-
-            if (availableStock == 0) {
-                message = product.getName()
-                        + " is currently sold out. Remove it from your cart to continue.";
-            } else if (availableStock == 1) {
-                message = "Only 1 unit of "
-                        + product.getName()
-                        + " is currently available. Reduce the cart quantity to continue.";
-            } else {
-                message = "Only "
-                        + availableStock
-                        + " units of "
-                        + product.getName()
-                        + " are currently available. Reduce the cart quantity to continue.";
-            }
-
-            throw new IllegalArgumentException(message);
-        }
-    }
 
     private CustomerInfo createCustomerInfoSnapshot(User user) {
         return new CustomerInfo(
@@ -223,21 +207,6 @@ public class OrderApplicationService {
                 user.getAddress());
     }
 
-    private List<OrderItem> createOrderItemsFromCart(Cart cart) {
-        return cart.getItems()
-                .stream()
-                .map(this::createOrderItemFromCartItem)
-                .toList();
-    }
-
-    private OrderItem createOrderItemFromCartItem(CartItem cartItem) {
-        return new OrderItem(
-                null,
-                cartItem.getProductId(),
-                cartItem.getProductName(),
-                cartItem.getUnitPrice(),
-                cartItem.getQuantity());
-    }
 
     private void clearCart(Cart cart) {
         Cart emptyCart = new Cart(
@@ -283,6 +252,108 @@ public class OrderApplicationService {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
     }
+
+    private List<OrderItem> createValidatedOrderItems(
+        Cart cart
+) {
+    List<OrderItem> orderItems =
+            new ArrayList<>();
+
+    for (var cartItem : cart.getItems()) {
+        Product product =
+                productRepository.findById(
+                        cartItem.getProductId()
+                )
+                .orElseThrow(() ->
+                        new ProductNotFoundException(
+                                cartItem.getProductId()
+                        )
+                );
+
+        validateCurrentStock(
+                product,
+                cartItem.getQuantity()
+        );
+
+        BigDecimal currentUnitPrice =
+                productPricingService
+                        .getEffectiveUnitPrice(product);
+
+        validateCartPriceIsCurrent(
+                product,
+                cartItem.getUnitPrice(),
+                currentUnitPrice
+        );
+
+        orderItems.add(
+                new OrderItem(
+                        null,
+                        product.getId(),
+                        product.getName(),
+                        currentUnitPrice,
+                        cartItem.getQuantity()
+                )
+        );
+    }
+
+    return orderItems;
+}
+
+private void validateCartPriceIsCurrent(
+        Product product,
+        BigDecimal cartUnitPrice,
+        BigDecimal currentUnitPrice
+) {
+    if (cartUnitPrice.compareTo(
+            currentUnitPrice
+    ) == 0) {
+        return;
+    }
+
+    throw new CartPriceChangedException(
+            product.getName(),
+            cartUnitPrice,
+            currentUnitPrice
+    );
+}
+
+private void validateCurrentStock(
+        Product product,
+        int requestedQuantity
+) {
+    int availableStock =
+            product.getStockQuantity();
+
+    if (requestedQuantity <= availableStock) {
+        return;
+    }
+
+    if (availableStock == 0) {
+        throw new IllegalArgumentException(
+                product.getName()
+                        + " is currently sold out. "
+                        + "Remove it from your cart to continue."
+        );
+    }
+
+    if (availableStock == 1) {
+        throw new IllegalArgumentException(
+                "Only 1 unit of "
+                        + product.getName()
+                        + " is currently available. "
+                        + "Reduce the cart quantity to continue."
+        );
+    }
+
+    throw new IllegalArgumentException(
+            "Only "
+                    + availableStock
+                    + " units of "
+                    + product.getName()
+                    + " are currently available. "
+                    + "Reduce the cart quantity to continue."
+    );
+}
 
     private OrderResponse toResponse(Order order) {
         CustomerInfo customerInfo = order.getCustomerInfo();
