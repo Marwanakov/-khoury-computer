@@ -31,15 +31,21 @@ public class ProductApplicationService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductPricingService productPricingService;
     private final ImageStorage imageStorage;
 
     public ProductApplicationService(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
-            ImageStorage imageStorage) {
+            ImageStorage imageStorage,
+            ProductPricingService productPricingService) {
         this.productRepository = productRepository;
+
         this.categoryRepository = categoryRepository;
+
         this.imageStorage = imageStorage;
+
+        this.productPricingService = productPricingService;
     }
 
     @Transactional
@@ -87,7 +93,13 @@ public class ProductApplicationService {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
-        validateCategoryExists(request.categoryId());
+        validateCategoryExists(
+                request.categoryId());
+
+        productPricingService
+                .validateRegularPriceForExistingDeals(
+                        productId,
+                        request.price());
 
         String oldImageUrl = existingProduct.getImageUrl();
 
@@ -455,5 +467,58 @@ public class ProductApplicationService {
         }
 
         return String.join(System.lineSeparator(), cleanedLines);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> filterStorefrontProducts(
+            String keyword,
+            Long categoryId,
+            String brand,
+            ProductAvailabilityStatus availabilityStatus,
+            BigDecimal minPrice,
+            BigDecimal maxPrice) {
+        validatePriceFilter(
+                minPrice,
+                maxPrice);
+
+        String normalizedKeyword = normalizeFilterText(keyword);
+
+        String normalizedBrand = normalizeFilterText(brand);
+
+        return productRepository.findAll()
+                .stream()
+                .filter(product -> matchesKeyword(
+                        product,
+                        normalizedKeyword))
+                .filter(product -> categoryId == null
+                        || product.getCategoryId()
+                                .equals(categoryId))
+                .filter(product -> matchesBrand(
+                        product,
+                        normalizedBrand))
+                .filter(product -> availabilityStatus == null
+                        || product.getAvailabilityStatus() == availabilityStatus)
+                .filter(product -> matchesEffectivePrice(
+                        product,
+                        minPrice,
+                        maxPrice))
+                .map(this::toResponse)
+                .toList();
+    }
+
+    private boolean matchesEffectivePrice(
+            Product product,
+            BigDecimal minPrice,
+            BigDecimal maxPrice) {
+        BigDecimal effectivePrice = productPricingService
+                .getEffectiveUnitPrice(product);
+
+        if (minPrice != null
+                && effectivePrice.compareTo(minPrice) < 0) {
+            return false;
+        }
+
+        return maxPrice == null
+                || effectivePrice.compareTo(maxPrice) <= 0;
     }
 }

@@ -23,19 +23,35 @@
             <a
               class="product-back-link d-inline-block"
               th:href="@{/products(
-      keyword=${param.keyword != null ? param.keyword[0] : null},
-      categoryId=${param.categoryId != null ? param.categoryId[0] : null},
-      brand=${param.brand != null ? param.brand[0] : null},
-      status=${param.status != null ? param.status[0] : null},
-      minPrice=${param.minPrice != null ? param.minPrice[0] : null},
-      maxPrice=${param.maxPrice != null ? param.maxPrice[0] : null}
-    )}"
+                keyword=${param.keyword != null
+                    ? param.keyword[0]
+                    : null},
+                categoryId=${param.categoryId != null
+                    ? param.categoryId[0]
+                    : null},
+                brand=${param.brand != null
+                    ? param.brand[0]
+                    : null},
+                status=${param.status != null
+                    ? param.status[0]
+                    : null},
+                minPrice=${param.minPrice != null
+                    ? param.minPrice[0]
+                    : null},
+                maxPrice=${param.maxPrice != null
+                    ? param.maxPrice[0]
+                    : null},
+                dealsOnly=${param.dealsOnly != null
+                    ? param.dealsOnly[0]
+                    : null}
+              )}"
             >
               &larr; Back to Products
             </a>
           </div>
 
           <div class="row g-5 align-items-start">
+            <!-- Product image -->
             <div class="col-lg-6">
               <div class="product-details-image-card">
                 <img
@@ -54,8 +70,10 @@
               </div>
             </div>
 
+            <!-- Product information -->
             <div class="col-lg-6">
               <div class="product-details-info">
+                <!-- Product badges -->
                 <div class="d-flex flex-wrap gap-2 mb-3">
                   <span
                     class="badge rounded-pill text-bg-primary"
@@ -66,14 +84,29 @@
 
                   <span
                     class="badge product-status-badge"
-                    th:classappend="${product.availabilityStatus().name() == 'AVAILABLE'} ? ' status-available' :
-                                                  (${product.availabilityStatus().name() == 'LOW_STOCK'} ? ' status-low-stock' : ' status-sold-out')"
+                    th:classappend="${product.availabilityStatus().name()
+                                    == 'AVAILABLE'}
+                                    ? ' status-available'
+                                    : (${product.availabilityStatus().name()
+                                        == 'LOW_STOCK'}
+                                        ? ' status-low-stock'
+                                        : ' status-sold-out')"
                     th:text="${product.availabilityStatus().displayName}"
                   >
-                    AVAILABLE
+                    Available
+                  </span>
+
+                  <span
+                    th:if="${activeDeal != null}"
+                    class="badge product-details-deal-badge"
+                  >
+                    <strong th:text="${activeDeal.discountPercentage()}">
+                      10 </strong
+                    >% OFF
                   </span>
                 </div>
 
+                <!-- Brand and product name -->
                 <p
                   class="product-details-brand mb-2"
                   th:text="${product.brand()}"
@@ -88,13 +121,59 @@
                   Product name
                 </h1>
 
-                <div class="product-details-price mb-4">
-                  ₪<span
-                    th:text="${#numbers.formatDecimal(product.price(), 0, 0)}"
-                    >0</span
+                <!-- Normal product price -->
+                <div
+                  th:if="${activeDeal == null}"
+                  class="product-details-price mb-4"
+                >
+                  <span class="product-details-currency">₪</span>
+
+                  <span
+                    th:text="${#numbers.formatDecimal(
+                        product.price(),
+                        0,
+                        0
+                    )}"
                   >
+                    0
+                  </span>
                 </div>
 
+                <!-- Active deal pricing -->
+                <div
+                  th:if="${activeDeal != null}"
+                  class="product-details-deal-price-row mb-4"
+                >
+                  <strong class="product-details-current-deal-price">
+                    <span class="product-details-currency">₪</span>
+
+                    <span
+                      th:text="${#numbers.formatDecimal(
+          activeDeal.dealPrice(),
+          0,
+          0
+      )}"
+                    >
+                      900
+                    </span>
+                  </strong>
+
+                  <span class="product-details-regular-price">
+                    <span class="product-details-currency">₪</span>
+
+                    <span
+                      th:text="${#numbers.formatDecimal(
+          activeDeal.regularPrice(),
+          0,
+          0
+      )}"
+                    >
+                      950
+                    </span>
+                  </span>
+                </div>
+
+                <!-- Description -->
                 <p
                   class="product-details-description"
                   th:text="${product.description()}"
@@ -102,19 +181,22 @@
                   Product description
                 </p>
 
+                <!-- Product metadata -->
                 <div class="product-details-meta">
                   <div>
                     <span class="meta-label">Stock status</span>
 
                     <strong
-                      th:if="${product.availabilityStatus().name() == 'AVAILABLE'}"
+                      th:if="${product.availabilityStatus().name()
+                              == 'AVAILABLE'}"
                       class="product-stock-available"
                     >
                       In stock
                     </strong>
 
                     <strong
-                      th:if="${product.availabilityStatus().name() == 'LOW_STOCK'}"
+                      th:if="${product.availabilityStatus().name()
+                              == 'LOW_STOCK'}"
                       class="product-stock-low"
                       th:text="|Only ${product.stockQuantity()} left|"
                     >
@@ -122,7 +204,8 @@
                     </strong>
 
                     <strong
-                      th:if="${product.availabilityStatus().name() == 'SOLD_OUT'}"
+                      th:if="${product.availabilityStatus().name()
+                              == 'SOLD_OUT'}"
                       class="product-stock-out"
                     >
                       No stock remaining
@@ -131,11 +214,13 @@
 
                   <div>
                     <span class="meta-label">Category</span>
-                    <strong th:text="${category.name()}">Category</strong>
+
+                    <strong th:text="${category.name()}"> Category </strong>
                   </div>
 
                   <div>
                     <span class="meta-label">Availability</span>
+
                     <strong
                       th:text="${product.availabilityStatus().displayName}"
                     >
@@ -144,8 +229,10 @@
                   </div>
                 </div>
 
+                <!-- Tags -->
                 <div
-                  th:if="${product.tags() != null and !product.tags().isEmpty()}"
+                  th:if="${product.tags() != null
+                          and !product.tags().isEmpty()}"
                   class="mt-4"
                 >
                   <h5 class="fw-bold mb-3">Features / Tags</h5>
@@ -161,6 +248,7 @@
                   </div>
                 </div>
 
+                <!-- Specifications -->
                 <details
                   th:if="${!product.specificationItems().isEmpty()}"
                   class="product-specifications mt-4"
@@ -186,7 +274,8 @@
                       <table class="table product-specifications-table">
                         <tbody>
                           <tr
-                            th:each="specification : ${product.specificationItems()}"
+                            th:each="specification
+                                     : ${product.specificationItems()}"
                           >
                             <th scope="row" th:text="${specification.label()}">
                               Processor
@@ -202,8 +291,8 @@
                   </div>
                 </details>
 
+                <!-- Product actions -->
                 <div class="product-details-actions mt-5">
-                  <!-- This form will work after we build CartController in Phase 4.3 -->
                   <form
                     th:action="@{/cart/items}"
                     method="post"
@@ -249,7 +338,8 @@
                     <button
                       type="submit"
                       class="btn btn-khoury"
-                      th:disabled="${product.availabilityStatus().name() == 'SOLD_OUT'}"
+                      th:disabled="${product.availabilityStatus().name()
+                                    == 'SOLD_OUT'}"
                     >
                       Add to Cart
                     </button>

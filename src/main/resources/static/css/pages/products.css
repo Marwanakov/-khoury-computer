@@ -3,52 +3,47 @@
 ========================= */
 
 .products-hero {
-    padding: 4rem 0 3rem;
+    padding: 2.25rem 0;
     background:
-        radial-gradient(circle at top right, rgba(37, 99, 235, 0.14), transparent 35%),
-        linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f7fb 100%
+        );
     border-bottom: 1px solid #e5e7eb;
 }
 
 .products-title {
-    font-size: clamp(2.2rem, 4vw, 3.6rem);
-    line-height: 1.05;
-    font-weight: 900;
-    letter-spacing: -0.045em;
+    max-width: 760px;
     color: #0f172a;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
 }
 
 .products-subtitle {
-    max-width: 700px;
+    max-width: 780px;
     color: #64748b;
-    font-size: 1.05rem;
-    line-height: 1.7;
+    font-size: 0.95rem;
+    line-height: 1.65;
 }
 
-.products-summary-card {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 1.25rem;
-    padding: 1.5rem;
-    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: 0.5rem;
-}
-
-.products-summary-card strong {
-    color: #2563eb;
-    font-size: 2rem;
-    font-weight: 900;
+.products-content {
+    padding-top: 2.25rem;
+    padding-bottom: 4rem;
 }
 
 .products-search-panel {
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
+    border-radius: 1.1rem;
+    padding: 1rem;
 }
 
 .products-sidebar {
@@ -211,4 +206,159 @@
     justify-content: center;
     font-weight: 900;
     margin: 0 auto 1rem;
+}
+
+/* =========================
+   Deals Filter
+========================= */
+
+.deals-only-filter {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    cursor: pointer;
+    background-color: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 0.85rem;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.deals-only-filter:hover {
+    border-color: #f59e0b;
+    box-shadow: 0 7px 18px rgba(245, 158, 11, 0.1);
+}
+
+.deals-only-filter .form-check-input {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.deals-only-filter strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: #78350f;
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.deals-only-filter small {
+    display: block;
+    color: #92400e;
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+
+/* =========================
+   Product Deal Card
+========================= */
+
+.product-image-wrapper {
+    position: relative;
+}
+
+.product-card-has-deal .product-card {
+    border: 1px solid #fed7aa;
+}
+
+.product-card-has-deal:hover .product-card {
+    border-color: #f59e0b;
+    box-shadow:
+        0 20px 45px rgba(15, 23, 42, 0.12),
+        0 8px 22px rgba(220, 38, 38, 0.08);
+}
+
+.product-deal-badge {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.12rem;
+    padding: 0.48rem 0.7rem;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 900;
+    background-color: #dc2626;
+    border-radius: 999px;
+    box-shadow: 0 8px 18px rgba(220, 38, 38, 0.24);
+}
+
+.product-deal-badge strong {
+    font-size: 0.9rem;
+    font-weight: 950;
+}
+
+
+/* =========================
+   Deal Pricing
+========================= */
+
+.product-price,
+.product-deal-current-price,
+.product-deal-regular-price,
+.product-deal-pricing small strong {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.12rem;
+    white-space: nowrap;
+}
+
+.product-price-currency {
+    font-size: 0.75em;
+}
+
+.product-deal-pricing {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-deal-label {
+    margin-bottom: 0.15rem;
+    color: #dc2626;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.product-deal-pricing > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem;
+}
+
+.product-deal-current-price {
+    color: #dc2626;
+    font-size: 1.3rem;
+    font-weight: 950;
+}
+
+.product-deal-regular-price {
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-decoration: line-through;
+}
+
+.product-deal-pricing small {
+    margin-top: 0.15rem;
+    color: #64748b;
+    font-size: 0.68rem;
+    font-weight: 750;
+}
+
+.product-deal-pricing small strong {
+    color: #166534;
+    font-weight: 900;
+}
+
+@media (max-width: 575.98px) {
+    .product-footer {
+        align-items: flex-end;
+    }
 }

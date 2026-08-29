@@ -10,42 +10,37 @@
     <main>
       <section class="products-hero">
         <div class="container">
-          <div class="row align-items-end g-4">
-            <div class="col-lg-7">
-              <span class="badge hero-label rounded-pill px-3 py-2 mb-3">
-                Browse products
-              </span>
+          <span class="badge hero-label rounded-pill px-3 py-2 mb-2">
+            Browse products
+          </span>
 
-              <h1 class="products-title mb-3">
-                Find the right tech for your setup.
-              </h1>
+          <h1 class="products-title mb-2">
+            Find the right tech for your setup.
+          </h1>
 
-              <p class="products-subtitle mb-0">
-                Search laptops, screens, accessories, chargers, USB devices,
-                gaming products, and networking tools available from Khoury
-                Computer.
-              </p>
-            </div>
-
-            <div class="col-lg-5">
-              <div class="products-summary-card">
-                <span class="text-muted">Showing</span>
-                <strong th:text="${products.size()}">0</strong>
-                <span class="text-muted">products</span>
-              </div>
-            </div>
-          </div>
+          <p class="products-subtitle mb-0">
+            Search laptops, screens, accessories, chargers, gaming products, and
+            networking tools available from Khoury Computer.
+          </p>
         </div>
       </section>
 
-      <section class="container py-5">
-        <!-- Search stays at the top center -->
+      <section class="container products-content">
+        <!-- Product search -->
         <div class="products-search-panel mb-4">
           <form
             th:action="@{/products}"
             method="get"
             class="row g-3 align-items-center"
           >
+            <!-- Preserve the Deals-only filter during searches -->
+            <input
+              th:if="${dealsOnly}"
+              type="hidden"
+              name="dealsOnly"
+              value="true"
+            />
+
             <div class="col-lg-9">
               <input
                 name="keyword"
@@ -72,6 +67,7 @@
                 class="d-flex justify-content-between align-items-center mb-4"
               >
                 <h5 class="sidebar-title mb-0">Filters</h5>
+
                 <a
                   class="small fw-bold text-decoration-none"
                   th:href="@{/products}"
@@ -83,24 +79,30 @@
               <form th:action="@{/products}" method="get">
                 <input type="hidden" name="keyword" th:value="${keyword}" />
 
+                <!-- Category -->
                 <div class="filter-group">
-                  <label for="categoryId" class="filter-title">Category</label>
+                  <label for="categoryId" class="filter-title">
+                    Category
+                  </label>
 
                   <select id="categoryId" name="categoryId" class="form-select">
                     <option value="">All categories</option>
+
                     <option
                       th:each="category : ${categories}"
                       th:value="${category.id()}"
                       th:text="${category.name()}"
-                      th:selected="${selectedCategoryId != null and selectedCategoryId == category.id()}"
+                      th:selected="${selectedCategoryId != null
+                                   and selectedCategoryId == category.id()}"
                     >
                       Category
                     </option>
                   </select>
                 </div>
 
+                <!-- Brand -->
                 <div class="filter-group">
-                  <label for="brand" class="filter-title">Brand</label>
+                  <label for="brand" class="filter-title"> Brand </label>
 
                   <input
                     id="brand"
@@ -112,6 +114,29 @@
                   />
                 </div>
 
+                <!-- Deals-only filter -->
+                <div class="filter-group">
+                  <p class="filter-title mb-2">Special offers</p>
+
+                  <label class="deals-only-filter" for="dealsOnly">
+                    <input
+                      id="dealsOnly"
+                      name="dealsOnly"
+                      type="checkbox"
+                      value="true"
+                      class="form-check-input"
+                      th:checked="${dealsOnly}"
+                    />
+
+                    <span>
+                      <strong>Deals only</strong>
+
+                      <small> Show currently discounted products. </small>
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Availability -->
                 <div class="filter-group">
                   <p class="filter-title mb-2">Availability</p>
 
@@ -124,6 +149,7 @@
                       value=""
                       th:checked="${selectedStatus == null}"
                     />
+
                     <label class="form-check-label" for="statusAny">
                       Any status
                     </label>
@@ -139,7 +165,9 @@
                       name="status"
                       th:id="${'status-' + availabilityStatus.name()}"
                       th:value="${availabilityStatus}"
-                      th:checked="${selectedStatus != null and selectedStatus == availabilityStatus}"
+                      th:checked="${selectedStatus != null
+                                  and selectedStatus
+                                      == availabilityStatus}"
                     />
 
                     <label
@@ -147,11 +175,12 @@
                       th:for="${'status-' + availabilityStatus.name()}"
                       th:text="${availabilityStatus.displayName}"
                     >
-                      AVAILABLE
+                      Available
                     </label>
                   </div>
                 </div>
 
+                <!-- Price range -->
                 <div class="filter-group">
                   <p class="filter-title mb-2">Price range</p>
 
@@ -191,8 +220,9 @@
 
           <!-- Product results -->
           <div class="col-lg-9">
+            <!-- Empty state -->
             <div
-              th:if="${#lists.isEmpty(products)}"
+              th:if="${#lists.isEmpty(productCards)}"
               class="empty-products-card"
             >
               <div class="empty-products-icon">!</div>
@@ -208,37 +238,57 @@
               </a>
             </div>
 
-            <div th:if="${!#lists.isEmpty(products)}" class="row g-4">
-              <div class="col-sm-6 col-xl-4" th:each="product : ${products}">
+            <!-- Product cards -->
+            <div th:if="${!#lists.isEmpty(productCards)}" class="row g-4">
+              <div class="col-sm-6 col-xl-4" th:each="card : ${productCards}">
                 <a
                   class="product-card-link"
+                  th:classappend="${card.hasActiveDeal()}
+                                  ? ' product-card-has-deal'"
                   th:href="@{/products/{id}(
-    id=${product.id()},
-    keyword=${keyword},
-    categoryId=${selectedCategoryId},
-    brand=${brand},
-    status=${selectedStatus},
-    minPrice=${minPrice},
-    maxPrice=${maxPrice}
-  )}"
+                    id=${card.product().id()},
+                    keyword=${keyword},
+                    categoryId=${selectedCategoryId},
+                    brand=${brand},
+                    status=${selectedStatus},
+                    minPrice=${minPrice},
+                    maxPrice=${maxPrice},
+                    dealsOnly=${dealsOnly}
+                  )}"
                 >
                   <div class="card product-card h-100">
+                    <!-- Product image -->
                     <div class="product-image-wrapper">
                       <img
-                        th:if="${product.imageUrl() != null and !product.imageUrl().isBlank()}"
-                        th:src="${product.imageUrl()}"
+                        th:if="${card.product().imageUrl() != null
+                               and !card.product().imageUrl().isBlank()}"
+                        th:src="${card.product().imageUrl()}"
                         class="product-image"
-                        th:alt="${product.name()}"
+                        th:alt="${card.product().name()}"
                       />
 
                       <div
-                        th:if="${product.imageUrl() == null or product.imageUrl().isBlank()}"
+                        th:if="${card.product().imageUrl() == null
+                               or card.product().imageUrl().isBlank()}"
                         class="product-image-placeholder"
                       >
                         <span>No Image</span>
                       </div>
+
+                      <!-- Discount badge -->
+                      <span
+                        th:if="${card.hasActiveDeal()}"
+                        class="product-deal-badge"
+                      >
+                        <strong
+                          th:text="${card.activeDeal().discountPercentage()}"
+                        >
+                          10 </strong
+                        >% OFF
+                      </span>
                     </div>
 
+                    <!-- Product information -->
                     <div class="card-body p-4 d-flex flex-column">
                       <div
                         class="d-flex justify-content-between align-items-start gap-3 mb-2"
@@ -246,14 +296,14 @@
                         <div>
                           <p
                             class="product-brand mb-1"
-                            th:text="${product.brand()}"
+                            th:text="${card.product().brand()}"
                           >
                             Brand
                           </p>
 
                           <h5
                             class="product-name mb-0"
-                            th:text="${product.name()}"
+                            th:text="${card.product().name()}"
                           >
                             Product name
                           </h5>
@@ -261,29 +311,88 @@
 
                         <span
                           class="badge product-status-badge"
-                          th:classappend="${product.availabilityStatus().name() == 'AVAILABLE'} ? ' status-available' :
-                                                              (${product.availabilityStatus().name() == 'LOW_STOCK'} ? ' status-low-stock' : ' status-sold-out')"
-                          th:text="${product.availabilityStatus().displayName}"
+                          th:classappend="${card.product()
+                                              .availabilityStatus()
+                                              .name() == 'AVAILABLE'}
+                                          ? ' status-available'
+                                          : (${card.product()
+                                                   .availabilityStatus()
+                                                   .name() == 'LOW_STOCK'}
+                                              ? ' status-low-stock'
+                                              : ' status-sold-out')"
+                          th:text="${card.product()
+                                        .availabilityStatus()
+                                        .displayName}"
                         >
-                          AVAILABLE
+                          Available
                         </span>
                       </div>
 
                       <p
                         class="product-description flex-grow-1"
-                        th:text="${#strings.abbreviate(product.description(), 115)}"
+                        th:text="${#strings.abbreviate(
+                            card.product().description(),
+                            115
+                        )}"
                       >
                         Product description
                       </p>
 
                       <div class="product-footer">
-                        <div>
-                          <span class="product-price">
-                            ₪<span
-                              th:text="${#numbers.formatDecimal(product.price(), 0, 0)}"
-                              >0</span
-                            >
+                        <!-- Regular pricing -->
+                        <span
+                          th:unless="${card.hasActiveDeal()}"
+                          class="product-price"
+                        >
+                          <span class="product-price-currency"> ₪ </span>
+
+                          <span
+                            th:text="${#numbers.formatDecimal(
+                                card.product().price(),
+                                0,
+                                0
+                            )}"
+                          >
+                            0
                           </span>
+                        </span>
+
+                        <!-- Deal pricing -->
+                        <div
+                          th:if="${card.hasActiveDeal()}"
+                          class="product-deal-pricing"
+                        >
+                          <span class="product-deal-label"> Deal price </span>
+
+                          <div>
+                            <strong class="product-deal-current-price">
+                              <span class="product-price-currency"> ₪ </span>
+
+                              <span
+                                th:text="${#numbers.formatDecimal(
+                                    card.activeDeal().dealPrice(),
+                                    0,
+                                    0
+                                )}"
+                              >
+                                2499
+                              </span>
+                            </strong>
+
+                            <span class="product-deal-regular-price">
+                              <span class="product-price-currency"> ₪ </span>
+
+                              <span
+                                th:text="${#numbers.formatDecimal(
+                                    card.activeDeal().regularPrice(),
+                                    0,
+                                    0
+                                )}"
+                              >
+                                2799
+                              </span>
+                            </span>
+                          </div>
                         </div>
 
                         <span class="btn btn-outline-primary rounded-pill px-3">
