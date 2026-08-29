@@ -13,6 +13,7 @@ import com.khourycomputer.domain.model.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +23,17 @@ public class CartApplicationService {
         private final CartRepository cartRepository;
         private final ProductRepository productRepository;
         private final UserRepository userRepository;
+        private final ProductPricingService productPricingService;
 
         public CartApplicationService(
                         CartRepository cartRepository,
                         ProductRepository productRepository,
-                        UserRepository userRepository) {
+                        UserRepository userRepository,
+                        ProductPricingService productPricingService) {
                 this.cartRepository = cartRepository;
                 this.productRepository = productRepository;
                 this.userRepository = userRepository;
+                this.productPricingService = productPricingService;
         }
 
         // User story: customer views his cart to check products, quantities, and total
@@ -40,7 +44,11 @@ public class CartApplicationService {
 
                 Cart cart = getOrCreateCart(userId);
 
-                return toResponse(cart);
+                Cart refreshedCart = refreshCartPrices(cart);
+
+                Cart savedCart = cartRepository.save(refreshedCart);
+
+                return toResponse(savedCart);
         }
 
         // User story: customer adds products to cart.
@@ -54,9 +62,17 @@ public class CartApplicationService {
 
                 validateStock(product, request.quantity());
 
-                Cart cart = getOrCreateCart(userId);
+                Cart cart = refreshCartPrices(
+                                getOrCreateCart(userId));
 
-                List<CartItem> updatedItems = addOrIncreaseItem(cart.getItems(), product, request.quantity());
+                BigDecimal effectiveUnitPrice = productPricingService
+                                .getEffectiveUnitPrice(product);
+
+                List<CartItem> updatedItems = addOrIncreaseItem(
+                                cart.getItems(),
+                                product,
+                                effectiveUnitPrice,
+                                request.quantity());
 
                 Cart updatedCart = new Cart(
                                 cart.getId(),
@@ -80,7 +96,9 @@ public class CartApplicationService {
                 validateStock(product, request.quantity());
 
                 Cart cart = cartRepository.findByUserId(userId)
-                                .orElseThrow(() -> new IllegalArgumentException("Cart not found."));
+                                .map(this::refreshCartPrices)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Cart not found."));
 
                 List<CartItem> updatedItems = cart.getItems()
                                 .stream()
@@ -89,7 +107,8 @@ public class CartApplicationService {
                                                                 item.getId(),
                                                                 item.getProductId(),
                                                                 item.getProductName(),
-                                                                item.getUnitPrice(),
+                                                                productPricingService
+                                                                                .getEffectiveUnitPrice(product),
                                                                 request.quantity())
                                                 : item)
                                 .toList();
@@ -110,7 +129,9 @@ public class CartApplicationService {
                 validateUserExists(userId);
 
                 Cart cart = cartRepository.findByUserId(userId)
-                                .orElseThrow(() -> new IllegalArgumentException("Cart not found."));
+                                .map(this::refreshCartPrices)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Cart not found."));
 
                 List<CartItem> updatedItems = cart.getItems()
                                 .stream()
@@ -147,36 +168,49 @@ public class CartApplicationService {
                                 .orElseGet(() -> cartRepository.save(new Cart(null, userId, List.of())));
         }
 
-        private List<CartItem> addOrIncreaseItem(List<CartItem> existingItems, Product product, int quantityToAdd) {
+        private List<CartItem> addOrIncreaseItem(
+                        List<CartItem> existingItems,
+                        Product product,
+                        BigDecimal effectiveUnitPrice,
+                        int quantityToAdd) {
                 List<CartItem> updatedItems = new ArrayList<>();
+
                 boolean productAlreadyInCart = false;
 
                 for (CartItem item : existingItems) {
-                        if (item.getProductId().equals(product.getId())) {
-                                int newQuantity = item.getQuantity() + quantityToAdd;
+                        if (item.getProductId()
+                                        .equals(product.getId())) {
 
-                                validateStock(product, newQuantity);
+                                int newQuantity = item.getQuantity()
+                                                + quantityToAdd;
 
-                                updatedItems.add(new CartItem(
-                                                item.getId(),
-                                                item.getProductId(),
-                                                item.getProductName(),
-                                                item.getUnitPrice(),
-                                                newQuantity));
+                                validateStock(
+                                                product,
+                                                newQuantity);
+
+                                updatedItems.add(
+                                                new CartItem(
+                                                                item.getId(),
+                                                                item.getProductId(),
+                                                                product.getName(),
+                                                                effectiveUnitPrice,
+                                                                newQuantity));
 
                                 productAlreadyInCart = true;
+
                         } else {
                                 updatedItems.add(item);
                         }
                 }
 
                 if (!productAlreadyInCart) {
-                        updatedItems.add(new CartItem(
-                                        null,
-                                        product.getId(),
-                                        product.getName(),
-                                        product.getPrice(),
-                                        quantityToAdd));
+                        updatedItems.add(
+                                        new CartItem(
+                                                        null,
+                                                        product.getId(),
+                                                        product.getName(),
+                                                        effectiveUnitPrice,
+                                                        quantityToAdd));
                 }
 
                 return updatedItems;
@@ -229,16 +263,44 @@ public class CartApplicationService {
                                 item.getId(),
                                 item.getProductId(),
                                 item.getProductName(),
-                                product.getImageUrl() == null ? "" : product.getImageUrl(),
+                                product.getImageUrl() == null
+                                                ? ""
+                                                : product.getImageUrl(),
                                 item.getUnitPrice(),
+                                product.getPrice(),
                                 item.getQuantity(),
                                 item.getSubtotal(),
                                 product.getStockQuantity());
         }
 
-        private String findCurrentProductImageUrl(Long productId) {
-                return productRepository.findById(productId)
-                                .map(Product::getImageUrl)
-                                .orElse("");
+        private Cart refreshCartPrices(Cart cart) {
+                List<CartItem> refreshedItems = cart.getItems()
+                                .stream()
+                                .map(this::refreshCartItemPrice)
+                                .toList();
+
+                return new Cart(
+                                cart.getId(),
+                                cart.getUserId(),
+                                refreshedItems);
+        }
+
+        private CartItem refreshCartItemPrice(
+                        CartItem item) {
+                Product product = productRepository.findById(
+                                item.getProductId())
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Product not found: "
+                                                                + item.getProductName()));
+
+                BigDecimal effectiveUnitPrice = productPricingService
+                                .getEffectiveUnitPrice(product);
+
+                return new CartItem(
+                                item.getId(),
+                                item.getProductId(),
+                                product.getName(),
+                                effectiveUnitPrice,
+                                item.getQuantity());
         }
 }

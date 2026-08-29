@@ -115,16 +115,64 @@
                     </a>
                   </h5>
 
-                  <div class="cart-unit-price mb-3">
+                  <!-- Normal unit price -->
+                  <div
+                    th:unless="${item.hasActiveDeal()}"
+                    class="cart-unit-price mb-3"
+                  >
                     <span class="cart-price-label">Unit price</span>
 
                     <strong class="money-amount">
                       <span class="money-symbol">₪</span>
+
                       <span
-                        th:text="${#numbers.formatDecimal(item.unitPrice(), 0, 0)}"
-                        >0</span
+                        th:text="${#numbers.formatDecimal(
+          item.unitPrice(),
+          0,
+          0
+      )}"
                       >
+                        0
+                      </span>
                     </strong>
+                  </div>
+
+                  <!-- Active deal unit price -->
+                  <div
+                    th:if="${item.hasActiveDeal()}"
+                    class="cart-unit-price mb-3"
+                  >
+                    <span class="cart-price-label">Unit price</span>
+
+                    <div class="cart-deal-price-row">
+                      <strong class="money-amount cart-current-deal-price">
+                        <span class="money-symbol">₪</span>
+
+                        <span
+                          th:text="${#numbers.formatDecimal(
+            item.unitPrice(),
+            0,
+            0
+        )}"
+                        >
+                          900
+                        </span>
+                      </strong>
+
+                      <span class="money-amount cart-regular-unit-price">
+                        <span class="money-symbol">₪</span>
+
+                        <span
+                          th:text="${#numbers.formatDecimal(
+            item.regularUnitPrice(),
+            0,
+            0
+        )}"
+                        >
+                          950
+                        </span>
+                      </span>
+                    </div>
                   </div>
 
                   <div class="d-flex flex-wrap gap-2 align-items-center">
@@ -215,6 +263,26 @@
                 </div>
 
                 <div class="cart-item-subtotal">
+                  <span
+                    th:if="${item.hasActiveDeal()}"
+                    class="cart-item-deal-saving"
+                  >
+                    Saving
+
+                    <strong class="money-amount">
+                      <span class="money-symbol">₪</span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+          item.totalSavings(),
+          0,
+          0
+      )}"
+                      >
+                        0
+                      </span>
+                    </strong>
+                  </span>
                   <span>Subtotal</span>
                   <strong class="money-amount">
                     <span class="money-symbol">₪</span>

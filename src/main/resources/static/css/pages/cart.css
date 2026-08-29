@@ -387,3 +387,53 @@
 .cart-stock-invalid {
     color: #b91c1c;
 }
+
+/* =========================
+   Cart Deal Pricing
+========================= */
+
+
+
+.cart-deal-price-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem;
+}
+
+.cart-current-deal-price {
+    color: #dc2626 !important;
+}
+
+.cart-regular-unit-price {
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-decoration: line-through;
+}
+
+.cart-item-subtotal > .cart-item-deal-saving {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: #166534;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.cart-item-deal-saving > strong {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.12rem;
+    color: #166534;
+    font-size: 0.9rem;
+    font-weight: 950;
+}
+
+@media (max-width: 575.98px) {
+    .cart-deal-unit-price {
+        width: 100%;
+        align-items: flex-start;
+    }
+}
