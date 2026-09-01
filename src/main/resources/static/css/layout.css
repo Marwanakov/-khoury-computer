@@ -517,3 +517,17 @@
     }
 }
 
+/* =========================
+   Best Sellers Navigation
+========================= */
+
+@media (max-width: 1199.98px) {
+    .category-nav-scroll {
+        gap: 1.2rem;
+    }
+
+    .category-nav-link {
+        font-size: 0.88rem;
+    }
+}
+

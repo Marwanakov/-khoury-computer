@@ -166,7 +166,7 @@
           <div class="home-collections-grid">
             <!-- Deals -->
             <a
-              class="home-collection-card"
+              class="home-collection-card home-collection-card-deals"
               th:href="@{/deals}"
               aria-label="View current deals"
             >
@@ -177,6 +177,10 @@
                 />
 
                 <div class="home-collection-card-overlay"></div>
+
+                <span class="home-deals-image-badge" aria-hidden="true">
+                  DEALS
+                </span>
               </div>
 
               <div class="home-collection-card-content">
@@ -190,11 +194,6 @@
                 </span>
               </div>
             </a>
-
-            <!-- Future cards belong here:
-           Best Sellers
-           Bundles
-      -->
 
             <!-- New Arrivals -->
             <a
@@ -210,13 +209,52 @@
 
                 <div class="home-collection-card-overlay"></div>
 
-                
+                <span
+                  class="home-new-arrival-image-badge"
+                  aria-hidden="true"
+                >
+                  NEW
+                </span>
               </div>
 
               <div class="home-collection-card-content">
                 <div>
                   <span>Recently selected</span>
                   <h3>New Arrivals</h3>
+                </div>
+
+                <span class="home-collection-arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </div>
+            </a>
+
+            <!-- Best Sellers -->
+            <a
+              class="home-collection-card home-collection-card-best-sellers"
+              th:href="@{/best-sellers}"
+              aria-label="View best selling products"
+            >
+              <div class="home-collection-card-media">
+                <img
+                  th:src="@{/images/home/best-sellers-banner.png}"
+                  alt="Popular and best selling technology products"
+                />
+
+                <div class="home-collection-card-overlay"></div>
+
+                <span
+                  class="home-best-seller-image-badge"
+                  aria-hidden="true"
+                >
+                  BEST SELLER
+                </span>
+              </div>
+
+              <div class="home-collection-card-content">
+                <div>
+                  <span>Customer favorites</span>
+                  <h3>Best Sellers</h3>
                 </div>
 
                 <span class="home-collection-arrow" aria-hidden="true">
@@ -258,7 +296,9 @@
 
           <p>Browse all products or contact the store for assistance.</p>
 
-          <a class="btn btn-khoury" th:href="@{/products}"> Browse Products </a>
+          <a class="btn btn-khoury" th:href="@{/products}">
+            Browse Products
+          </a>
         </div>
 
         <!-- Dynamic categories -->

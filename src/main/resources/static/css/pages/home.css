@@ -31,19 +31,6 @@
     line-height: 1.7;
 }
 
-.hero-visual-card {
-    position: relative;
-    min-height: 390px;
-    border-radius: 2rem;
-    background:
-        linear-gradient(135deg, rgba(219, 234, 254, 0.95), rgba(255, 255, 255, 0.95)),
-        radial-gradient(circle at top right, rgba(124, 58, 237, 0.18), transparent 40%);
-    border: 1px solid #dbeafe;
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-    overflow: hidden;
-}
-
-
 /* =========================
    Hero Visual
 ========================= */
@@ -323,11 +310,6 @@
    Dynamic Categories
 ========================= */
 
-.category-card-fallback {
-    color: #94a3b8 !important;
-    font-style: italic;
-}
-
 .home-categories-empty {
     padding: 3rem 1.5rem;
     text-align: center;
@@ -420,7 +402,7 @@
 
 .home-collections-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.25rem;
 }
 
@@ -576,11 +558,41 @@
    New Arrivals Collection
 ========================= */
 
+.home-collection-card-new {
+    border-color: #c4b5fd;
+}
+
 .home-collection-card-new:hover {
-    border-color: #8b5cf6;
+    border-color: #7c3aed;
     box-shadow:
         0 22px 48px rgba(15, 23, 42, 0.12),
         0 8px 22px rgba(124, 58, 237, 0.14);
+}
+
+.home-collection-card-new
+.home-collection-card-media {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(124, 58, 237, 0.28),
+            transparent 44%
+        ),
+        linear-gradient(
+            145deg,
+            #ede9fe,
+            #f5f3ff
+        );
+    border-bottom-color: #c4b5fd;
+}
+
+.home-collection-card-new
+.home-collection-card-content {
+    background:
+        linear-gradient(
+            145deg,
+            #faf5ff,
+            #ffffff
+        );
 }
 
 .home-collection-card-new
@@ -591,6 +603,10 @@
 .home-collection-card-new:hover
 .home-collection-arrow {
     background-color: #7c3aed;
+}
+
+.home-collection-card-new:focus-visible {
+    outline-color: rgba(124, 58, 237, 0.35);
 }
 
 .home-new-arrival-image-badge {
@@ -615,4 +631,174 @@
     border-radius: 999px;
     box-shadow:
         0 8px 20px rgba(124, 58, 237, 0.28);
+}
+
+.home-collection-card-new
+.home-collection-card-overlay {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(124, 58, 237, 0.015) 40%,
+            rgba(124, 58, 237, 0.07) 100%
+        );
+}
+
+.home-collection-card-new
+.home-collection-card-content {
+    background:
+        linear-gradient(
+            145deg,
+            #f5f3ff,
+            #ffffff
+        );
+}
+
+/* =========================
+   Best Sellers Collection
+========================= */
+
+.home-collection-card-best-sellers {
+    border-color: #fde68a;
+}
+
+.home-collection-card-best-sellers:hover {
+    border-color: #d97706;
+    box-shadow:
+        0 22px 48px rgba(15, 23, 42, 0.12),
+        0 8px 22px rgba(217, 119, 6, 0.16);
+}
+
+.home-collection-card-best-sellers
+.home-collection-card-media {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.2),
+            transparent 42%
+        ),
+        #fffbeb;
+    border-bottom-color: #fde68a;
+}
+
+.home-collection-card-best-sellers
+.home-collection-card-content {
+    background:
+        linear-gradient(
+            145deg,
+            #fffbeb,
+            #ffffff
+        );
+}
+
+.home-collection-card-best-sellers
+.home-collection-card-content > div > span {
+    color: #92400e;
+}
+
+.home-collection-card-best-sellers:hover
+.home-collection-arrow {
+    background-color: #d97706;
+}
+
+.home-collection-card-best-sellers:focus-visible {
+    outline-color: rgba(217, 119, 6, 0.35);
+}
+
+.home-best-seller-image-badge {
+    position: absolute;
+    top: 0.9rem;
+    left: 0.9rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    color: #78350f;
+    font-size: 0.66rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    background:
+        linear-gradient(
+            135deg,
+            #fcd34d,
+            #f59e0b
+        );
+    border: 1px solid #d97706;
+    border-radius: 999px;
+    box-shadow:
+        0 8px 20px rgba(217, 119, 6, 0.28);
+}
+
+/* =========================
+   Deals Collection
+========================= */
+
+.home-collection-card-deals {
+    border-color: #fed7aa;
+}
+
+.home-collection-card-deals:hover {
+    border-color: #ef4444;
+    box-shadow:
+        0 22px 48px rgba(15, 23, 42, 0.12),
+        0 8px 22px rgba(220, 38, 38, 0.14);
+}
+
+.home-collection-card-deals
+.home-collection-card-media {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(220, 38, 38, 0.18),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            #fff7ed,
+            #f8fafc
+        );
+    border-bottom-color: #fed7aa;
+}
+
+.home-collection-card-deals
+.home-collection-card-content {
+    background:
+        linear-gradient(
+            145deg,
+            #fff7ed,
+            #ffffff
+        );
+}
+
+.home-collection-card-deals
+.home-collection-card-content > div > span {
+    color: #b91c1c;
+}
+
+.home-collection-card-deals:hover
+.home-collection-arrow {
+    background-color: #dc2626;
+}
+
+.home-collection-card-deals:focus-visible {
+    outline-color: rgba(220, 38, 38, 0.35);
+}
+
+.home-deals-image-badge {
+    position: absolute;
+    top: 0.9rem;
+    left: 0.9rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    background-color: #dc2626;
+    border-radius: 999px;
+    box-shadow:
+        0 8px 20px rgba(220, 38, 38, 0.28);
 }
