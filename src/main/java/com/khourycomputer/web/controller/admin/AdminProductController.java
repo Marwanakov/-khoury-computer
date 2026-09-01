@@ -31,18 +31,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.Comparator;
+import com.khourycomputer.application.service.ProductDealApplicationService;
 
 @Controller
 public class AdminProductController {
 
         private final ProductApplicationService productApplicationService;
         private final CategoryApplicationService categoryApplicationService;
+        private final ProductDealApplicationService productDealApplicationService;
 
         public AdminProductController(
                         ProductApplicationService productApplicationService,
-                        CategoryApplicationService categoryApplicationService) {
+                        CategoryApplicationService categoryApplicationService,
+                        ProductDealApplicationService productDealApplicationService) {
                 this.productApplicationService = productApplicationService;
+
                 this.categoryApplicationService = categoryApplicationService;
+
+                this.productDealApplicationService = productDealApplicationService;
         }
 
         @GetMapping("/admin/products")
@@ -52,6 +59,7 @@ public class AdminProductController {
                         @RequestParam(required = false) ProductAvailabilityStatus status,
                         @RequestParam(required = false) BigDecimal minPrice,
                         @RequestParam(required = false) BigDecimal maxPrice,
+                        @RequestParam(required = false) String collection,
                         Model model) {
                 List<ProductResponse> products = productApplicationService.filterProducts(
                                 keyword,
@@ -62,6 +70,30 @@ public class AdminProductController {
                                 maxPrice);
 
                 List<ProductResponse> allProducts = productApplicationService.listProducts();
+
+                Set<Long> activeDealProductIds = productDealApplicationService
+                                .listActiveDeals()
+                                .stream()
+                                .map(deal -> deal.productId())
+                                .collect(Collectors.toSet());
+
+                String selectedCollection = normalizeAdminCollection(collection);
+
+                if ("DEALS".equals(selectedCollection)) {
+                        products = products.stream()
+                                        .filter(product -> activeDealProductIds.contains(
+                                                        product.id()))
+                                        .toList();
+                }
+
+                if ("NEW_ARRIVALS".equals(selectedCollection)) {
+                        products = products.stream()
+                                        .filter(ProductResponse::newArrival)
+                                        .sorted(
+                                                        Comparator.comparing(
+                                                                        ProductResponse::newArrivalMarkedAt).reversed())
+                                        .toList();
+                }
 
                 List<CategoryResponse> categories = categoryApplicationService.listCategories();
 
@@ -83,6 +115,10 @@ public class AdminProductController {
                                 .filter(product -> product.availabilityStatus() == ProductAvailabilityStatus.SOLD_OUT)
                                 .count();
 
+                long newArrivalCount = allProducts.stream()
+                                .filter(ProductResponse::newArrival)
+                                .count();
+
                 model.addAttribute("products", products);
                 model.addAttribute("categories", categories);
                 model.addAttribute("categoriesById", categoriesById);
@@ -93,25 +129,24 @@ public class AdminProductController {
                 model.addAttribute(
                                 "totalProductCount",
                                 allProducts.size());
-                model.addAttribute(
-                                "availableCount",
-                                availableCount);
-                model.addAttribute(
-                                "lowStockCount",
-                                lowStockCount);
-                model.addAttribute(
-                                "soldOutCount",
-                                soldOutCount);
+                model.addAttribute("availableCount", availableCount);
+                model.addAttribute("lowStockCount", lowStockCount);
+                model.addAttribute("soldOutCount", soldOutCount);
+                model.addAttribute("newArrivalCount", newArrivalCount);
 
                 model.addAttribute("keyword", keyword);
                 model.addAttribute(
                                 "selectedCategoryId",
                                 categoryId);
-                model.addAttribute(
-                                "selectedStatus",
-                                status);
+                model.addAttribute("selectedStatus", status);
                 model.addAttribute("minPrice", minPrice);
                 model.addAttribute("maxPrice", maxPrice);
+                model.addAttribute(
+                                "selectedCollection",
+                                selectedCollection);
+                model.addAttribute(
+                                "activeDealProductIds",
+                                activeDealProductIds);
 
                 return "admin/products";
         }
@@ -328,7 +363,8 @@ public class AdminProductController {
                                 form.getBrand().trim(),
                                 form.getStockQuantity(),
                                 form.getCategoryId(),
-                                parseTags(form.getTags()));
+                                parseTags(form.getTags()),
+                                form.isNewArrival());
         }
 
         private UpdateProductRequest toUpdateProductRequest(
@@ -341,7 +377,8 @@ public class AdminProductController {
                                 form.getBrand().trim(),
                                 form.getStockQuantity(),
                                 form.getCategoryId(),
-                                parseTags(form.getTags()));
+                                parseTags(form.getTags()),
+                                form.isNewArrival());
         }
 
         private AdminProductForm toAdminProductForm(
@@ -353,12 +390,10 @@ public class AdminProductController {
                 form.setSpecifications(product.specifications());
                 form.setPrice(product.price());
                 form.setBrand(product.brand());
-                form.setStockQuantity(
-                                product.stockQuantity());
-                form.setCategoryId(
-                                product.categoryId());
-                form.setTags(
-                                String.join(", ", product.tags()));
+                form.setStockQuantity(product.stockQuantity());
+                form.setCategoryId(product.categoryId());
+                form.setTags(String.join(", ", product.tags()));
+                form.setNewArrival(product.newArrival());
 
                 return form;
         }
@@ -398,5 +433,18 @@ public class AdminProductController {
                 return value == null
                                 ? ""
                                 : value.trim();
+        }
+
+        private String normalizeAdminCollection(
+                        String collection) {
+                if ("DEALS".equalsIgnoreCase(collection)) {
+                        return "DEALS";
+                }
+
+                if ("NEW_ARRIVALS".equalsIgnoreCase(collection)) {
+                        return "NEW_ARRIVALS";
+                }
+
+                return "";
         }
 }

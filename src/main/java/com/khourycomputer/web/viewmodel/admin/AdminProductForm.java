@@ -46,6 +46,8 @@ public class AdminProductForm {
     @Size(max = 500, message = "Tags cannot exceed 500 characters.")
     private String tags;
 
+    private boolean newArrival;
+
     public String getName() {
         return name;
     }
@@ -124,5 +126,13 @@ public class AdminProductForm {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public boolean isNewArrival() {
+        return newArrival;
+    }
+
+    public void setNewArrival(boolean newArrival) {
+        this.newArrival = newArrival;
     }
 }

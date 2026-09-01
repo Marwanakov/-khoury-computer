@@ -65,6 +65,11 @@
               <strong th:text="${totalProductCount}">0</strong>
             </div>
 
+            <div class="admin-summary-card summary-new-arrivals">
+              <span>New arrivals</span>
+              <strong th:text="${newArrivalCount}">0</strong>
+            </div>
+
             <div class="admin-summary-card summary-available">
               <span>Available</span>
               <strong th:text="${availableCount}">0</strong>
@@ -144,6 +149,33 @@
                                     and selectedStatus == availabilityStatus}"
                   >
                     Available
+                  </option>
+                </select>
+              </div>
+
+              <div class="admin-filter-field">
+                <label for="collection">Collection</label>
+
+                <select id="collection" name="collection" class="form-select">
+                  <option
+                    value=""
+                    th:selected="${#strings.isEmpty(selectedCollection)}"
+                  >
+                    All products
+                  </option>
+
+                  <option
+                    value="DEALS"
+                    th:selected="${selectedCollection == 'DEALS'}"
+                  >
+                    Deals only
+                  </option>
+
+                  <option
+                    value="NEW_ARRIVALS"
+                    th:selected="${selectedCollection == 'NEW_ARRIVALS'}"
+                  >
+                    New arrivals only
                   </option>
                 </select>
               </div>
@@ -252,11 +284,34 @@
                         </div>
 
                         <div>
-                          <strong th:text="${product.name()}">
-                            Product name
-                          </strong>
+                          <div class="admin-product-name-row">
+                            <strong th:text="${product.name()}">
+                              Product name
+                            </strong>
 
-                          <span th:text="${product.brand()}"> Brand </span>
+                            <div class="admin-product-promotion-badges">
+                              <span
+                                th:if="${product.newArrival()}"
+                                class="admin-new-arrival-badge"
+                              >
+                                NEW
+                              </span>
+
+                              <span
+                                th:if="${activeDealProductIds.contains(product.id())}"
+                                class="admin-active-deal-badge"
+                              >
+                                DEAL
+                              </span>
+                            </div>
+                          </div>
+
+                          <span
+                            class="admin-product-brand"
+                            th:text="${product.brand()}"
+                          >
+                            Brand
+                          </span>
                         </div>
                       </div>
                     </td>

@@ -307,6 +307,46 @@
 
             <hr class="admin-form-divider" />
 
+            <!-- Storefront promotion -->
+            <div class="admin-form-section">
+              <div class="admin-form-section-heading">
+                <span>Storefront promotion</span>
+
+                <h2>New Arrival status</h2>
+
+                <p>
+                  Highlight this product in the New Arrivals collection and
+                  identify it with a NEW badge throughout the storefront.
+                </p>
+              </div>
+
+              <div class="card border-0 bg-light rounded-4">
+                <div class="card-body p-4">
+                  <div class="form-check form-switch">
+                    <input
+                      id="newArrival"
+                      type="checkbox"
+                      class="form-check-input"
+                      role="switch"
+                      th:field="*{newArrival}"
+                    />
+
+                    <label for="newArrival" class="form-check-label fw-bold">
+                      Mark this product as a New Arrival
+                    </label>
+                  </div>
+
+                  <p class="text-muted small mb-0 mt-2">
+                    When enabled, the product will appear on the New Arrivals
+                    page and display a NEW badge. Disable it when the product
+                    should no longer be promoted as new.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <hr class="admin-form-divider" />
+
             <!-- Product image -->
             <div class="admin-form-section">
               <div class="admin-form-section-heading">
