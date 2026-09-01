@@ -640,15 +640,45 @@
 
 @media (max-width: 575.98px) {
     .product-details-badge-row {
+        flex-wrap: wrap;
         align-items: flex-start;
     }
 
     .product-details-classification-badges {
-        max-width: 58%;
+        max-width: 100%;
     }
 
     .product-details-promotion-badges {
-        max-width: 42%;
+        width: 100%;
+        max-width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
     }
+}
+
+/* =========================
+   Best Seller Badge
+========================= */
+
+.product-details-best-seller-badge {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0.45rem 0.7rem;
+    color: #78350f;
+    font-size: 0.66rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    background:
+        linear-gradient(
+            135deg,
+            #fcd34d,
+            #f59e0b
+        );
+    border: 1px solid #d97706;
+    border-radius: 999px;
+    box-shadow:
+        0 6px 16px rgba(217, 119, 6, 0.22);
 }
 

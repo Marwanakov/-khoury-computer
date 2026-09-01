@@ -40,11 +40,22 @@
               &larr; Back to New Arrivals
             </a>
 
-            <!-- Products and every other source -->
+            <!-- Return to Best Sellers -->
             <a
-              th:if="${param.returnTo == null
-            or (param.returnTo[0] != 'deals'
-                and param.returnTo[0] != 'new-arrivals')}"
+              th:if="${param.returnTo != null
+            and param.returnTo[0] == 'best-sellers'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/best-sellers}"
+            >
+              &larr; Back to Best Sellers
+            </a>
+
+            <!-- Return to the filtered Products page -->
+            <a
+              th:unless="${param.returnTo != null
+                and (param.returnTo[0] == 'deals'
+                     or param.returnTo[0] == 'new-arrivals'
+                     or param.returnTo[0] == 'best-sellers')}"
               class="product-back-link d-inline-block"
               th:href="@{/products(
       keyword=${param.keyword != null
@@ -70,6 +81,9 @@
           : null},
       newArrivalsOnly=${param.newArrivalsOnly != null
           ? param.newArrivalsOnly[0]
+          : null},
+      bestSellersOnly=${param.bestSellersOnly != null
+          ? param.bestSellersOnly[0]
           : null}
     )}"
             >
@@ -128,7 +142,9 @@
 
                   <!-- Promotional badges -->
                   <div
-                    th:if="${activeDeal != null or product.newArrival()}"
+                    th:if="${activeDeal != null
+          or product.newArrival()
+          or product.bestSeller()}"
                     class="product-details-promotion-badges"
                   >
                     <span
@@ -145,6 +161,13 @@
                       class="badge product-details-new-arrival-badge"
                     >
                       NEW
+                    </span>
+
+                    <span
+                      th:if="${product.bestSeller()}"
+                      class="badge product-details-best-seller-badge"
+                    >
+                      BEST SELLER
                     </span>
                   </div>
                 </div>

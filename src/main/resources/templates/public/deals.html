@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{fragments/head :: head('Deals', '/css/pages/deals.css')}">
+  <head
+    th:replace="~{fragments/head :: head('Deals', '/css/pages/deals.css')}"
+  >
   </head>
 
   <body>
@@ -23,7 +25,10 @@
       <section class="deals-content">
         <div class="container">
           <!-- No active deals -->
-          <div th:if="${#lists.isEmpty(deals)}" class="deals-empty">
+          <div
+            th:if="${#lists.isEmpty(deals)}"
+            class="deals-empty"
+          >
             <div class="deals-empty-icon">%</div>
 
             <h2>No active deals right now</h2>
@@ -39,7 +44,10 @@
           </div>
 
           <!-- Active deal grid -->
-          <div th:if="${!#lists.isEmpty(deals)}" class="deals-grid">
+          <div
+            th:if="${!#lists.isEmpty(deals)}"
+            class="deals-grid"
+          >
             <a
               class="deal-product-card"
               th:each="deal : ${deals}"
@@ -70,7 +78,10 @@
                   OFF
                 </span>
 
-                <span th:if="${deal.featured()}" class="deal-featured-badge">
+                <span
+                  th:if="${deal.featured()}"
+                  class="deal-featured-badge"
+                >
                   Featured
                 </span>
               </div>
@@ -78,7 +89,9 @@
               <div class="deal-product-content">
                 <span class="deal-product-label">Special offer</span>
 
-                <h2 th:text="${deal.productName()}">Lenovo IdeaPad</h2>
+                <h2 th:text="${deal.productName()}">
+                  Lenovo IdeaPad
+                </h2>
 
                 <div class="deal-price-comparison">
                   <div>
@@ -159,11 +172,16 @@
             </a>
           </div>
 
-          <div th:if="${!#lists.isEmpty(deals)}" class="deals-catalog-link">
+          <div
+            th:if="${!#lists.isEmpty(deals)}"
+            class="deals-catalog-link"
+          >
             <div>
               <strong>Looking for something else?</strong>
 
-              <p>Browse all products available from Khoury Computer.</p>
+              <p>
+                Browse all products available from Khoury Computer.
+              </p>
             </div>
 
             <a class="btn btn-outline-dark" th:href="@{/products}">
