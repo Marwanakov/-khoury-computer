@@ -485,7 +485,6 @@
     display: inline-flex;
     align-items: baseline;
     gap: 0.12rem;
-    margin-left: auto;
     color: #ffffff;
     background-color: #dc2626;
     border-radius: 999px;
@@ -494,12 +493,6 @@
 
 .product-details-deal-badge strong {
     font-weight: 950;
-}
-
-@media (max-width: 575.98px) {
-    .product-details-deal-badge {
-        margin-left: 0;
-    }
 }
 
 
@@ -535,14 +528,6 @@
     text-decoration: line-through;
 }
 
-
-.product-details-deal-price-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.75rem;
-}
-
 .product-details-current-deal-price,
 .product-details-regular-price {
     display: inline-flex;
@@ -565,5 +550,105 @@
     text-decoration: line-through;
 }
 
+/* =========================
+   New Arrival Badge
+========================= */
 
+.product-details-new-arrival-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.7rem;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #4f46e5
+        );
+    border-radius: 999px;
+    box-shadow:
+        0 6px 16px rgba(124, 58, 237, 0.22);
+}
+
+/* =========================
+   Product Detail Badges
+========================= */
+
+.product-details-badge-row {
+    display: flex;
+    min-height: 32px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.product-details-classification-badges,
+.product-details-promotion-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.product-details-promotion-badges {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.product-details-deal-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.12rem;
+    margin: 0;
+    padding: 0.45rem 0.7rem;
+    color: #ffffff;
+    background-color: #dc2626;
+    border-radius: 999px;
+    box-shadow:
+        0 6px 16px rgba(220, 38, 38, 0.2);
+}
+
+.product-details-deal-badge strong {
+    font-weight: 950;
+}
+
+.product-details-new-arrival-badge {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0.45rem 0.7rem;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #4f46e5
+        );
+    border-radius: 999px;
+    box-shadow:
+        0 6px 16px rgba(124, 58, 237, 0.22);
+}
+
+@media (max-width: 575.98px) {
+    .product-details-badge-row {
+        align-items: flex-start;
+    }
+
+    .product-details-classification-badges {
+        max-width: 58%;
+    }
+
+    .product-details-promotion-badges {
+        max-width: 42%;
+    }
+}
 

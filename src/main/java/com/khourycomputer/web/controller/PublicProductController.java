@@ -54,6 +54,8 @@ public class PublicProductController {
 
                         @RequestParam(defaultValue = "false") boolean dealsOnly,
 
+                        @RequestParam(defaultValue = "false") boolean newArrivalsOnly,
+
                         Model model) {
                 List<ProductResponse> filteredProducts = productApplicationService
                                 .filterStorefrontProducts(
@@ -62,7 +64,8 @@ public class PublicProductController {
                                                 brand,
                                                 status,
                                                 minPrice,
-                                                maxPrice);
+                                                maxPrice,
+                                                newArrivalsOnly);
 
                 Map<Long, ProductDealResponse> activeDealsByProductId = productDealApplicationService
                                 .listActiveDeals()
@@ -76,8 +79,7 @@ public class PublicProductController {
                 List<ProductCardViewModel> productCards = filteredProducts.stream()
                                 .filter(product -> !dealsOnly
                                                 || activeDealsByProductId
-                                                                .containsKey(
-                                                                                product.id()))
+                                                                .containsKey(product.id()))
                                 .map(product -> new ProductCardViewModel(
                                                 product,
                                                 activeDealsByProductId.get(
@@ -123,6 +125,10 @@ public class PublicProductController {
                 model.addAttribute(
                                 "dealsOnly",
                                 dealsOnly);
+
+                model.addAttribute(
+                                "newArrivalsOnly",
+                                newArrivalsOnly);
 
                 return "public/products";
         }

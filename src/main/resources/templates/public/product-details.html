@@ -20,31 +20,58 @@
           </div>
 
           <div class="mb-4">
+            <!-- Return to Deals -->
             <a
+              th:if="${param.returnTo != null
+            and param.returnTo[0] == 'deals'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/deals}"
+            >
+              &larr; Back to Deals
+            </a>
+
+            <!-- Return to New Arrivals -->
+            <a
+              th:if="${param.returnTo != null
+            and param.returnTo[0] == 'new-arrivals'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/new-arrivals}"
+            >
+              &larr; Back to New Arrivals
+            </a>
+
+            <!-- Products and every other source -->
+            <a
+              th:if="${param.returnTo == null
+            or (param.returnTo[0] != 'deals'
+                and param.returnTo[0] != 'new-arrivals')}"
               class="product-back-link d-inline-block"
               th:href="@{/products(
-                keyword=${param.keyword != null
-                    ? param.keyword[0]
-                    : null},
-                categoryId=${param.categoryId != null
-                    ? param.categoryId[0]
-                    : null},
-                brand=${param.brand != null
-                    ? param.brand[0]
-                    : null},
-                status=${param.status != null
-                    ? param.status[0]
-                    : null},
-                minPrice=${param.minPrice != null
-                    ? param.minPrice[0]
-                    : null},
-                maxPrice=${param.maxPrice != null
-                    ? param.maxPrice[0]
-                    : null},
-                dealsOnly=${param.dealsOnly != null
-                    ? param.dealsOnly[0]
-                    : null}
-              )}"
+      keyword=${param.keyword != null
+          ? param.keyword[0]
+          : null},
+      categoryId=${param.categoryId != null
+          ? param.categoryId[0]
+          : null},
+      brand=${param.brand != null
+          ? param.brand[0]
+          : null},
+      status=${param.status != null
+          ? param.status[0]
+          : null},
+      minPrice=${param.minPrice != null
+          ? param.minPrice[0]
+          : null},
+      maxPrice=${param.maxPrice != null
+          ? param.maxPrice[0]
+          : null},
+      dealsOnly=${param.dealsOnly != null
+          ? param.dealsOnly[0]
+          : null},
+      newArrivalsOnly=${param.newArrivalsOnly != null
+          ? param.newArrivalsOnly[0]
+          : null}
+    )}"
             >
               &larr; Back to Products
             </a>
@@ -74,36 +101,52 @@
             <div class="col-lg-6">
               <div class="product-details-info">
                 <!-- Product badges -->
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                  <span
-                    class="badge rounded-pill text-bg-primary"
-                    th:text="${category.name()}"
-                  >
-                    Category
-                  </span>
+                <div class="product-details-badge-row mb-3">
+                  <!-- Product classification -->
+                  <div class="product-details-classification-badges">
+                    <span
+                      class="badge rounded-pill text-bg-primary"
+                      th:text="${category.name()}"
+                    >
+                      Category
+                    </span>
 
-                  <span
-                    class="badge product-status-badge"
-                    th:classappend="${product.availabilityStatus().name()
-                                    == 'AVAILABLE'}
-                                    ? ' status-available'
-                                    : (${product.availabilityStatus().name()
-                                        == 'LOW_STOCK'}
-                                        ? ' status-low-stock'
-                                        : ' status-sold-out')"
-                    th:text="${product.availabilityStatus().displayName}"
-                  >
-                    Available
-                  </span>
+                    <span
+                      class="badge product-status-badge"
+                      th:classappend="${product.availabilityStatus().name()
+                      == 'AVAILABLE'}
+                      ? ' status-available'
+                      : (${product.availabilityStatus().name()
+                          == 'LOW_STOCK'}
+                          ? ' status-low-stock'
+                          : ' status-sold-out')"
+                      th:text="${product.availabilityStatus().displayName}"
+                    >
+                      Available
+                    </span>
+                  </div>
 
-                  <span
-                    th:if="${activeDeal != null}"
-                    class="badge product-details-deal-badge"
+                  <!-- Promotional badges -->
+                  <div
+                    th:if="${activeDeal != null or product.newArrival()}"
+                    class="product-details-promotion-badges"
                   >
-                    <strong th:text="${activeDeal.discountPercentage()}">
-                      10 </strong
-                    >% OFF
-                  </span>
+                    <span
+                      th:if="${activeDeal != null}"
+                      class="badge product-details-deal-badge"
+                    >
+                      <strong th:text="${activeDeal.discountPercentage()}">
+                        10 </strong
+                      >% OFF
+                    </span>
+
+                    <span
+                      th:if="${product.newArrival()}"
+                      class="badge product-details-new-arrival-badge"
+                    >
+                      NEW
+                    </span>
+                  </div>
                 </div>
 
                 <!-- Brand and product name -->

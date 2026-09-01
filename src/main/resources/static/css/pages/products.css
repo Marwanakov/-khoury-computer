@@ -87,16 +87,17 @@
 }
 
 .product-card {
-    border: 0;
-    border-radius: 1.25rem;
-    overflow: hidden;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent;
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .product-card-link:hover .product-card {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.13);
+    transform: translateY(-3px);
+    border-color: #6c63ff;
+    box-shadow: none;
 }
 
 .product-image-wrapper {
@@ -265,10 +266,10 @@
 }
 
 .product-card-has-deal:hover .product-card {
-    border-color: #f59e0b;
+    border-color: #ef4444;
     box-shadow:
         0 20px 45px rgba(15, 23, 42, 0.12),
-        0 8px 22px rgba(220, 38, 38, 0.08);
+        0 8px 24px rgba(239, 68, 68, 0.16);
 }
 
 .product-deal-badge {
@@ -362,3 +363,240 @@
         align-items: flex-end;
     }
 }
+
+.product-new-arrival-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.7rem;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #4f46e5
+        );
+    border-radius: 999px;
+    box-shadow:
+        0 8px 18px rgba(124, 58, 237, 0.25);
+}
+
+.product-card-link.product-card-is-new .product-card {
+    border: 1px solid #c4b5fd;
+}
+
+.product-card-link.product-card-is-new:hover .product-card {
+    border: 1px solid #7c3aed;
+    box-shadow: none;
+}
+
+.product-card-link.product-card-has-deal:hover .product-card {
+    border-color: #ff3b3b;
+    box-shadow: none;
+}
+
+/* =========================
+   New Arrivals Page
+========================= */
+
+.new-arrivals-page {
+    min-height: 70vh;
+    background-color: #f4f7fb;
+}
+
+.new-arrivals-hero {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(124, 58, 237, 0.16),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f5f3ff 100%
+        );
+    border-bottom-color: #ddd6fe;
+}
+
+.new-arrivals-hero-label {
+    display: inline-flex;
+    margin-bottom: 0.75rem;
+    padding: 0.45rem 0.75rem;
+    color: #6d28d9;
+    font-size: 0.7rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background-color: #ede9fe;
+    border: 1px solid #c4b5fd;
+    border-radius: 999px;
+}
+
+.new-arrivals-catalog-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border: 1px solid #ddd6fe;
+    border-radius: 1.25rem;
+}
+
+.new-arrivals-catalog-link strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.new-arrivals-catalog-link p {
+    max-width: 650px;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 767.98px) {
+    .new-arrivals-catalog-link {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .new-arrivals-catalog-link .btn {
+        width: 100%;
+    }
+}
+
+/* =========================
+   Premium New Arrival Cards
+========================= */
+
+.new-arrivals-page .product-card-link {
+    border-radius: 1.4rem;
+}
+
+.new-arrivals-page .product-card {
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #c4b5fd;
+    border-radius: 1.4rem;
+    box-shadow:
+        0 18px 42px rgba(91, 33, 182, 0.09),
+        0 6px 18px rgba(15, 23, 42, 0.05);
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.new-arrivals-page
+.product-card-link:hover
+.product-card {
+    border-color: #7c3aed;
+    box-shadow:
+        0 26px 58px rgba(91, 33, 182, 0.16),
+        0 10px 28px rgba(124, 58, 237, 0.1);
+    transform: translateY(-7px);
+}
+
+.new-arrivals-page
+.product-card-link:focus-visible {
+    outline: 3px solid rgba(124, 58, 237, 0.32);
+    outline-offset: 4px;
+}
+
+/* Violet glow in the upper-right image area */
+.new-arrivals-page .product-image-wrapper {
+    height: 230px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(124, 58, 237, 0.2),
+            transparent 44%
+        ),
+        linear-gradient(
+            145deg,
+            #faf5ff,
+            #f8fafc
+        );
+    border-bottom: 1px solid #c4b5fd;
+}
+
+/* Product images behave like Deal-page images */
+.new-arrivals-page .product-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.8rem;
+    object-fit: contain;
+    transition: transform 0.45s ease;
+}
+
+.new-arrivals-page
+.product-card-link:hover
+.product-image {
+    transform: scale(1.055);
+}
+
+.new-arrivals-page
+.product-image-placeholder {
+    transition: transform 0.45s ease;
+}
+
+.new-arrivals-page
+.product-card-link:hover
+.product-image-placeholder {
+    transform: scale(1.035);
+}
+
+.new-arrivals-page .card-body {
+    background-color: #ffffff;
+}
+
+/* Deal remains the stronger promotion when both apply */
+.new-arrivals-page
+.product-card-link.product-card-has-deal
+.product-card {
+    border-color: #fed7aa;
+}
+
+.new-arrivals-page
+.product-card-link.product-card-has-deal
+.product-image-wrapper {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.17),
+            transparent 44%
+        ),
+        linear-gradient(
+            145deg,
+            #fff7ed,
+            #f8fafc
+        );
+    border-bottom-color: #fed7aa;
+}
+
+.new-arrivals-page
+.product-card-link.product-card-has-deal:hover
+.product-card {
+    border-color: #ef4444;
+    box-shadow:
+        0 26px 58px rgba(120, 53, 15, 0.14),
+        0 10px 28px rgba(220, 38, 38, 0.1);
+}
+

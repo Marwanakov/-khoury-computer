@@ -41,6 +41,14 @@
               value="true"
             />
 
+            <!-- Preserve the New-Arrivals filter during searches -->
+            <input
+              th:if="${newArrivalsOnly}"
+              type="hidden"
+              name="newArrivalsOnly"
+              value="true"
+            />
+
             <div class="col-lg-9">
               <input
                 name="keyword"
@@ -114,9 +122,9 @@
                   />
                 </div>
 
-                <!-- Deals-only filter -->
+                <!-- Promotional collection filters -->
                 <div class="filter-group">
-                  <p class="filter-title mb-2">Special offers</p>
+                  <p class="filter-title mb-2">Featured collections</p>
 
                   <label class="deals-only-filter" for="dealsOnly">
                     <input
@@ -132,6 +140,23 @@
                       <strong>Deals only</strong>
 
                       <small> Show currently discounted products. </small>
+                    </span>
+                  </label>
+
+                  <label class="deals-only-filter mt-3" for="newArrivalsOnly">
+                    <input
+                      id="newArrivalsOnly"
+                      name="newArrivalsOnly"
+                      type="checkbox"
+                      value="true"
+                      class="form-check-input"
+                      th:checked="${newArrivalsOnly}"
+                    />
+
+                    <span>
+                      <strong>New arrivals only</strong>
+
+                      <small> Show products recently selected as new. </small>
                     </span>
                   </label>
                 </div>
@@ -243,8 +268,11 @@
               <div class="col-sm-6 col-xl-4" th:each="card : ${productCards}">
                 <a
                   class="product-card-link"
-                  th:classappend="${card.hasActiveDeal()}
-                                  ? ' product-card-has-deal'"
+                  th:classappend="|${card.hasActiveDeal()
+                    ? ' product-card-has-deal'
+                    : ''}${card.product().newArrival()
+                    ? ' product-card-is-new'
+                    : ''}|"
                   th:href="@{/products/{id}(
                     id=${card.product().id()},
                     keyword=${keyword},
@@ -253,7 +281,8 @@
                     status=${selectedStatus},
                     minPrice=${minPrice},
                     maxPrice=${maxPrice},
-                    dealsOnly=${dealsOnly}
+                    dealsOnly=${dealsOnly},
+                    newArrivalsOnly=${newArrivalsOnly}
                   )}"
                 >
                   <div class="card product-card h-100">
@@ -274,6 +303,14 @@
                       >
                         <span>No Image</span>
                       </div>
+
+                      <!-- New Arrival badge -->
+                      <span
+                        th:if="${card.product().newArrival()}"
+                        class="product-new-arrival-badge"
+                      >
+                        NEW
+                      </span>
 
                       <!-- Discount badge -->
                       <span

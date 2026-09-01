@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('New Arrivals', '/css/pages/products.css')}"
+  ></head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="new-arrivals-page">
+      <section class="products-hero new-arrivals-hero">
+        <div class="container">
+          <span class="new-arrivals-hero-label">
+            Fresh technology
+          </span>
+
+          <h1 class="products-title mb-2">
+            New Arrivals
+          </h1>
+
+          <p class="products-subtitle mb-0">
+            Discover the latest laptops, accessories, displays, gaming
+            products, and technology available from Khoury Computer.
+          </p>
+        </div>
+      </section>
+
+      <section class="container products-content">
+        <!-- Empty state -->
+        <div
+          th:if="${#lists.isEmpty(productCards)}"
+          class="empty-products-card"
+        >
+          <div class="empty-products-icon">!</div>
+
+          <h2 class="fw-bold mb-2">
+            No new arrivals right now
+          </h2>
+
+          <p class="text-muted mb-4">
+            Newly selected products will appear here. You can still browse
+            the complete catalog.
+          </p>
+
+          <a
+            class="btn btn-khoury"
+            th:href="@{/products}"
+          >
+            Browse Products
+          </a>
+        </div>
+
+        <!-- New Arrival product grid -->
+        <div
+          th:if="${!#lists.isEmpty(productCards)}"
+          class="row g-4"
+        >
+          <div
+            class="col-sm-6 col-lg-4 col-xl-3"
+            th:each="card : ${productCards}"
+          >
+            <a
+              class="product-card-link"
+              th:classappend="|${card.hasActiveDeal()
+                    ? ' product-card-has-deal'
+                    : ''}${card.product().newArrival()
+                    ? ' product-card-is-new'
+                    : ''}|"
+              th:href="@{/products/{id}(
+                id=${card.product().id()},
+                returnTo='new-arrivals'
+              )}"
+            >
+              <div class="card product-card h-100">
+                <!-- Product image -->
+                <div class="product-image-wrapper">
+                  <img
+                    th:if="${card.product().imageUrl() != null
+                           and !card.product().imageUrl().isBlank()}"
+                    th:src="${card.product().imageUrl()}"
+                    class="product-image"
+                    th:alt="${card.product().name()}"
+                  />
+
+                  <div
+                    th:if="${card.product().imageUrl() == null
+                           or card.product().imageUrl().isBlank()}"
+                    class="product-image-placeholder"
+                  >
+                    <span>No Image</span>
+                  </div>
+
+                  <span class="product-new-arrival-badge">
+                    NEW
+                  </span>
+
+                  <span
+                    th:if="${card.hasActiveDeal()}"
+                    class="product-deal-badge"
+                  >
+                    <strong
+                      th:text="${card.activeDeal()
+                                    .discountPercentage()}"
+                    >
+                      10
+                    </strong>% OFF
+                  </span>
+                </div>
+
+                <!-- Product information -->
+                <div class="card-body p-4 d-flex flex-column">
+                  <div
+                    class="d-flex justify-content-between
+                           align-items-start gap-3 mb-2"
+                  >
+                    <div>
+                      <p
+                        class="product-brand mb-1"
+                        th:text="${card.product().brand()}"
+                      >
+                        Brand
+                      </p>
+
+                      <h2
+                        class="product-name h5 mb-0"
+                        th:text="${card.product().name()}"
+                      >
+                        Product name
+                      </h2>
+                    </div>
+
+                    <span
+                      class="badge product-status-badge"
+                      th:classappend="${
+                          card.product()
+                              .availabilityStatus()
+                              .name() == 'AVAILABLE'
+                        } ? ' status-available'
+                          : (${
+                              card.product()
+                                  .availabilityStatus()
+                                  .name() == 'LOW_STOCK'
+                            } ? ' status-low-stock'
+                              : ' status-sold-out')"
+                      th:text="${card.product()
+                                    .availabilityStatus()
+                                    .displayName}"
+                    >
+                      Available
+                    </span>
+                  </div>
+
+                  <p
+                    class="product-description flex-grow-1"
+                    th:text="${#strings.abbreviate(
+                        card.product().description(),
+                        115
+                    )}"
+                  >
+                    Product description
+                  </p>
+
+                  <div class="product-footer">
+                    <!-- Regular price -->
+                    <span
+                      th:unless="${card.hasActiveDeal()}"
+                      class="product-price"
+                    >
+                      <span class="product-price-currency">
+                        ₪
+                      </span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+                            card.product().price(),
+                            0,
+                            0
+                        )}"
+                      >
+                        0
+                      </span>
+                    </span>
+
+                    <!-- Deal price -->
+                    <div
+                      th:if="${card.hasActiveDeal()}"
+                      class="product-deal-pricing"
+                    >
+                      <span class="product-deal-label">
+                        Deal price
+                      </span>
+
+                      <div>
+                        <strong class="product-deal-current-price">
+                          <span class="product-price-currency">
+                            ₪
+                          </span>
+
+                          <span
+                            th:text="${#numbers.formatDecimal(
+                                card.activeDeal().dealPrice(),
+                                0,
+                                0
+                            )}"
+                          >
+                            2499
+                          </span>
+                        </strong>
+
+                        <span class="product-deal-regular-price">
+                          <span class="product-price-currency">
+                            ₪
+                          </span>
+
+                          <span
+                            th:text="${#numbers.formatDecimal(
+                                card.activeDeal().regularPrice(),
+                                0,
+                                0
+                            )}"
+                          >
+                            2799
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <span
+                      class="btn btn-outline-primary rounded-pill px-3"
+                    >
+                      Details
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Link to the complete catalog -->
+        <div
+          th:if="${!#lists.isEmpty(productCards)}"
+          class="new-arrivals-catalog-link"
+        >
+          <div>
+            <strong>Looking for more products?</strong>
+
+            <p>
+              Browse the complete Khoury Computer catalog and use the
+              available search and filtering tools.
+            </p>
+          </div>
+
+          <a
+            class="btn btn-outline-dark rounded-pill px-4"
+            th:href="@{/products}"
+          >
+            View Full Catalog
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div
+      th:replace="~{fragments/footer :: bootstrapScript}"
+    ></div>
+  </body>
+</html>
