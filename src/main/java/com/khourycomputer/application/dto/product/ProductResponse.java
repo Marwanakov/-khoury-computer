@@ -21,7 +21,9 @@ public record ProductResponse(
         Long categoryId,
         Set<String> tags,
         boolean newArrival,
-        LocalDateTime newArrivalMarkedAt) {
+        LocalDateTime newArrivalMarkedAt,
+        boolean bestSeller,
+        LocalDateTime bestSellerMarkedAt) {
 
     public List<ProductSpecificationResponse> specificationItems() {
         if (specifications == null || specifications.isBlank()) {

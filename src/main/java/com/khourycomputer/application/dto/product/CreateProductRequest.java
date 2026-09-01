@@ -12,6 +12,7 @@ public record CreateProductRequest(
         int stockQuantity,
         Long categoryId,
         Set<String> tags,
-        boolean newArrival
+        boolean newArrival,
+        boolean bestSeller
 ) {
 }

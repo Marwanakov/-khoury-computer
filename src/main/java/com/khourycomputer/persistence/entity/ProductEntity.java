@@ -43,6 +43,14 @@ public record ProductEntity(
         boolean newArrival,
 
         @Column("new_arrival_marked_at")
-        LocalDateTime newArrivalMarkedAt
+        LocalDateTime newArrivalMarkedAt,
+
+        @Column("is_best_seller")
+        boolean bestSeller,
+
+        @Column("best_seller_marked_at")
+        LocalDateTime bestSellerMarkedAt
+
+        
 ) {
 }

@@ -60,6 +60,8 @@ public class ProductApplicationService {
 
         registerImageDeletionOnRollback(imageUrl);
 
+        LocalDateTime currentTime = LocalDateTime.now();
+
         Product product = new Product(
                 null,
                 request.name(),
@@ -74,7 +76,11 @@ public class ProductApplicationService {
                 cleanTags(request.tags()),
                 request.newArrival(),
                 request.newArrival()
-                        ? LocalDateTime.now()
+                        ? currentTime
+                        : null,
+                request.bestSeller(),
+                request.bestSeller()
+                        ? currentTime
                         : null);
 
         Product savedProduct = productRepository.save(product);
@@ -118,6 +124,10 @@ public class ProductApplicationService {
                 existingProduct,
                 request.newArrival());
 
+        LocalDateTime bestSellerMarkedAt = determineBestSellerMarkedAt(
+                existingProduct,
+                request.bestSeller());
+
         Product updatedProduct = new Product(
                 existingProduct.getId(),
                 request.name(),
@@ -131,7 +141,9 @@ public class ProductApplicationService {
                 request.categoryId(),
                 cleanTags(request.tags()),
                 request.newArrival(),
-                newArrivalMarkedAt);
+                newArrivalMarkedAt,
+                request.bestSeller(),
+                bestSellerMarkedAt);
 
         Product savedProduct = productRepository.save(updatedProduct);
 
@@ -323,7 +335,9 @@ public class ProductApplicationService {
                 product.getCategoryId(),
                 product.getTags(),
                 product.isNewArrival(),
-                product.getNewArrivalMarkedAt());
+                product.getNewArrivalMarkedAt(),
+                product.isBestSeller(),
+                product.getBestSellerMarkedAt());
     }
 
     private boolean matchesKeyword(Product product, String keyword) {
@@ -491,7 +505,8 @@ public class ProductApplicationService {
             ProductAvailabilityStatus availabilityStatus,
             BigDecimal minPrice,
             BigDecimal maxPrice,
-            boolean newArrivalsOnly) {
+            boolean newArrivalsOnly,
+            boolean bestSellersOnly) {
         validatePriceFilter(minPrice, maxPrice);
 
         String normalizedKeyword = normalizeFilterText(keyword);
@@ -513,6 +528,8 @@ public class ProductApplicationService {
                         || product.getAvailabilityStatus() == availabilityStatus)
                 .filter(product -> !newArrivalsOnly
                         || product.isNewArrival())
+                .filter(product -> !bestSellersOnly
+                        || product.isBestSeller())
                 .filter(product -> matchesEffectivePrice(
                         product,
                         minPrice,
@@ -521,7 +538,10 @@ public class ProductApplicationService {
                         newArrivalsOnly
                                 ? Comparator.comparing(
                                         Product::getNewArrivalMarkedAt).reversed()
-                                : (first, second) -> 0)
+                                : bestSellersOnly
+                                        ? Comparator.comparing(
+                                                Product::getBestSellerMarkedAt).reversed()
+                                        : (first, second) -> 0)
                 .map(this::toResponse)
                 .toList();
     }
@@ -557,16 +577,40 @@ public class ProductApplicationService {
     }
 
     @Transactional(readOnly = true)
-public List<ProductResponse> listNewArrivals() {
-    return productRepository.findAll()
-            .stream()
-            .filter(Product::isNewArrival)
-            .sorted(
-                    Comparator.comparing(
-                            Product::getNewArrivalMarkedAt
-                    ).reversed()
-            )
-            .map(this::toResponse)
-            .toList();
-}
+    public List<ProductResponse> listNewArrivals() {
+        return productRepository.findAll()
+                .stream()
+                .filter(Product::isNewArrival)
+                .sorted(
+                        Comparator.comparing(
+                                Product::getNewArrivalMarkedAt).reversed())
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listBestSellers() {
+        return productRepository.findAll()
+                .stream()
+                .filter(Product::isBestSeller)
+                .sorted(
+                        Comparator.comparing(
+                                Product::getBestSellerMarkedAt).reversed())
+                .map(this::toResponse)
+                .toList();
+    }
+
+    private LocalDateTime determineBestSellerMarkedAt(
+            Product existingProduct,
+            boolean bestSeller) {
+        if (!bestSeller) {
+            return null;
+        }
+
+        if (existingProduct.isBestSeller()) {
+            return existingProduct.getBestSellerMarkedAt();
+        }
+
+        return LocalDateTime.now();
+    }
 }

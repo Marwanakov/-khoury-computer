@@ -25,6 +25,8 @@ public class Product {
     private Set<String> tags;
     private boolean newArrival;
     private LocalDateTime newArrivalMarkedAt;
+    private boolean bestSeller;
+    private LocalDateTime bestSellerMarkedAt;
 
     public Product(
             Long id,
@@ -39,8 +41,9 @@ public class Product {
             Long categoryId,
             Set<String> tags,
             boolean newArrival,
-            LocalDateTime newArrivalMarkedAt
-    ) {
+            LocalDateTime newArrivalMarkedAt,
+            boolean bestSeller,
+            LocalDateTime bestSellerMarkedAt) {
         setId(id);
         setName(name);
         setDescription(description);
@@ -53,6 +56,9 @@ public class Product {
         setCategoryId(categoryId);
         setTags(tags);
         setNewArrivalState(newArrival, newArrivalMarkedAt);
+        setBestSellerState(
+                bestSeller,
+                bestSellerMarkedAt);
     }
 
     public Long getId() {
@@ -135,8 +141,7 @@ public class Product {
                             + quantity
                             + ", available: "
                             + stockQuantity
-                            + "."
-            );
+                            + ".");
         }
 
         stockQuantity -= quantity;
@@ -151,8 +156,7 @@ public class Product {
     }
 
     public void markAsSoldOut() {
-        this.availabilityStatus =
-                ProductAvailabilityStatus.SOLD_OUT;
+        this.availabilityStatus = ProductAvailabilityStatus.SOLD_OUT;
     }
 
     private void setId(Long id) {
@@ -162,8 +166,7 @@ public class Product {
     private void setName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(
-                    "Product name cannot be empty."
-            );
+                    "Product name cannot be empty.");
         }
 
         this.name = name.trim();
@@ -185,8 +188,7 @@ public class Product {
         if (price == null
                 || price.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException(
-                    "Product price cannot be negative."
-            );
+                    "Product price cannot be negative.");
         }
 
         this.price = price;
@@ -201,20 +203,17 @@ public class Product {
     private void setStockQuantity(int stockQuantity) {
         if (stockQuantity < 0) {
             throw new IllegalArgumentException(
-                    "Stock quantity cannot be negative."
-            );
+                    "Stock quantity cannot be negative.");
         }
 
         this.stockQuantity = stockQuantity;
     }
 
     private void setAvailabilityStatus(
-            ProductAvailabilityStatus availabilityStatus
-    ) {
+            ProductAvailabilityStatus availabilityStatus) {
         this.availabilityStatus = Objects.requireNonNullElse(
                 availabilityStatus,
-                ProductAvailabilityStatus.AVAILABLE
-        );
+                ProductAvailabilityStatus.AVAILABLE);
     }
 
     private void setImageUrl(String imageUrl) {
@@ -226,8 +225,7 @@ public class Product {
     private void setCategoryId(Long categoryId) {
         if (categoryId == null) {
             throw new IllegalArgumentException(
-                    "Product must belong to a category."
-            );
+                    "Product must belong to a category.");
         }
 
         this.categoryId = categoryId;
@@ -241,47 +239,76 @@ public class Product {
 
     private void setNewArrivalState(
             boolean newArrival,
-            LocalDateTime newArrivalMarkedAt
-    ) {
+            LocalDateTime newArrivalMarkedAt) {
         if (newArrival && newArrivalMarkedAt == null) {
             throw new IllegalArgumentException(
-                    "A new arrival must have a marked time."
-            );
+                    "A new arrival must have a marked time.");
         }
 
         if (!newArrival && newArrivalMarkedAt != null) {
             throw new IllegalArgumentException(
                     "A product that is not a new arrival "
-                            + "cannot have a new-arrival marked time."
-            );
+                            + "cannot have a new-arrival marked time.");
         }
 
         this.newArrival = newArrival;
         this.newArrivalMarkedAt = newArrivalMarkedAt;
     }
 
+     public boolean isBestSeller() {
+        return bestSeller;
+    }
+
+    public LocalDateTime getBestSellerMarkedAt() {
+        return bestSellerMarkedAt;
+    }
+
+    public void markAsBestSeller(LocalDateTime markedAt) {
+        setBestSellerState(true, markedAt);
+    }
+
+    public void removeBestSellerStatus() {
+        setBestSellerState(false, null);
+    }
+
+    private void setBestSellerState(
+            boolean bestSeller,
+            LocalDateTime bestSellerMarkedAt) {
+        if (bestSeller && bestSellerMarkedAt == null) {
+            throw new IllegalArgumentException(
+                    "A best seller must have a marked time.");
+        }
+
+        if (!bestSeller && bestSellerMarkedAt != null) {
+            throw new IllegalArgumentException(
+                    "A product that is not a best seller "
+                            + "cannot have a best-seller marked time.");
+        }
+
+        this.bestSeller = bestSeller;
+        this.bestSellerMarkedAt = bestSellerMarkedAt;
+    }
+
     private void validateStockAdjustmentQuantity(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException(
-                    "Stock adjustment quantity must be greater than zero."
-            );
+                    "Stock adjustment quantity must be greater than zero.");
         }
     }
 
     private void refreshAvailabilityStatus() {
         if (stockQuantity == 0) {
-            availabilityStatus =
-                    ProductAvailabilityStatus.SOLD_OUT;
+            availabilityStatus = ProductAvailabilityStatus.SOLD_OUT;
             return;
         }
 
         if (stockQuantity <= LOW_STOCK_LIMIT) {
-            availabilityStatus =
-                    ProductAvailabilityStatus.LOW_STOCK;
+            availabilityStatus = ProductAvailabilityStatus.LOW_STOCK;
             return;
         }
 
-        availabilityStatus =
-                ProductAvailabilityStatus.AVAILABLE;
+        availabilityStatus = ProductAvailabilityStatus.AVAILABLE;
     }
+
+   
 }

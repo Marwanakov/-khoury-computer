@@ -29,7 +29,9 @@ public class ProductMapper {
                 productEntity.categoryId(),
                 mapTagsToDomain(productEntity.tags()),
                 productEntity.newArrival(),
-                productEntity.newArrivalMarkedAt()
+                productEntity.newArrivalMarkedAt(),
+                productEntity.bestSeller(),
+                productEntity.bestSellerMarkedAt()
         );
     }
 
@@ -51,7 +53,9 @@ public class ProductMapper {
                 product.getCategoryId(),
                 mapTagsToEntity(product.getTags()),
                 product.isNewArrival(),
-                product.getNewArrivalMarkedAt()
+                product.getNewArrivalMarkedAt(),
+                product.isBestSeller(),
+                product.getBestSellerMarkedAt()
         );
     }
 
