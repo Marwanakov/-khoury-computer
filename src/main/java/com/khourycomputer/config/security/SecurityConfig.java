@@ -32,6 +32,7 @@ public class SecurityConfig {
                                                                 "/products/**",
                                                                 "/deals",
                                                                 "/new-arrivals",
+                                                                "/best-sellers",
                                                                 "/contact",
                                                                 "/register",
                                                                 "/login",

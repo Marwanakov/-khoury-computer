@@ -49,6 +49,14 @@
               value="true"
             />
 
+            <!-- Preserve the Best-Sellers filter during searches -->
+            <input
+              th:if="${bestSellersOnly}"
+              type="hidden"
+              name="bestSellersOnly"
+              value="true"
+            />
+
             <div class="col-lg-9">
               <input
                 name="keyword"
@@ -126,7 +134,11 @@
                 <div class="filter-group">
                   <p class="filter-title mb-2">Featured collections</p>
 
-                  <label class="deals-only-filter" for="dealsOnly">
+                  <!-- Deals -->
+                  <label
+                    class="collection-filter collection-filter-deals"
+                    for="dealsOnly"
+                  >
                     <input
                       id="dealsOnly"
                       name="dealsOnly"
@@ -138,12 +150,15 @@
 
                     <span>
                       <strong>Deals only</strong>
-
-                      <small> Show currently discounted products. </small>
+                      <small>Show currently discounted products.</small>
                     </span>
                   </label>
 
-                  <label class="deals-only-filter mt-3" for="newArrivalsOnly">
+                  <!-- New Arrivals -->
+                  <label
+                    class="collection-filter collection-filter-new-arrivals"
+                    for="newArrivalsOnly"
+                  >
                     <input
                       id="newArrivalsOnly"
                       name="newArrivalsOnly"
@@ -155,8 +170,30 @@
 
                     <span>
                       <strong>New arrivals only</strong>
+                      <small>Show products recently selected as new.</small>
+                    </span>
+                  </label>
 
-                      <small> Show products recently selected as new. </small>
+                  <!-- Best Sellers -->
+                  <label
+                    class="collection-filter collection-filter-best-sellers"
+                    for="bestSellersOnly"
+                  >
+                    <input
+                      id="bestSellersOnly"
+                      name="bestSellersOnly"
+                      type="checkbox"
+                      value="true"
+                      class="form-check-input"
+                      th:checked="${bestSellersOnly}"
+                    />
+
+                    <span>
+                      <strong>Best sellers only</strong>
+                      <small
+                        >Show products recommended from strong store
+                        sales.</small
+                      >
                     </span>
                   </label>
                 </div>
@@ -269,10 +306,12 @@
                 <a
                   class="product-card-link"
                   th:classappend="|${card.hasActiveDeal()
-                    ? ' product-card-has-deal'
-                    : ''}${card.product().newArrival()
-                    ? ' product-card-is-new'
-                    : ''}|"
+      ? ' product-card-has-deal'
+      : ''}${card.product().newArrival()
+      ? ' product-card-is-new'
+      : ''}${card.product().bestSeller()
+      ? ' product-card-is-best-seller'
+      : ''}|"
                   th:href="@{/products/{id}(
                     id=${card.product().id()},
                     keyword=${keyword},
@@ -282,7 +321,8 @@
                     minPrice=${minPrice},
                     maxPrice=${maxPrice},
                     dealsOnly=${dealsOnly},
-                    newArrivalsOnly=${newArrivalsOnly}
+                    newArrivalsOnly=${newArrivalsOnly},
+                    bestSellersOnly=${bestSellersOnly}
                   )}"
                 >
                   <div class="card product-card h-100">
@@ -310,6 +350,15 @@
                         class="product-new-arrival-badge"
                       >
                         NEW
+                      </span>
+
+                      <span
+                        th:if="${card.product().bestSeller()}"
+                        class="product-best-seller-badge"
+                        th:classappend="${card.product().newArrival()}
+      ? ' product-best-seller-badge-below'"
+                      >
+                        BEST SELLER
                       </span>
 
                       <!-- Discount badge -->

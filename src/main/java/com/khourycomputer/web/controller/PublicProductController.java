@@ -56,6 +56,8 @@ public class PublicProductController {
 
                         @RequestParam(defaultValue = "false") boolean newArrivalsOnly,
 
+                        @RequestParam(defaultValue = "false") boolean bestSellersOnly,
+
                         Model model) {
                 List<ProductResponse> filteredProducts = productApplicationService
                                 .filterStorefrontProducts(
@@ -65,7 +67,8 @@ public class PublicProductController {
                                                 status,
                                                 minPrice,
                                                 maxPrice,
-                                                newArrivalsOnly);
+                                                newArrivalsOnly,
+                                                bestSellersOnly);
 
                 Map<Long, ProductDealResponse> activeDealsByProductId = productDealApplicationService
                                 .listActiveDeals()
@@ -129,6 +132,10 @@ public class PublicProductController {
                 model.addAttribute(
                                 "newArrivalsOnly",
                                 newArrivalsOnly);
+
+                model.addAttribute(
+                                "bestSellersOnly",
+                                bestSellersOnly);
 
                 return "public/products";
         }

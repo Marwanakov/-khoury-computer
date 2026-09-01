@@ -1,22 +1,26 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head
-    th:replace="~{fragments/head :: head('New Arrivals', '/css/pages/products.css')}"
+    th:replace="~{fragments/head :: head('Best Sellers', '/css/pages/products.css')}"
   ></head>
 
   <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <main class="new-arrivals-page">
-      <section class="products-hero new-arrivals-hero">
+    <main class="best-sellers-page">
+      <section class="products-hero best-sellers-hero">
         <div class="container">
-          <span class="new-arrivals-hero-label"> Fresh technology </span>
+          <span class="best-sellers-hero-label">
+            Customer favorites
+          </span>
 
-          <h1 class="products-title mb-2">New Arrivals</h1>
+          <h1 class="products-title mb-2">
+            Best Sellers
+          </h1>
 
           <p class="products-subtitle mb-0">
-            Discover the latest laptops, accessories, displays, gaming products,
-            and technology available from Khoury Computer.
+            Explore products frequently selected by Khoury Computer customers
+            and recommended from real experience in the store.
           </p>
         </div>
       </section>
@@ -29,18 +33,28 @@
         >
           <div class="empty-products-icon">!</div>
 
-          <h2 class="fw-bold mb-2">No new arrivals right now</h2>
+          <h2 class="fw-bold mb-2">
+            No best sellers right now
+          </h2>
 
           <p class="text-muted mb-4">
-            Newly selected products will appear here. You can still browse the
-            complete catalog.
+            Store favorites will appear here when they are selected. You can
+            still browse the complete catalog.
           </p>
 
-          <a class="btn btn-khoury" th:href="@{/products}"> Browse Products </a>
+          <a
+            class="btn btn-khoury"
+            th:href="@{/products}"
+          >
+            Browse Products
+          </a>
         </div>
 
-        <!-- New Arrival product grid -->
-        <div th:if="${!#lists.isEmpty(productCards)}" class="row g-4">
+        <!-- Best Seller product grid -->
+        <div
+          th:if="${!#lists.isEmpty(productCards)}"
+          class="row g-4"
+        >
           <div
             class="col-sm-6 col-lg-4 col-xl-3"
             th:each="card : ${productCards}"
@@ -48,15 +62,15 @@
             <a
               class="product-card-link"
               th:classappend="|${card.hasActiveDeal()
-      ? ' product-card-has-deal'
-      : ''}${card.product().newArrival()
-      ? ' product-card-is-new'
-      : ''}${card.product().bestSeller()
-      ? ' product-card-is-best-seller'
-      : ''}|"
+                    ? ' product-card-has-deal'
+                    : ''}${card.product().newArrival()
+                    ? ' product-card-is-new'
+                    : ''}${card.product().bestSeller()
+                    ? ' product-card-is-best-seller'
+                    : ''}|"
               th:href="@{/products/{id}(
                 id=${card.product().id()},
-                returnTo='new-arrivals'
+                returnTo='best-sellers'
               )}"
             >
               <div class="card product-card h-100">
@@ -79,12 +93,18 @@
                   </div>
 
                   <!-- New Arrival badge -->
-                  <span class="product-new-arrival-badge"> NEW </span>
+                  <span
+                    th:if="${card.product().newArrival()}"
+                    class="product-new-arrival-badge"
+                  >
+                    NEW
+                  </span>
 
                   <!-- Best Seller badge -->
                   <span
-                    th:if="${card.product().bestSeller()}"
-                    class="product-best-seller-badge product-best-seller-badge-below"
+                    class="product-best-seller-badge"
+                    th:classappend="${card.product().newArrival()}
+                        ? ' product-best-seller-badge-below'"
                   >
                     BEST SELLER
                   </span>
@@ -98,15 +118,16 @@
                       th:text="${card.activeDeal()
                                     .discountPercentage()}"
                     >
-                      10 </strong
-                    >% OFF
+                      10
+                    </strong>% OFF
                   </span>
                 </div>
 
                 <!-- Product information -->
                 <div class="card-body p-4 d-flex flex-column">
                   <div
-                    class="d-flex justify-content-between align-items-start gap-3 mb-2"
+                    class="d-flex justify-content-between
+                           align-items-start gap-3 mb-2"
                   >
                     <div>
                       <p
@@ -161,7 +182,9 @@
                       th:unless="${card.hasActiveDeal()}"
                       class="product-price"
                     >
-                      <span class="product-price-currency"> ₪ </span>
+                      <span class="product-price-currency">
+                        ₪
+                      </span>
 
                       <span
                         th:text="${#numbers.formatDecimal(
@@ -179,11 +202,15 @@
                       th:if="${card.hasActiveDeal()}"
                       class="product-deal-pricing"
                     >
-                      <span class="product-deal-label"> Deal price </span>
+                      <span class="product-deal-label">
+                        Deal price
+                      </span>
 
                       <div>
                         <strong class="product-deal-current-price">
-                          <span class="product-price-currency"> ₪ </span>
+                          <span class="product-price-currency">
+                            ₪
+                          </span>
 
                           <span
                             th:text="${#numbers.formatDecimal(
@@ -197,7 +224,9 @@
                         </strong>
 
                         <span class="product-deal-regular-price">
-                          <span class="product-price-currency"> ₪ </span>
+                          <span class="product-price-currency">
+                            ₪
+                          </span>
 
                           <span
                             th:text="${#numbers.formatDecimal(
@@ -212,7 +241,9 @@
                       </div>
                     </div>
 
-                    <span class="btn btn-outline-primary rounded-pill px-3">
+                    <span
+                      class="btn btn-outline-primary rounded-pill px-3"
+                    >
                       Details
                     </span>
                   </div>
@@ -225,14 +256,14 @@
         <!-- Link to the complete catalog -->
         <div
           th:if="${!#lists.isEmpty(productCards)}"
-          class="new-arrivals-catalog-link"
+          class="best-sellers-catalog-link"
         >
           <div>
             <strong>Looking for more products?</strong>
 
             <p>
-              Browse the complete Khoury Computer catalog and use the available
-              search and filtering tools.
+              Browse the complete Khoury Computer catalog and use the
+              available search and filtering tools.
             </p>
           </div>
 
@@ -247,6 +278,8 @@
     </main>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
-    <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+    <div
+      th:replace="~{fragments/footer :: bootstrapScript}"
+    ></div>
   </body>
 </html>
