@@ -95,6 +95,16 @@ public class AdminProductController {
                                         .toList();
                 }
 
+                if ("BEST_SELLERS".equals(selectedCollection)) {
+                        products = products.stream()
+                                        .filter(ProductResponse::bestSeller)
+                                        .sorted(
+                                                        Comparator.comparing(
+                                                                        ProductResponse::bestSellerMarkedAt)
+                                                                        .reversed())
+                                        .toList();
+                }
+
                 List<CategoryResponse> categories = categoryApplicationService.listCategories();
 
                 Map<Long, CategoryResponse> categoriesById = categories.stream()
@@ -119,6 +129,10 @@ public class AdminProductController {
                                 .filter(ProductResponse::newArrival)
                                 .count();
 
+                long bestSellerCount = allProducts.stream()
+                                .filter(ProductResponse::bestSeller)
+                                .count();
+
                 model.addAttribute("products", products);
                 model.addAttribute("categories", categories);
                 model.addAttribute("categoriesById", categoriesById);
@@ -133,6 +147,7 @@ public class AdminProductController {
                 model.addAttribute("lowStockCount", lowStockCount);
                 model.addAttribute("soldOutCount", soldOutCount);
                 model.addAttribute("newArrivalCount", newArrivalCount);
+                model.addAttribute("bestSellerCount", bestSellerCount);
 
                 model.addAttribute("keyword", keyword);
                 model.addAttribute(
@@ -364,7 +379,8 @@ public class AdminProductController {
                                 form.getStockQuantity(),
                                 form.getCategoryId(),
                                 parseTags(form.getTags()),
-                                form.isNewArrival());
+                                form.isNewArrival(),
+                                form.isBestSeller());
         }
 
         private UpdateProductRequest toUpdateProductRequest(
@@ -378,7 +394,8 @@ public class AdminProductController {
                                 form.getStockQuantity(),
                                 form.getCategoryId(),
                                 parseTags(form.getTags()),
-                                form.isNewArrival());
+                                form.isNewArrival(),
+                                form.isBestSeller());
         }
 
         private AdminProductForm toAdminProductForm(
@@ -394,6 +411,7 @@ public class AdminProductController {
                 form.setCategoryId(product.categoryId());
                 form.setTags(String.join(", ", product.tags()));
                 form.setNewArrival(product.newArrival());
+                form.setBestSeller(product.bestSeller());
 
                 return form;
         }
@@ -443,6 +461,10 @@ public class AdminProductController {
 
                 if ("NEW_ARRIVALS".equalsIgnoreCase(collection)) {
                         return "NEW_ARRIVALS";
+                }
+
+                if ("BEST_SELLERS".equalsIgnoreCase(collection)) {
+                        return "BEST_SELLERS";
                 }
 
                 return "";

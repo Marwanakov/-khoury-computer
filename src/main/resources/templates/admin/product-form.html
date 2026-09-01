@@ -312,16 +312,17 @@
               <div class="admin-form-section-heading">
                 <span>Storefront promotion</span>
 
-                <h2>New Arrival status</h2>
+                <h2>Product collections</h2>
 
                 <p>
-                  Highlight this product in the New Arrivals collection and
-                  identify it with a NEW badge throughout the storefront.
+                  Highlight this product in selected storefront collections. A
+                  product may belong to both collections at the same time.
                 </p>
               </div>
 
-              <div class="card border-0 bg-light rounded-4">
-                <div class="card-body p-4">
+              <div class="admin-promotion-options">
+                <!-- New Arrival -->
+                <div class="admin-promotion-option admin-promotion-new-arrival">
                   <div class="form-check form-switch">
                     <input
                       id="newArrival"
@@ -336,10 +337,33 @@
                     </label>
                   </div>
 
-                  <p class="text-muted small mb-0 mt-2">
-                    When enabled, the product will appear on the New Arrivals
-                    page and display a NEW badge. Disable it when the product
-                    should no longer be promoted as new.
+                  <p>
+                    When enabled, the product will appear in the New Arrivals
+                    collection and display a NEW badge throughout the
+                    storefront.
+                  </p>
+                </div>
+
+                <!-- Best Seller -->
+                <div class="admin-promotion-option admin-promotion-best-seller">
+                  <div class="form-check form-switch">
+                    <input
+                      id="bestSeller"
+                      type="checkbox"
+                      class="form-check-input"
+                      role="switch"
+                      th:field="*{bestSeller}"
+                    />
+
+                    <label for="bestSeller" class="form-check-label fw-bold">
+                      Mark this product as a Best Seller
+                    </label>
+                  </div>
+
+                  <p>
+                    Enable this for products that sell especially well in the
+                    physical store. The product will appear in the Best Sellers
+                    collection and display a gold BEST SELLER badge.
                   </p>
                 </div>
               </div>

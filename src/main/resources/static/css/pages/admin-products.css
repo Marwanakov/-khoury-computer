@@ -97,7 +97,7 @@
 
 .admin-product-summary-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
@@ -153,6 +153,10 @@
 
 .summary-new-arrivals::before {
     background-color: #7c3aed;
+}
+
+.summary-best-sellers::before {
+    background-color: #d97706;
 }
 
 
@@ -380,6 +384,27 @@
     background-color: #ede9fe;
     border: 1px solid #c4b5fd;
     border-radius: 999px;
+}
+
+.admin-best-seller-badge {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 0.3rem 0.5rem;
+    color: #78350f;
+    font-size: 0.62rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    background:
+        linear-gradient(
+            135deg,
+            #fef3c7,
+            #fde68a
+        );
+    border: 1px solid #f59e0b;
+    border-radius: 999px;
+    box-shadow: 0 5px 12px rgba(217, 119, 6, 0.12);
 }
 
 .admin-product-brand {
@@ -998,4 +1023,71 @@
     background-color: #fee2e2;
     border: 1px solid #fca5a5;
     border-radius: 999px;
+}
+
+/* =========================
+   Storefront Promotions
+========================= */
+
+.admin-promotion-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.admin-promotion-option {
+    padding: 1.35rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+}
+
+.admin-promotion-option .form-check {
+    margin-bottom: 0;
+}
+
+.admin-promotion-option .form-check-label {
+    color: #0f172a;
+}
+
+.admin-promotion-option p {
+    margin: 0.65rem 0 0;
+    color: #64748b;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.admin-promotion-new-arrival {
+    background:
+        linear-gradient(
+            145deg,
+            #faf5ff,
+            #ffffff
+        );
+    border-color: #ddd6fe;
+}
+
+.admin-promotion-new-arrival .form-check-input:checked {
+    background-color: #7c3aed;
+    border-color: #7c3aed;
+}
+
+.admin-promotion-best-seller {
+    background:
+        linear-gradient(
+            145deg,
+            #fffbeb,
+            #ffffff
+        );
+    border-color: #fde68a;
+}
+
+.admin-promotion-best-seller .form-check-input:checked {
+    background-color: #d97706;
+    border-color: #d97706;
+}
+
+@media (max-width: 767.98px) {
+    .admin-promotion-options {
+        grid-template-columns: 1fr;
+    }
 }

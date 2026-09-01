@@ -48,6 +48,8 @@ public class AdminProductForm {
 
     private boolean newArrival;
 
+    private boolean bestSeller;
+
     public String getName() {
         return name;
     }
@@ -134,5 +136,13 @@ public class AdminProductForm {
 
     public void setNewArrival(boolean newArrival) {
         this.newArrival = newArrival;
+    }
+
+    public boolean isBestSeller() {
+        return bestSeller;
+    }
+
+    public void setBestSeller(boolean bestSeller) {
+        this.bestSeller = bestSeller;
     }
 }

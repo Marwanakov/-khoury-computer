@@ -70,6 +70,11 @@
               <strong th:text="${newArrivalCount}">0</strong>
             </div>
 
+            <div class="admin-summary-card summary-best-sellers">
+              <span>Best sellers</span>
+              <strong th:text="${bestSellerCount}">0</strong>
+            </div>
+
             <div class="admin-summary-card summary-available">
               <span>Available</span>
               <strong th:text="${availableCount}">0</strong>
@@ -176,6 +181,13 @@
                     th:selected="${selectedCollection == 'NEW_ARRIVALS'}"
                   >
                     New arrivals only
+                  </option>
+
+                  <option
+                    value="BEST_SELLERS"
+                    th:selected="${selectedCollection == 'BEST_SELLERS'}"
+                  >
+                    Best sellers only
                   </option>
                 </select>
               </div>
@@ -295,6 +307,13 @@
                                 class="admin-new-arrival-badge"
                               >
                                 NEW
+                              </span>
+
+                              <span
+                                th:if="${product.bestSeller()}"
+                                class="admin-best-seller-badge"
+                              >
+                                BEST SELLER
                               </span>
 
                               <span
