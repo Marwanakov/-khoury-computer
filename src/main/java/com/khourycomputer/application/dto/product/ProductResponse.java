@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.time.LocalDateTime;
 
 public record ProductResponse(
         Long id,
@@ -18,8 +19,9 @@ public record ProductResponse(
         ProductAvailabilityStatus availabilityStatus,
         String imageUrl,
         Long categoryId,
-        Set<String> tags
-) {
+        Set<String> tags,
+        boolean newArrival,
+        LocalDateTime newArrivalMarkedAt) {
 
     public List<ProductSpecificationResponse> specificationItems() {
         if (specifications == null || specifications.isBlank()) {
@@ -35,8 +37,7 @@ public record ProductResponse(
     }
 
     private static ProductSpecificationResponse parseSpecification(
-            String line
-    ) {
+            String line) {
         int separatorIndex = line.indexOf(':');
 
         if (separatorIndex <= 0

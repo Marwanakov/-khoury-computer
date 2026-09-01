@@ -27,7 +27,9 @@ public class ProductMapper {
                 productEntity.availabilityStatus(),
                 productEntity.imageUrl(),
                 productEntity.categoryId(),
-                mapTagsToDomain(productEntity.tags())
+                mapTagsToDomain(productEntity.tags()),
+                productEntity.newArrival(),
+                productEntity.newArrivalMarkedAt()
         );
     }
 
@@ -47,12 +49,15 @@ public class ProductMapper {
                 product.getAvailabilityStatus(),
                 product.getImageUrl(),
                 product.getCategoryId(),
-                mapTagsToEntity(product.getTags())
+                mapTagsToEntity(product.getTags()),
+                product.isNewArrival(),
+                product.getNewArrivalMarkedAt()
         );
     }
 
-    // The following two methods handles tag conversion only. (SLAP-Principle)
-    private Set<String> mapTagsToDomain(Set<ProductTagEntity> tags) {
+    private Set<String> mapTagsToDomain(
+            Set<ProductTagEntity> tags
+    ) {
         if (tags == null) {
             return Set.of();
         }
@@ -62,7 +67,9 @@ public class ProductMapper {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ProductTagEntity> mapTagsToEntity(Set<String> tags) {
+    private Set<ProductTagEntity> mapTagsToEntity(
+            Set<String> tags
+    ) {
         if (tags == null) {
             return Set.of();
         }

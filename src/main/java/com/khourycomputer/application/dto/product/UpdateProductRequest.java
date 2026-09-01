@@ -11,6 +11,7 @@ public record UpdateProductRequest(
         String brand,
         int stockQuantity,
         Long categoryId,
-        Set<String> tags
+        Set<String> tags,
+        boolean newArrival
 ) {
 }

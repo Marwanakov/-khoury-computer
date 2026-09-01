@@ -7,6 +7,7 @@ import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Table("products")
@@ -36,5 +37,12 @@ public record ProductEntity(
         Long categoryId,
 
         @MappedCollection(idColumn = "product_id")
-        Set<ProductTagEntity> tags
-){}
+        Set<ProductTagEntity> tags,
+
+        @Column("is_new_arrival")
+        boolean newArrival,
+
+        @Column("new_arrival_marked_at")
+        LocalDateTime newArrivalMarkedAt
+) {
+}

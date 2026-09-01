@@ -16,10 +16,12 @@ import com.khourycomputer.application.port.storage.ImageStorageFolder;
 import com.khourycomputer.application.port.storage.ImageUpload;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import java.time.LocalDateTime;
 
 import java.util.Objects;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,7 +71,11 @@ public class ProductApplicationService {
                 calculateAvailabilityStatus(request.stockQuantity()),
                 imageUrl,
                 request.categoryId(),
-                cleanTags(request.tags()));
+                cleanTags(request.tags()),
+                request.newArrival(),
+                request.newArrival()
+                        ? LocalDateTime.now()
+                        : null);
 
         Product savedProduct = productRepository.save(product);
 
@@ -90,6 +96,7 @@ public class ProductApplicationService {
             UpdateProductRequest request,
             ImageUpload newImage,
             boolean removeImage) {
+
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
@@ -107,6 +114,9 @@ public class ProductApplicationService {
                 oldImageUrl,
                 newImage,
                 removeImage);
+        LocalDateTime newArrivalMarkedAt = determineNewArrivalMarkedAt(
+                existingProduct,
+                request.newArrival());
 
         Product updatedProduct = new Product(
                 existingProduct.getId(),
@@ -119,7 +129,9 @@ public class ProductApplicationService {
                 calculateAvailabilityStatus(request.stockQuantity()),
                 resultingImageUrl,
                 request.categoryId(),
-                cleanTags(request.tags()));
+                cleanTags(request.tags()),
+                request.newArrival(),
+                newArrivalMarkedAt);
 
         Product savedProduct = productRepository.save(updatedProduct);
 
@@ -309,7 +321,9 @@ public class ProductApplicationService {
                 product.getAvailabilityStatus(),
                 product.getImageUrl(),
                 product.getCategoryId(),
-                product.getTags());
+                product.getTags(),
+                product.isNewArrival(),
+                product.getNewArrivalMarkedAt());
     }
 
     private boolean matchesKeyword(Product product, String keyword) {
@@ -476,10 +490,9 @@ public class ProductApplicationService {
             String brand,
             ProductAvailabilityStatus availabilityStatus,
             BigDecimal minPrice,
-            BigDecimal maxPrice) {
-        validatePriceFilter(
-                minPrice,
-                maxPrice);
+            BigDecimal maxPrice,
+            boolean newArrivalsOnly) {
+        validatePriceFilter(minPrice, maxPrice);
 
         String normalizedKeyword = normalizeFilterText(keyword);
 
@@ -498,10 +511,17 @@ public class ProductApplicationService {
                         normalizedBrand))
                 .filter(product -> availabilityStatus == null
                         || product.getAvailabilityStatus() == availabilityStatus)
+                .filter(product -> !newArrivalsOnly
+                        || product.isNewArrival())
                 .filter(product -> matchesEffectivePrice(
                         product,
                         minPrice,
                         maxPrice))
+                .sorted(
+                        newArrivalsOnly
+                                ? Comparator.comparing(
+                                        Product::getNewArrivalMarkedAt).reversed()
+                                : (first, second) -> 0)
                 .map(this::toResponse)
                 .toList();
     }
@@ -521,4 +541,32 @@ public class ProductApplicationService {
         return maxPrice == null
                 || effectivePrice.compareTo(maxPrice) <= 0;
     }
+
+    private LocalDateTime determineNewArrivalMarkedAt(
+            Product existingProduct,
+            boolean newArrival) {
+        if (!newArrival) {
+            return null;
+        }
+
+        if (existingProduct.isNewArrival()) {
+            return existingProduct.getNewArrivalMarkedAt();
+        }
+
+        return LocalDateTime.now();
+    }
+
+    @Transactional(readOnly = true)
+public List<ProductResponse> listNewArrivals() {
+    return productRepository.findAll()
+            .stream()
+            .filter(Product::isNewArrival)
+            .sorted(
+                    Comparator.comparing(
+                            Product::getNewArrivalMarkedAt
+                    ).reversed()
+            )
+            .map(this::toResponse)
+            .toList();
+}
 }
