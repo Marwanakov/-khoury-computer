@@ -606,20 +606,32 @@
 }
 
 .admin-ordered-product {
+    display: block;
     padding: 1rem;
+    color: inherit;
+    text-decoration: none;
     background-color: #f8fafc;
     border: 1px solid #e8edf3;
     border-radius: 1rem;
+    cursor: pointer;
     transition:
+        color 0.2s ease,
         border-color 0.2s ease,
         box-shadow 0.2s ease,
         transform 0.2s ease;
 }
 
-.admin-ordered-product:hover {
-    border-color: #bfdbfe;
-    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.1);
+.admin-ordered-product:hover,
+.admin-ordered-product:focus {
+    color: inherit;
+    border-color: #93c5fd;
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.12);
     transform: translateY(-2px);
+}
+
+.admin-ordered-product:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 3px;
 }
 
 .admin-ordered-product-main {
@@ -649,11 +661,12 @@
         transform 0.2s ease;
 }
 
-.admin-ordered-product-image-link:hover,
-.admin-ordered-product-image-link:focus {
+.admin-ordered-product:hover
+.admin-ordered-product-image-link,
+.admin-ordered-product:focus
+.admin-ordered-product-image-link {
     border-color: #93c5fd;
     box-shadow: 0 10px 22px rgba(37, 99, 235, 0.16);
-    transform: translateY(-2px);
 }
 
 .admin-ordered-product-image {
@@ -665,9 +678,9 @@
     transition: transform 0.25s ease;
 }
 
-.admin-ordered-product-image-link:hover
+.admin-ordered-product:hover
 .admin-ordered-product-image,
-.admin-ordered-product-image-link:focus
+.admin-ordered-product:focus
 .admin-ordered-product-image {
     transform: scale(1.05);
 }
@@ -693,8 +706,10 @@
     transition: color 0.2s ease;
 }
 
-.admin-ordered-product-name:hover,
-.admin-ordered-product-name:focus {
+.admin-ordered-product:hover
+.admin-ordered-product-name,
+.admin-ordered-product:focus
+.admin-ordered-product-name {
     color: #2563eb;
 }
 
@@ -715,31 +730,6 @@
 .admin-product-current-stock strong {
     color: #0f172a;
     font-weight: 900;
-}
-
-.admin-ordered-product-view-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.55rem;
-    color: #2563eb;
-    font-size: 0.72rem;
-    font-weight: 850;
-    text-decoration: none;
-}
-
-.admin-ordered-product-view-link:hover,
-.admin-ordered-product-view-link:focus {
-    color: #1d4ed8;
-}
-
-.admin-ordered-product-view-link span {
-    transition: transform 0.2s ease;
-}
-
-.admin-ordered-product-view-link:hover span,
-.admin-ordered-product-view-link:focus span {
-    transform: translateX(3px);
 }
 
 /* Quantity and prices */

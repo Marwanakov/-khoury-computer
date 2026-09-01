@@ -225,19 +225,17 @@
                 </div>
 
                 <div class="admin-ordered-product-list">
-                  <div
+                  <a
                     class="admin-ordered-product"
                     th:each="item : ${order.items()}"
+                    th:href="@{/products/{id}(id=${item.productId()})}"
+                    target="_blank"
+                    rel="noopener"
+                    th:aria-label="|View ${item.productName()} details|"
                   >
                     <div class="admin-ordered-product-main">
-                      <!-- Clickable product image -->
-                      <a
-                        class="admin-ordered-product-image-link"
-                        th:href="@{/products/{id}(id=${item.productId()})}"
-                        target="_blank"
-                        rel="noopener"
-                        th:aria-label="|View ${item.productName()} details|"
-                      >
+                      <!-- Product image -->
+                      <div class="admin-ordered-product-image-link">
                         <img
                           th:if="${!#strings.isEmpty(item.imageUrl())}"
                           class="admin-ordered-product-image"
@@ -251,54 +249,38 @@
                           th:src="@{/images/products/product-fallback.png}"
                           th:alt="|Default image for ${item.productName()}|"
                         />
-                      </a>
+                      </div>
 
                       <!-- Product identity -->
                       <div class="admin-ordered-product-information">
-                        <a
+                        <strong
                           class="admin-ordered-product-name"
-                          th:href="@{/products/{id}(id=${item.productId()})}"
-                          target="_blank"
-                          rel="noopener"
                           th:text="${item.productName()}"
                         >
                           Product name
-                        </a>
+                        </strong>
 
                         <p>
                           Product ID:
-                          <span th:text="${item.productId()}"> 1 </span>
+                          <span th:text="${item.productId()}">1</span>
                         </p>
 
                         <p class="admin-product-current-stock">
                           Current stock:
 
                           <strong
-                            th:text="${currentStockByProductId[
-                        item.productId()
-                    ]}"
+                            th:text="${currentStockByProductId[item.productId()]}"
                           >
                             0
                           </strong>
                         </p>
-
-                        <a
-                          class="admin-ordered-product-view-link"
-                          th:href="@{/products/{id}(id=${item.productId()})}"
-                          target="_blank"
-                          rel="noopener"
-                        >
-                          View Product
-                          <span aria-hidden="true">&rarr;</span>
-                        </a>
                       </div>
 
-                      <!-- Quantity and prices -->
+                      <!-- Quantity and historical order prices -->
                       <div class="admin-ordered-product-meta">
                         <div>
                           <span>Quantity</span>
-
-                          <strong th:text="${item.quantity()}"> 1 </strong>
+                          <strong th:text="${item.quantity()}">1</strong>
                         </div>
 
                         <div>
@@ -307,10 +289,10 @@
                           <strong>
                             &#8362;<span
                               th:text="${#numbers.formatDecimal(
-                            item.unitPrice(),
-                            1,
-                            2
-                        )}"
+                        item.unitPrice(),
+                        1,
+                        2
+                    )}"
                             >
                               0.00
                             </span>
@@ -323,10 +305,10 @@
                           <strong>
                             &#8362;<span
                               th:text="${#numbers.formatDecimal(
-                            item.subtotal(),
-                            1,
-                            2
-                        )}"
+                        item.subtotal(),
+                        1,
+                        2
+                    )}"
                             >
                               0.00
                             </span>
@@ -334,7 +316,7 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 </div>
               </div>
             </div>
