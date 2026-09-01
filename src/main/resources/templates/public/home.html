@@ -194,8 +194,36 @@
             <!-- Future cards belong here:
            Best Sellers
            Bundles
-           New Arrivals
       -->
+
+            <!-- New Arrivals -->
+            <a
+              class="home-collection-card home-collection-card-new"
+              th:href="@{/new-arrivals}"
+              aria-label="View new arrivals"
+            >
+              <div class="home-collection-card-media">
+                <img
+                  th:src="@{/images/home/new-arrivals-banner.png}"
+                  alt="Latest computers and technology products"
+                />
+
+                <div class="home-collection-card-overlay"></div>
+
+                
+              </div>
+
+              <div class="home-collection-card-content">
+                <div>
+                  <span>Recently selected</span>
+                  <h3>New Arrivals</h3>
+                </div>
+
+                <span class="home-collection-arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </div>
+            </a>
           </div>
         </div>
       </section>
