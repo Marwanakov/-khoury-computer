@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,12 +36,14 @@ public class ProductApplicationService {
     private final CategoryRepository categoryRepository;
     private final ProductPricingService productPricingService;
     private final ImageStorage imageStorage;
+    private final ProductSearchMatcher productSearchMatcher;
 
     public ProductApplicationService(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
             ImageStorage imageStorage,
-            ProductPricingService productPricingService) {
+            ProductPricingService productPricingService,
+            ProductSearchMatcher productSearchMatcher) {
         this.productRepository = productRepository;
 
         this.categoryRepository = categoryRepository;
@@ -48,6 +51,8 @@ public class ProductApplicationService {
         this.imageStorage = imageStorage;
 
         this.productPricingService = productPricingService;
+
+        this.productSearchMatcher = productSearchMatcher;
     }
 
     @Transactional
@@ -507,17 +512,21 @@ public class ProductApplicationService {
             BigDecimal maxPrice,
             boolean newArrivalsOnly,
             boolean bestSellersOnly) {
-        validatePriceFilter(minPrice, maxPrice);
 
-        String normalizedKeyword = normalizeFilterText(keyword);
+        validatePriceFilter(minPrice, maxPrice);
 
         String normalizedBrand = normalizeFilterText(brand);
 
-        return productRepository.findAll()
+        Map<Long, String> categoryNamesById = categoryRepository
+                .findAll()
                 .stream()
-                .filter(product -> matchesKeyword(
-                        product,
-                        normalizedKeyword))
+                .collect(Collectors.toMap(
+                        category -> category.getId(),
+                        category -> category.getName()));
+
+        List<Product> filterCandidates = productRepository
+                .findAll()
+                .stream()
                 .filter(product -> categoryId == null
                         || product.getCategoryId()
                                 .equals(categoryId))
@@ -534,14 +543,39 @@ public class ProductApplicationService {
                         product,
                         minPrice,
                         maxPrice))
-                .sorted(
-                        newArrivalsOnly
-                                ? Comparator.comparing(
-                                        Product::getNewArrivalMarkedAt).reversed()
-                                : bestSellersOnly
-                                        ? Comparator.comparing(
-                                                Product::getBestSellerMarkedAt).reversed()
-                                        : (first, second) -> 0)
+                .toList();
+
+        boolean hasKeyword = productSearchMatcher.hasQuery(keyword);
+
+        boolean exactMatchesExist = hasKeyword
+                && filterCandidates.stream()
+                        .anyMatch(product -> productSearchMatcher
+                                .matchesExactly(
+                                        product,
+                                        categoryNamesById.get(
+                                                product.getCategoryId()),
+                                        keyword));
+
+        return filterCandidates.stream()
+                .filter(product -> !hasKeyword
+                        || (exactMatchesExist
+                                ? productSearchMatcher
+                                        .matchesExactly(
+                                                product,
+                                                categoryNamesById.get(
+                                                        product.getCategoryId()),
+                                                keyword)
+                                : productSearchMatcher
+                                        .matches(
+                                                product,
+                                                categoryNamesById.get(
+                                                        product.getCategoryId()),
+                                                keyword)))
+                .sorted(createStorefrontProductComparator(
+                        keyword,
+                        categoryNamesById,
+                        newArrivalsOnly,
+                        bestSellersOnly))
                 .map(this::toResponse)
                 .toList();
     }
@@ -612,5 +646,42 @@ public class ProductApplicationService {
         }
 
         return LocalDateTime.now();
+    }
+
+    private Comparator<Product> createStorefrontProductComparator(
+            String keyword,
+            Map<Long, String> categoryNamesById,
+            boolean newArrivalsOnly,
+            boolean bestSellersOnly) {
+
+        Comparator<Product> comparator;
+
+        if (productSearchMatcher.hasQuery(keyword)) {
+            comparator = Comparator
+                    .comparingInt((Product product) -> productSearchMatcher.calculateRelevance(
+                            product,
+                            categoryNamesById.get(
+                                    product.getCategoryId()),
+                            keyword))
+                    .reversed();
+        } else {
+            comparator = (first, second) -> 0;
+        }
+
+        if (newArrivalsOnly) {
+            comparator = comparator.thenComparing(
+                    Product::getNewArrivalMarkedAt,
+                    Comparator.nullsLast(
+                            Comparator.reverseOrder()));
+        } else if (bestSellersOnly) {
+            comparator = comparator.thenComparing(
+                    Product::getBestSellerMarkedAt,
+                    Comparator.nullsLast(
+                            Comparator.reverseOrder()));
+        }
+
+        return comparator.thenComparing(
+                Product::getName,
+                String.CASE_INSENSITIVE_ORDER);
     }
 }
