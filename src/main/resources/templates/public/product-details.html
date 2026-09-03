@@ -23,7 +23,7 @@
             <!-- Return to Deals -->
             <a
               th:if="${param.returnTo != null
-            and param.returnTo[0] == 'deals'}"
+      and param.returnTo[0] == 'deals'}"
               class="product-back-link d-inline-block"
               th:href="@{/deals}"
             >
@@ -33,7 +33,7 @@
             <!-- Return to New Arrivals -->
             <a
               th:if="${param.returnTo != null
-            and param.returnTo[0] == 'new-arrivals'}"
+      and param.returnTo[0] == 'new-arrivals'}"
               class="product-back-link d-inline-block"
               th:href="@{/new-arrivals}"
             >
@@ -43,48 +43,78 @@
             <!-- Return to Best Sellers -->
             <a
               th:if="${param.returnTo != null
-            and param.returnTo[0] == 'best-sellers'}"
+      and param.returnTo[0] == 'best-sellers'}"
               class="product-back-link d-inline-block"
               th:href="@{/best-sellers}"
             >
               &larr; Back to Best Sellers
             </a>
 
+            <!-- Return to Cart -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'cart'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/cart}"
+            >
+              &larr; Back to My Cart
+            </a>
+
+            <!-- Return to the customer's order -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'order'
+      and param.orderId != null}"
+              class="product-back-link d-inline-block"
+              th:href="@{/orders/{id}(
+      id=${param.orderId[0]}
+    )}"
+            >
+              &larr; Back to My Order
+            </a>
+
             <!-- Return to the filtered Products page -->
             <a
               th:unless="${param.returnTo != null
-                and (param.returnTo[0] == 'deals'
-                     or param.returnTo[0] == 'new-arrivals'
-                     or param.returnTo[0] == 'best-sellers')}"
+      and (
+        param.returnTo[0] == 'deals'
+        or param.returnTo[0] == 'new-arrivals'
+        or param.returnTo[0] == 'best-sellers'
+        or param.returnTo[0] == 'cart'
+        or (
+          param.returnTo[0] == 'order'
+          and param.orderId != null
+        )
+      )}"
               class="product-back-link d-inline-block"
               th:href="@{/products(
       keyword=${param.keyword != null
-          ? param.keyword[0]
-          : null},
+        ? param.keyword[0]
+        : null},
       categoryId=${param.categoryId != null
-          ? param.categoryId[0]
-          : null},
+        ? param.categoryId[0]
+        : null},
       brand=${param.brand != null
-          ? param.brand[0]
-          : null},
+        ? param.brand[0]
+        : null},
       status=${param.status != null
-          ? param.status[0]
-          : null},
+        ? param.status[0]
+        : null},
       minPrice=${param.minPrice != null
-          ? param.minPrice[0]
-          : null},
+        ? param.minPrice[0]
+        : null},
       maxPrice=${param.maxPrice != null
-          ? param.maxPrice[0]
-          : null},
+        ? param.maxPrice[0]
+        : null},
       dealsOnly=${param.dealsOnly != null
-          ? param.dealsOnly[0]
-          : null},
+        ? param.dealsOnly[0]
+        : null},
       newArrivalsOnly=${param.newArrivalsOnly != null
-          ? param.newArrivalsOnly[0]
-          : null},
+        ? param.newArrivalsOnly[0]
+        : null},
       bestSellersOnly=${param.bestSellersOnly != null
-          ? param.bestSellersOnly[0]
-          : null}
+        ? param.bestSellersOnly[0]
+        : null}
     )}"
             >
               &larr; Back to Products
