@@ -16,6 +16,7 @@ public class Order {
     private List<OrderItem> items;
     private OrderStatus status;
     private LocalDateTime createdAt;
+    private OrderDiscount customDiscount;
 
     public Order(
             Long id,
@@ -23,14 +24,16 @@ public class Order {
             CustomerInfo customerInfo,
             List<OrderItem> items,
             OrderStatus status,
-            LocalDateTime createdAt
-    ) {
+            LocalDateTime createdAt,
+            OrderDiscount customDiscount) {
+
         setId(id);
         setUserId(userId);
         setCustomerInfo(customerInfo);
         setItems(items);
         setStatus(status);
         setCreatedAt(createdAt);
+        setCustomDiscount(customDiscount);
     }
 
     public Long getId() {
@@ -57,10 +60,104 @@ public class Order {
         return createdAt;
     }
 
-    public BigDecimal getTotalPrice() {
+    public BigDecimal getSubtotal() {
         return items.stream()
                 .map(OrderItem::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(
+                        BigDecimal.ZERO,
+                        BigDecimal::add);
+    }
+
+    public BigDecimal getCustomDiscountAmount() {
+        if (customDiscount == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return customDiscount.getAmount();
+    }
+
+    public LocalDateTime getCustomDiscountAppliedAt() {
+        if (customDiscount == null) {
+            return null;
+        }
+
+        return customDiscount.getAppliedAt();
+    }
+
+    public boolean hasCustomDiscount() {
+        return customDiscount != null;
+    }
+
+    public BigDecimal getTotalPrice() {
+        if (customDiscount == null) {
+            return getSubtotal();
+        }
+
+        return customDiscount.applyTo(
+                getSubtotal());
+    }
+
+    public void applyAgreedFinalTotal(
+            BigDecimal agreedFinalTotal,
+            LocalDateTime appliedAt) {
+
+        validateCustomDiscountCanBeChanged();
+
+        if (agreedFinalTotal == null) {
+            throw new IllegalArgumentException(
+                    "Agreed final total cannot be empty.");
+        }
+
+        if (agreedFinalTotal.compareTo(
+                BigDecimal.ZERO) <= 0) {
+
+            throw new IllegalArgumentException(
+                    "Agreed final total must be "
+                            + "greater than zero.");
+        }
+
+        if (agreedFinalTotal
+                .stripTrailingZeros()
+                .scale() > 2) {
+
+            throw new IllegalArgumentException(
+                    "Agreed final total cannot have "
+                            + "more than two decimal places.");
+        }
+
+        BigDecimal subtotal = getSubtotal();
+
+        if (agreedFinalTotal.compareTo(subtotal) >= 0) {
+            throw new IllegalArgumentException(
+                    "Agreed final total must be lower "
+                            + "than the order subtotal.");
+        }
+
+        BigDecimal discountAmount = subtotal.subtract(agreedFinalTotal);
+
+        customDiscount = new OrderDiscount(
+                discountAmount,
+                appliedAt);
+    }
+
+    public void removeCustomDiscount() {
+        validateCustomDiscountCanBeChanged();
+
+        if (!hasCustomDiscount()) {
+            throw new IllegalStateException(
+                    "This order does not have "
+                            + "a custom discount.");
+        }
+
+        customDiscount = null;
+    }
+
+    private void validateCustomDiscountCanBeChanged() {
+        if (status != OrderStatus.PENDING) {
+            throw new IllegalStateException(
+                    "Custom discounts can only be changed "
+                            + "while an order is pending.");
+        }
     }
 
     public void confirm() {
@@ -80,27 +177,24 @@ public class Order {
     }
 
     public void cancel() {
-    if (status == OrderStatus.CANCELLED) {
-        throw new IllegalStateException(
-                "This order has already been cancelled."
-        );
-    }
+        if (status == OrderStatus.CANCELLED) {
+            throw new IllegalStateException(
+                    "This order has already been cancelled.");
+        }
 
-    if (status == OrderStatus.COMPLETED) {
-        throw new IllegalStateException(
-                "Completed orders cannot be cancelled."
-        );
-    }
+        if (status == OrderStatus.COMPLETED) {
+            throw new IllegalStateException(
+                    "Completed orders cannot be cancelled.");
+        }
 
-    if (status != OrderStatus.PENDING
-            && status != OrderStatus.CONFIRMED) {
-        throw new IllegalStateException(
-                "Only pending or confirmed orders can be cancelled."
-        );
-    }
+        if (status != OrderStatus.PENDING
+                && status != OrderStatus.CONFIRMED) {
+            throw new IllegalStateException(
+                    "Only pending or confirmed orders can be cancelled.");
+        }
 
-    status = OrderStatus.CANCELLED;
-}
+        status = OrderStatus.CANCELLED;
+    }
 
     private void setId(Long id) {
         this.id = id;
@@ -140,5 +234,20 @@ public class Order {
 
     private void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = Objects.requireNonNullElse(createdAt, LocalDateTime.now());
+    }
+
+    private void setCustomDiscount(
+            OrderDiscount customDiscount) {
+
+        if (customDiscount != null
+                && customDiscount.getAmount()
+                        .compareTo(getSubtotal()) > 0) {
+
+            throw new IllegalArgumentException(
+                    "Custom discount cannot exceed "
+                            + "the order subtotal.");
+        }
+
+        this.customDiscount = customDiscount;
     }
 }

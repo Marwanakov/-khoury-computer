@@ -4,8 +4,11 @@ import com.khourycomputer.domain.model.Order;
 import com.khourycomputer.domain.model.OrderItem;
 import com.khourycomputer.persistence.entity.OrderEntity;
 import com.khourycomputer.persistence.entity.OrderItemEntity;
+import com.khourycomputer.domain.model.OrderDiscount;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -25,11 +28,14 @@ public class OrderMapper {
         return new Order(
                 orderEntity.id(),
                 orderEntity.userId(),
-                customerInfoMapper.toDomain(orderEntity.customerInfo()),
+                customerInfoMapper.toDomain(
+                        orderEntity.customerInfo()),
                 mapItemsToDomain(orderEntity.items()),
                 orderEntity.status(),
-                orderEntity.createdAt()
-        );
+                orderEntity.createdAt(),
+                mapDiscountToDomain(
+                        orderEntity.customDiscountAmount(),
+                        orderEntity.customDiscountAppliedAt()));
     }
 
     public OrderEntity toEntity(Order order) {
@@ -40,11 +46,13 @@ public class OrderMapper {
         return new OrderEntity(
                 order.getId(),
                 order.getUserId(),
-                customerInfoMapper.toEntity(order.getCustomerInfo()),
+                customerInfoMapper.toEntity(
+                        order.getCustomerInfo()),
                 mapItemsToEntity(order.getItems()),
                 order.getStatus(),
-                order.getCreatedAt()
-        );
+                order.getCreatedAt(),
+                order.getCustomDiscountAmount(),
+                order.getCustomDiscountAppliedAt());
     }
 
     private List<OrderItem> mapItemsToDomain(List<OrderItemEntity> items) {
@@ -67,16 +75,17 @@ public class OrderMapper {
                 .toList();
     }
 
-    // OrderItem does not have its own mapper because it belongs inside the Order aggregate.
-    // These helper methods map one single order item between domain and persistence.
+    // OrderItem does not have its own mapper because it belongs inside the Order
+    // aggregate.
+    // These helper methods map one single order item between domain and
+    // persistence.
     private OrderItem mapItemToDomain(OrderItemEntity itemEntity) {
         return new OrderItem(
                 itemEntity.id(),
                 itemEntity.productId(),
                 itemEntity.productName(),
                 itemEntity.unitPrice(),
-                itemEntity.quantity()
-        );
+                itemEntity.quantity());
     }
 
     private OrderItemEntity mapItemToEntity(OrderItem item) {
@@ -85,7 +94,22 @@ public class OrderMapper {
                 item.getProductId(),
                 item.getProductName(),
                 item.getUnitPrice(),
-                item.getQuantity()
-        );
+                item.getQuantity());
+    }
+
+    private OrderDiscount mapDiscountToDomain(
+            BigDecimal amount,
+            LocalDateTime appliedAt) {
+
+        if (amount == null
+                || amount.compareTo(
+                        BigDecimal.ZERO) == 0) {
+
+            return null;
+        }
+
+        return new OrderDiscount(
+                amount,
+                appliedAt);
     }
 }

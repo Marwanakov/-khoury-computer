@@ -17,6 +17,14 @@ public record OrderResponse(
         List<OrderItemResponse> items,
         OrderStatus status,
         LocalDateTime createdAt,
+        BigDecimal subtotal,
+        BigDecimal customDiscountAmount,
+        LocalDateTime customDiscountAppliedAt,
         BigDecimal totalPrice
 ) {
+    public boolean hasCustomDiscount() {
+        return customDiscountAmount != null
+                && customDiscountAmount.compareTo(
+                        BigDecimal.ZERO) > 0;
+    }
 }

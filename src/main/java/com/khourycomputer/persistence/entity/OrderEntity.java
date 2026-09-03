@@ -7,6 +7,7 @@ import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,11 +21,20 @@ public record OrderEntity(
         @Embedded.Nullable(prefix = "customer_")
         CustomerInfoEntity customerInfo,
 
-        @MappedCollection(idColumn = "order_id", keyColumn = "order_item_order")
+        @MappedCollection(
+                idColumn = "order_id",
+                keyColumn = "order_item_order")
         List<OrderItemEntity> items,
 
         OrderStatus status,
 
         @Column("created_at")
-        LocalDateTime createdAt
-) {}
+        LocalDateTime createdAt,
+
+        @Column("custom_discount_amount")
+        BigDecimal customDiscountAmount,
+
+        @Column("custom_discount_applied_at")
+        LocalDateTime customDiscountAppliedAt
+) {
+}
