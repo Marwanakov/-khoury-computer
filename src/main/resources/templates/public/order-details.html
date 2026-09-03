@@ -224,18 +224,90 @@
               <aside class="order-summary-card">
                 <h3 class="order-card-title mb-4">Order Summary</h3>
 
-                <div class="order-summary-total">
+                <!-- Normal order total -->
+                <div
+                  th:unless="${order.hasCustomDiscount()}"
+                  class="order-summary-total"
+                >
                   <span>Total</span>
 
                   <strong class="money-amount">
                     <span class="money-symbol">₪</span>
 
                     <span
-                      th:text="${#numbers.formatDecimal(order.totalPrice(), 0, 0)}"
+                      th:text="${#numbers.formatDecimal(
+        order.totalPrice(),
+        0,
+        0
+      )}"
                     >
                       0
                     </span>
                   </strong>
+                </div>
+
+                <!-- Custom pricing breakdown -->
+                <div
+                  th:if="${order.hasCustomDiscount()}"
+                  class="order-custom-price-summary"
+                >
+                  <div class="order-custom-price-row">
+                    <span>Products subtotal</span>
+
+                    <strong class="money-amount">
+                      <span class="money-symbol">₪</span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+          order.subtotal(),
+          0,
+          0
+        )}"
+                      >
+                        0
+                      </span>
+                    </strong>
+                  </div>
+
+                  <div class="order-custom-price-row order-custom-discount-row">
+                    <span>Custom discount</span>
+
+                    <strong class="money-amount">
+                      &minus;<span class="money-symbol">₪</span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+          order.customDiscountAmount(),
+          0,
+          0
+        )}"
+                      >
+                        0
+                      </span>
+                    </strong>
+                  </div>
+
+                  <div class="order-custom-final-total">
+                    <span>Final agreed total</span>
+
+                    <strong class="money-amount">
+                      <span class="money-symbol">₪</span>
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+          order.totalPrice(),
+          0,
+          0
+        )}"
+                      >
+                        0
+                      </span>
+                    </strong>
+                  </div>
+
+                  <p class="order-custom-price-note">
+                    Khoury Computer applied the price agreed with you.
+                  </p>
                 </div>
 
                 <hr />

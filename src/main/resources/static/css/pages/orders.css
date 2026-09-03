@@ -557,3 +557,102 @@
     gap: 0.35rem;
   }
 }
+
+/* =========================
+   Customer Custom Pricing
+========================= */
+
+.order-list-custom-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.order-list-custom-price > strong {
+  color: #15803d;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.order-list-original-total {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: line-through;
+}
+
+.order-custom-price-summary {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-custom-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  color: #64748b;
+  font-size: 0.88rem;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.order-custom-price-row strong {
+  color: #0f172a;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.order-custom-discount-row,
+.order-custom-discount-row strong {
+  color: #15803d;
+}
+
+.order-custom-final-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.order-custom-final-total > span {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.order-custom-final-total strong {
+  color: #15803d;
+  font-size: 1.5rem;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.order-custom-price-note {
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  color: #166534;
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1.5;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.75rem;
+}
+
+@media (max-width: 575.98px) {
+  .order-list-custom-price {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .order-custom-price-row,
+  .order-custom-final-total {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
