@@ -324,22 +324,157 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
               <aside class="admin-order-action-card">
-                <span class="admin-action-card-label"> Order total </span>
+                <span class="admin-action-card-label"> Order pricing </span>
 
-                <div class="admin-order-grand-total">
-                  <span>Total</span>
+                <div class="admin-order-price-breakdown">
+                  <div class="admin-order-price-row">
+                    <span>Products subtotal</span>
 
-                  <strong>
-                    &#8362;<span
-                      th:text="${#numbers.formatDecimal(
-                                        order.totalPrice(),
-                                        1,
-                                        2
-                                    )}"
+                    <strong>
+                      &#8362;<span
+                        th:text="${#numbers.formatDecimal(
+          order.subtotal(),
+          1,
+          2
+        )}"
+                      >
+                        0.00
+                      </span>
+                    </strong>
+                  </div>
+
+                  <div
+                    th:if="${order.hasCustomDiscount()}"
+                    class="admin-order-price-row admin-order-discount-row"
+                  >
+                    <span>Custom discount</span>
+
+                    <strong>
+                      &minus;&#8362;<span
+                        th:text="${#numbers.formatDecimal(
+          order.customDiscountAmount(),
+          1,
+          2
+        )}"
+                      >
+                        0.00
+                      </span>
+                    </strong>
+                  </div>
+
+                  <div class="admin-order-grand-total">
+                    <span
+                      th:text="${order.hasCustomDiscount()
+        ? 'Agreed final total'
+        : 'Total'}"
                     >
-                      0.00
+                      Total
                     </span>
-                  </strong>
+
+                    <strong>
+                      &#8362;<span
+                        th:text="${#numbers.formatDecimal(
+          order.totalPrice(),
+          1,
+          2
+        )}"
+                      >
+                        0.00
+                      </span>
+                    </strong>
+                  </div>
+
+                  <p
+                    th:if="${order.hasCustomDiscount()}"
+                    class="admin-order-discount-date"
+                  >
+                    Applied
+                    <span
+                      th:text="${#temporals.format(
+        order.customDiscountAppliedAt(),
+        'dd MMM yyyy, HH:mm'
+      )}"
+                    >
+                      06 Aug 2026, 12:00
+                    </span>
+                  </p>
+                </div>
+
+                <div
+                  th:if="${order.status().name() == 'PENDING'}"
+                  class="admin-custom-discount-section"
+                >
+                  <div class="admin-custom-discount-heading">
+                    <span>Custom pricing</span>
+
+                    <strong
+                      th:text="${order.hasCustomDiscount()
+        ? 'Update agreed price'
+        : 'Apply custom discount'}"
+                    >
+                      Apply custom discount
+                    </strong>
+                  </div>
+
+                  <p>
+                    Enter the final total agreed with the customer. The discount
+                    will be calculated automatically.
+                  </p>
+
+                  <form
+                    th:action="@{/admin/orders/{id}/custom-discount(
+      id=${order.id()}
+    )}"
+                    th:object="${discountForm}"
+                    method="post"
+                    class="admin-custom-discount-form"
+                  >
+                    <label for="agreedFinalTotal"> Agreed final total </label>
+
+                    <div class="admin-custom-discount-input">
+                      <span>&#8362;</span>
+
+                      <input
+                        id="agreedFinalTotal"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        th:max="${order.subtotal()}"
+                        th:field="*{agreedFinalTotal}"
+                        class="form-control"
+                        placeholder="Example: 3000.00"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      class="btn btn-khoury w-100"
+                      th:text="${order.hasCustomDiscount()
+        ? 'Update Custom Price'
+        : 'Apply Custom Discount'}"
+                    >
+                      Apply Custom Discount
+                    </button>
+                  </form>
+
+                  <form
+                    th:if="${order.hasCustomDiscount()}"
+                    th:action="@{/admin/orders/{id}/custom-discount/remove(
+      id=${order.id()}
+    )}"
+                    method="post"
+                    class="admin-remove-discount-form"
+                    onsubmit="
+                      return confirm(
+                        'Remove this custom discount and restore the original total?',
+                      );
+                    "
+                  >
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                      Remove Custom Discount
+                    </button>
+                  </form>
                 </div>
 
                 <hr />

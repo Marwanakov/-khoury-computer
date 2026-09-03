@@ -1006,3 +1006,164 @@
         flex-direction: column;
     }
 }
+
+/* =========================
+   Custom Order Pricing
+========================= */
+
+.admin-order-price-breakdown {
+    margin-top: 1.25rem;
+}
+
+.admin-order-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0;
+    color: #64748b;
+    font-size: 0.84rem;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.admin-order-price-row strong {
+    color: #0f172a;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.admin-order-discount-row {
+    color: #166534;
+}
+
+.admin-order-discount-row strong {
+    color: #16a34a;
+}
+
+.admin-order-price-breakdown
+.admin-order-grand-total {
+    margin-top: 1rem;
+}
+
+.admin-order-discount-date {
+    margin: 0.75rem 0 0;
+    color: #64748b;
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+.admin-order-discount-date span {
+    font-weight: 800;
+}
+
+.admin-custom-discount-section {
+    margin-top: 1.5rem;
+    padding: 1.1rem;
+    background:
+        linear-gradient(
+            145deg,
+            #f0fdf4,
+            #ffffff
+        );
+    border: 1px solid #bbf7d0;
+    border-radius: 1rem;
+}
+
+.admin-custom-discount-heading {
+    margin-bottom: 0.55rem;
+}
+
+.admin-custom-discount-heading > span {
+    display: block;
+    margin-bottom: 0.15rem;
+    color: #16a34a;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.admin-custom-discount-heading strong {
+    color: #14532d;
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+
+.admin-custom-discount-section > p {
+    margin-bottom: 1rem;
+    color: #64748b;
+    font-size: 0.76rem;
+    line-height: 1.55;
+}
+
+.admin-custom-discount-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #334155;
+    font-size: 0.76rem;
+    font-weight: 850;
+}
+
+.admin-custom-discount-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.75rem;
+}
+
+.admin-custom-discount-input:focus-within {
+    border-color: #22c55e;
+    box-shadow:
+        0 0 0 0.2rem rgba(34, 197, 94, 0.12);
+}
+
+.admin-custom-discount-input > span {
+    padding-left: 0.85rem;
+    color: #166534;
+    font-weight: 900;
+}
+
+.admin-custom-discount-input .form-control {
+    min-height: 44px;
+    border: 0;
+    box-shadow: none;
+}
+
+.admin-remove-discount-form {
+    margin-top: 0.65rem;
+}
+
+/* =========================
+   Order List Custom Price
+========================= */
+
+.admin-order-custom-price {
+    display: flex;
+    min-width: 125px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+.admin-order-custom-price-values {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    white-space: nowrap;
+}
+
+.admin-order-custom-price-values strong {
+    color: #15803d;
+    font-size: 0.95rem;
+    font-weight: 950;
+}
+
+.admin-order-original-price {
+    color: #94a3b8;
+    font-size: 0.73rem;
+    font-weight: 800;
+    text-decoration: line-through;
+}
