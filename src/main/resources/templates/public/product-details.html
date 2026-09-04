@@ -73,6 +73,19 @@
               &larr; Back to My Order
             </a>
 
+            <!-- Return to Order Confirmation -->
+            <a
+              th:if="${param.returnTo != null
+    and param.returnTo[0] == 'confirmation'
+    and param.orderId != null}"
+              class="product-back-link d-inline-block"
+              th:href="@{/orders/confirmation/{id}(
+    id=${param.orderId[0]}
+  )}"
+            >
+              &larr; Back to Order Confirmation
+            </a>
+
             <!-- Return to the filtered Products page -->
             <a
               th:unless="${param.returnTo != null
@@ -85,6 +98,10 @@
           param.returnTo[0] == 'order'
           and param.orderId != null
         )
+        or (
+          param.returnTo[0] == 'confirmation'
+          and param.orderId != null
+)
       )}"
               class="product-back-link d-inline-block"
               th:href="@{/products(

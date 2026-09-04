@@ -10,7 +10,14 @@
     <main>
       <section class="order-page-hero">
         <div class="container">
-          <span class="order-page-label">Order received</span>
+          <a
+            class="order-back-link d-inline-block mb-3"
+            th:href="@{/orders/my-orders}"
+          >
+            &larr; Back to My Orders
+          </a>
+
+          <span class="order-page-label d-block"> Order received </span>
 
           <h1 class="order-page-title">Thank you for your order request</h1>
 
@@ -132,7 +139,11 @@
                 <a
                   class="order-item"
                   th:each="item : ${order.items()}"
-                  th:href="@{/products/{id}(id=${item.productId()})}"
+                  th:href="@{/products/{id}(
+  id=${item.productId()},
+  returnTo='confirmation',
+  orderId=${order.id()}
+)}"
                   th:aria-label="|View ${item.productName()} details|"
                 >
                   <div class="order-item-image-wrapper">
