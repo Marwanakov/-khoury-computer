@@ -209,10 +209,7 @@
 
                 <div class="home-collection-card-overlay"></div>
 
-                <span
-                  class="home-new-arrival-image-badge"
-                  aria-hidden="true"
-                >
+                <span class="home-new-arrival-image-badge" aria-hidden="true">
                   NEW
                 </span>
               </div>
@@ -243,10 +240,7 @@
 
                 <div class="home-collection-card-overlay"></div>
 
-                <span
-                  class="home-best-seller-image-badge"
-                  aria-hidden="true"
-                >
+                <span class="home-best-seller-image-badge" aria-hidden="true">
                   BEST SELLER
                 </span>
               </div>
@@ -296,9 +290,7 @@
 
           <p>Browse all products or contact the store for assistance.</p>
 
-          <a class="btn btn-khoury" th:href="@{/products}">
-            Browse Products
-          </a>
+          <a class="btn btn-khoury" th:href="@{/products}"> Browse Products </a>
         </div>
 
         <!-- Dynamic categories -->
@@ -348,9 +340,112 @@
           </div>
         </div>
       </section>
+
+      <!-- Shop By Brand -->
+      <section
+        class="home-brands-section"
+        th:if="${!#lists.isEmpty(brands)}"
+        aria-labelledby="homeBrandsTitle"
+      >
+        <div class="container">
+          <div class="home-brands-heading">
+            <div>
+              <span>Trusted technology</span>
+
+              <h2 id="homeBrandsTitle" class="section-title mb-2">
+                Shop by brand
+              </h2>
+
+              <p>Explore products from brands available at Khoury Computer.</p>
+            </div>
+
+            <a
+              class="btn btn-outline-primary rounded-pill px-4"
+              th:href="@{/products}"
+            >
+              View All Products
+            </a>
+          </div>
+        </div>
+
+        <div class="home-brands-marquee" data-brand-marquee>
+          <button
+            type="button"
+            class="home-brand-navigation home-brand-navigation-previous"
+            data-brand-previous
+            aria-label="Show previous brands"
+          >
+            <span aria-hidden="true">&larr;</span>
+          </button>
+
+          <button
+            type="button"
+            class="home-brand-navigation home-brand-navigation-next"
+            data-brand-next
+            aria-label="Show next brands"
+          >
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+
+          <div class="home-brands-track" data-brand-track>
+            <!-- Visible brand collection -->
+            <div class="home-brands-group">
+              <a
+                class="home-brand-item"
+                th:each="brand : ${brands}"
+                th:href="@{/products(brand=${brand.name()})}"
+                th:aria-label="|View ${brand.name()} products|"
+              >
+                <img
+                  th:if="${brand.logoUrl() != null
+                                and !#strings.isEmpty(brand.logoUrl())}"
+                  th:src="${brand.logoUrl()}"
+                  th:alt="${brand.name()}"
+                  loading="lazy"
+                />
+
+                <span
+                  th:if="${brand.logoUrl() == null
+                                 or #strings.isEmpty(brand.logoUrl())}"
+                  th:text="${brand.name()}"
+                >
+                  Brand
+                </span>
+              </a>
+            </div>
+
+            <!-- Duplicate collection creates a seamless loop -->
+            <div class="home-brands-group" aria-hidden="true">
+              <a
+                class="home-brand-item"
+                th:each="brand : ${brands}"
+                th:href="@{/products(brand=${brand.name()})}"
+                tabindex="-1"
+              >
+                <img
+                  th:if="${brand.logoUrl() != null
+                                and !#strings.isEmpty(brand.logoUrl())}"
+                  th:src="${brand.logoUrl()}"
+                  alt=""
+                  loading="lazy"
+                />
+
+                <span
+                  th:if="${brand.logoUrl() == null
+                                 or #strings.isEmpty(brand.logoUrl())}"
+                  th:text="${brand.name()}"
+                >
+                  Brand
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
     <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+    <script th:src="@{/js/home-brands.js}" defer></script>
   </body>
 </html>
