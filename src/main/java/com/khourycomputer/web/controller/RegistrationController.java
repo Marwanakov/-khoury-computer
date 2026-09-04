@@ -92,6 +92,7 @@ public class RegistrationController {
                                 registrationForm.getLastName(),
                                 registrationForm.getEmail(),
                                 registrationForm.getPassword(),
+                                registrationForm.getPhoneCountryCode(),
                                 registrationForm.getPhoneNumber(),
                                 addressRequest);
         }

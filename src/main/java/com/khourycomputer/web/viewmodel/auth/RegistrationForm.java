@@ -30,8 +30,13 @@ public class RegistrationForm {
     @NotBlank(message = "Please confirm your password.")
     private String confirmPassword;
 
+    @NotBlank(message = "Country code is required.")
+    @Pattern(regexp = "^\\+(970|972)$", message = "Country code must be +970 or +972.")
+    private String phoneCountryCode = "+970";
+
     @NotBlank(message = "Phone number is required.")
-    @Pattern(regexp = "^\\+?[0-9][0-9 ()-]{6,19}$", message = "Enter a valid phone number using 7 to 20 characters.")
+    @Size(max = 20, message = "Phone number cannot exceed 20 characters.")
+    @Pattern(regexp = "^0?5[0-9 ()-]*$", message = "Enter a mobile number starting with 05 or 5.")
     private String phoneNumber;
 
     @NotBlank(message = "City is required.")
@@ -118,4 +123,13 @@ public class RegistrationForm {
     public void setAddressDetails(String addressDetails) {
         this.addressDetails = addressDetails;
     }
+
+    public String getPhoneCountryCode() {
+        return phoneCountryCode;
+    }
+
+    public void setPhoneCountryCode(String phoneCountryCode) {
+        this.phoneCountryCode = phoneCountryCode;
+    }
+
 }

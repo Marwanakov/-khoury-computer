@@ -6,6 +6,7 @@ public record UpdateUserProfileRequest(
         String firstName,
         String lastName,
         String email,
+        String phoneCountryCode,
         String phoneNumber,
         AddressRequest address
 ) {

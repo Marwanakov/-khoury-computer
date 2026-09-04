@@ -1,258 +1,272 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Edit Profile', '/css/pages/profile.css')}"
+  ></head>
 
-<head th:replace="~{fragments/head :: head('Edit Profile', '/css/pages/profile.css')}"></head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<body>
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<main>
-
-    <section class="profile-hero">
+    <main>
+      <section class="profile-hero">
         <div class="container">
+          <a
+            class="profile-back-link d-inline-block mb-3"
+            th:href="@{/profile}"
+          >
+            ← Back to My Profile
+          </a>
 
-            <a class="profile-back-link d-inline-block mb-3"
-               th:href="@{/profile}">
-                ← Back to My Profile
-            </a>
+          <span class="profile-label d-block"> Account settings </span>
 
-            <span class="profile-label d-block">
-                Account settings
-            </span>
+          <h1 class="profile-title">Edit Profile</h1>
 
-            <h1 class="profile-title">
-                Edit Profile
-            </h1>
-
-            <p class="profile-subtitle">
-                Update your personal, contact, and delivery information.
-            </p>
-
+          <p class="profile-subtitle">
+            Update your personal, contact, and delivery information.
+          </p>
         </div>
-    </section>
+      </section>
 
-    <section class="py-5">
+      <section class="py-5">
         <div class="container">
+          <div class="profile-edit-card">
+            <form
+              th:action="@{/profile/edit}"
+              th:object="${profileForm}"
+              method="post"
+              novalidate
+            >
+              <!-- Global validation errors -->
+              <div
+                th:if="${#fields.hasGlobalErrors()}"
+                class="alert alert-danger border-0 mb-4"
+              >
+                <p
+                  th:each="error : ${#fields.globalErrors()}"
+                  th:text="${error}"
+                  class="mb-0"
+                >
+                  Profile update failed.
+                </p>
+              </div>
 
-            <div class="profile-edit-card">
+              <div class="profile-edit-heading">
+                <h2>Personal Information</h2>
 
-                <form th:action="@{/profile/edit}"
-                      th:object="${profileForm}"
-                      method="post"
-                      novalidate>
+                <p>
+                  Keep your account details accurate so the store can contact
+                  you regarding your orders.
+                </p>
+              </div>
 
-                    <!-- Global validation errors -->
-                    <div th:if="${#fields.hasGlobalErrors()}"
-                         class="alert alert-danger border-0 mb-4">
+              <!-- First and last name -->
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="firstName" class="form-label"> First name </label>
 
-                        <p th:each="error : ${#fields.globalErrors()}"
-                           th:text="${error}"
-                           class="mb-0">
-                            Profile update failed.
-                        </p>
+                  <input
+                    id="firstName"
+                    type="text"
+                    class="form-control"
+                    th:field="*{firstName}"
+                    th:errorclass="is-invalid"
+                    autocomplete="given-name"
+                    maxlength="50"
+                  />
 
-                    </div>
+                  <div class="invalid-feedback" th:errors="*{firstName}">
+                    First name error
+                  </div>
+                </div>
 
-                    <div class="profile-edit-heading">
-                        <h2>Personal Information</h2>
+                <div class="col-md-6">
+                  <label for="lastName" class="form-label"> Last name </label>
 
-                        <p>
-                            Keep your account details accurate so the store can
-                            contact you regarding your orders.
-                        </p>
-                    </div>
+                  <input
+                    id="lastName"
+                    type="text"
+                    class="form-control"
+                    th:field="*{lastName}"
+                    th:errorclass="is-invalid"
+                    autocomplete="family-name"
+                    maxlength="50"
+                  />
 
-                    <!-- First and last name -->
-                    <div class="row g-3">
+                  <div class="invalid-feedback" th:errors="*{lastName}">
+                    Last name error
+                  </div>
+                </div>
+              </div>
 
-                        <div class="col-md-6">
-                            <label for="firstName" class="form-label">
-                                First name
-                            </label>
+              <!-- Email and phone -->
+              <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                  <label for="email" class="form-label"> Email </label>
 
-                            <input id="firstName"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{firstName}"
-                                   th:errorclass="is-invalid"
-                                   autocomplete="given-name"
-                                   maxlength="50">
+                  <input
+                    id="email"
+                    type="email"
+                    class="form-control"
+                    th:field="*{email}"
+                    th:errorclass="is-invalid"
+                    autocomplete="email"
+                    maxlength="150"
+                  />
 
-                            <div class="invalid-feedback"
-                                 th:errors="*{firstName}">
-                                First name error
-                            </div>
-                        </div>
+                  <div class="invalid-feedback" th:errors="*{email}">
+                    Email error
+                  </div>
 
-                        <div class="col-md-6">
-                            <label for="lastName" class="form-label">
-                                Last name
-                            </label>
+                  <div class="form-text">
+                    Changing your email will sign you out. You must sign in
+                    again using the new email address.
+                  </div>
+                </div>
 
-                            <input id="lastName"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{lastName}"
-                                   th:errorclass="is-invalid"
-                                   autocomplete="family-name"
-                                   maxlength="50">
+                <div class="col-md-6">
+                  <label for="phoneNumber" class="form-label">
+                    Phone number
+                  </label>
 
-                            <div class="invalid-feedback"
-                                 th:errors="*{lastName}">
-                                Last name error
-                            </div>
-                        </div>
+                  <div class="input-group">
+                    <label class="visually-hidden" for="phoneCountryCode">
+                      Country code
+                    </label>
 
-                    </div>
+                    <select
+                      id="phoneCountryCode"
+                      class="form-select flex-grow-0 w-auto"
+                      th:field="*{phoneCountryCode}"
+                      th:errorclass="is-invalid"
+                      aria-label="Phone country code"
+                    >
+                      <option value="+970">+970</option>
+                      <option value="+972">+972</option>
+                    </select>
 
-                    <!-- Email and phone -->
-                    <div class="row g-3 mt-1">
+                    <input
+                      id="phoneNumber"
+                      type="tel"
+                      class="form-control"
+                      th:field="*{phoneNumber}"
+                      th:errorclass="is-invalid"
+                      autocomplete="tel-national"
+                      inputmode="tel"
+                      maxlength="20"
+                      placeholder="59 123 4567"
+                      aria-describedby="phoneNumberHelp"
+                    />
+                  </div>
 
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">
-                                Email
-                            </label>
+                  <div id="phoneNumberHelp" class="form-text">
+                    Enter 59 123 4567, or include the first zero: 059 123 4567.
+                  </div>
 
-                            <input id="email"
-                                   type="email"
-                                   class="form-control"
-                                   th:field="*{email}"
-                                   th:errorclass="is-invalid"
-                                   autocomplete="email"
-                                   maxlength="150">
+                  <div
+                    class="invalid-feedback d-block"
+                    th:if="${#fields.hasErrors('phoneCountryCode')}"
+                    th:errors="*{phoneCountryCode}"
+                  >
+                    Country code error
+                  </div>
 
-                            <div class="invalid-feedback"
-                                 th:errors="*{email}">
-                                Email error
-                            </div>
+                  <div
+                    class="invalid-feedback d-block"
+                    th:if="${#fields.hasErrors('phoneNumber')}"
+                    th:errors="*{phoneNumber}"
+                  >
+                    Phone number error
+                  </div>
+                </div>
+              </div>
 
-                            <div class="form-text">
-                                Changing your email will sign you out. You must
-                                sign in again using the new email address.
-                            </div>
-                        </div>
+              <hr class="profile-divider" />
 
-                        <div class="col-md-6">
-                            <label for="phoneNumber" class="form-label">
-                                Phone number
-                            </label>
+              <div class="profile-edit-heading">
+                <h2>Delivery Address</h2>
 
-                            <input id="phoneNumber"
-                                   type="tel"
-                                   class="form-control"
-                                   th:field="*{phoneNumber}"
-                                   th:errorclass="is-invalid"
-                                   autocomplete="tel"
-                                   maxlength="20">
+                <p>
+                  This address will be copied into future order requests.
+                  Existing orders will keep their original information.
+                </p>
+              </div>
 
-                            <div class="invalid-feedback"
-                                 th:errors="*{phoneNumber}">
-                                Phone number error
-                            </div>
-                        </div>
+              <!-- City and street -->
+              <div class="row g-3">
+                <div class="col-md-5">
+                  <label for="city" class="form-label"> City </label>
 
-                    </div>
+                  <input
+                    id="city"
+                    type="text"
+                    class="form-control"
+                    th:field="*{city}"
+                    th:errorclass="is-invalid"
+                    autocomplete="address-level2"
+                    maxlength="100"
+                  />
 
-                    <hr class="profile-divider">
+                  <div class="invalid-feedback" th:errors="*{city}">
+                    City error
+                  </div>
+                </div>
 
-                    <div class="profile-edit-heading">
-                        <h2>Delivery Address</h2>
+                <div class="col-md-7">
+                  <label for="street" class="form-label"> Street </label>
 
-                        <p>
-                            This address will be copied into future order requests.
-                            Existing orders will keep their original information.
-                        </p>
-                    </div>
+                  <input
+                    id="street"
+                    type="text"
+                    class="form-control"
+                    th:field="*{street}"
+                    th:errorclass="is-invalid"
+                    autocomplete="street-address"
+                    maxlength="150"
+                  />
 
-                    <!-- City and street -->
-                    <div class="row g-3">
+                  <div class="invalid-feedback" th:errors="*{street}">
+                    Street error
+                  </div>
+                </div>
+              </div>
 
-                        <div class="col-md-5">
-                            <label for="city" class="form-label">
-                                City
-                            </label>
+              <!-- Address details -->
+              <div class="mt-3">
+                <label for="addressDetails" class="form-label">
+                  Additional address details
+                </label>
 
-                            <input id="city"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{city}"
-                                   th:errorclass="is-invalid"
-                                   autocomplete="address-level2"
-                                   maxlength="100">
+                <textarea
+                  id="addressDetails"
+                  class="form-control"
+                  th:field="*{addressDetails}"
+                  th:errorclass="is-invalid"
+                  rows="3"
+                  maxlength="300"
+                  placeholder="Building, floor, nearby landmark..."
+                ></textarea>
 
-                            <div class="invalid-feedback"
-                                 th:errors="*{city}">
-                                City error
-                            </div>
-                        </div>
+                <div class="invalid-feedback" th:errors="*{addressDetails}">
+                  Address details error
+                </div>
+              </div>
 
-                        <div class="col-md-7">
-                            <label for="street" class="form-label">
-                                Street
-                            </label>
+              <div class="profile-edit-actions">
+                <a class="btn btn-outline-secondary" th:href="@{/profile}">
+                  Cancel
+                </a>
 
-                            <input id="street"
-                                   type="text"
-                                   class="form-control"
-                                   th:field="*{street}"
-                                   th:errorclass="is-invalid"
-                                   autocomplete="street-address"
-                                   maxlength="150">
-
-                            <div class="invalid-feedback"
-                                 th:errors="*{street}">
-                                Street error
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Address details -->
-                    <div class="mt-3">
-                        <label for="addressDetails" class="form-label">
-                            Additional address details
-                        </label>
-
-                        <textarea id="addressDetails"
-                                  class="form-control"
-                                  th:field="*{addressDetails}"
-                                  th:errorclass="is-invalid"
-                                  rows="3"
-                                  maxlength="300"
-                                  placeholder="Building, floor, nearby landmark..."></textarea>
-
-                        <div class="invalid-feedback"
-                             th:errors="*{addressDetails}">
-                            Address details error
-                        </div>
-                    </div>
-
-                    <div class="profile-edit-actions">
-
-                        <a class="btn btn-outline-secondary"
-                           th:href="@{/profile}">
-                            Cancel
-                        </a>
-
-                        <button type="submit"
-                                class="btn btn-khoury">
-                            Save Changes
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
+                <button type="submit" class="btn btn-khoury">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
-
-</body>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
 </html>

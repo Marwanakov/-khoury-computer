@@ -11,6 +11,7 @@ import com.khourycomputer.domain.exception.CustomerNotFoundException;
 import com.khourycomputer.domain.model.Address;
 import com.khourycomputer.domain.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.khourycomputer.domain.model.PalestinianPhoneNumber;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,20 +25,25 @@ public class UserApplicationService {
 
     public UserApplicationService(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder
-    ) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // User story: customer creates an account with name, email, phone number, password, and address.
+    // User story: customer creates an account with name, email, phone number,
+    // password, and address.
     @Transactional
     public UserResponse registerUser(RegisterUserRequest request) {
         String email = normalizeEmail(request.email());
 
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email already exists.");
+            throw new IllegalArgumentException(
+                    "Email already exists.");
         }
+
+        PalestinianPhoneNumber phoneNumber = PalestinianPhoneNumber.fromParts(
+                request.phoneCountryCode(),
+                request.phoneNumber());
 
         User user = new User(
                 null,
@@ -45,10 +51,9 @@ public class UserApplicationService {
                 request.lastName(),
                 email,
                 encodePassword(request.password()),
-                request.phoneNumber(),
+                phoneNumber.getInternationalNumber(),
                 toAddress(request.address()),
-                UserRole.CUSTOMER
-        );
+                UserRole.CUSTOMER);
 
         User savedUser = userRepository.save(user);
 
@@ -57,17 +62,25 @@ public class UserApplicationService {
 
     // User story: customer edits profile information so his data stays correct.
     @Transactional
-    public UserResponse updateUserProfile(Long userId, UpdateUserProfileRequest request) {
+    public UserResponse updateUserProfile(
+            Long userId,
+            UpdateUserProfileRequest request) {
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "User not found."));
 
         String newEmail = normalizeEmail(request.email());
 
         userRepository.findByEmail(newEmail)
                 .filter(userWithSameEmail -> !userWithSameEmail.getId().equals(userId))
                 .ifPresent(userWithSameEmail -> {
-                    throw new IllegalArgumentException("Email already exists.");
+                    throw new IllegalArgumentException(
+                            "Email already exists.");
                 });
+
+        PalestinianPhoneNumber phoneNumber = PalestinianPhoneNumber.fromParts(
+                request.phoneCountryCode(),
+                request.phoneNumber());
 
         User updatedUser = new User(
                 existingUser.getId(),
@@ -75,10 +88,9 @@ public class UserApplicationService {
                 request.lastName(),
                 newEmail,
                 existingUser.getPasswordHash(),
-                request.phoneNumber(),
+                phoneNumber.getInternationalNumber(),
                 toAddress(request.address()),
-                existingUser.getRole()
-        );
+                existingUser.getRole());
 
         User savedUser = userRepository.save(updatedUser);
 
@@ -95,18 +107,16 @@ public class UserApplicationService {
     }
 
     @Transactional(readOnly = true)
-public UserResponse getCustomerById(Long customerId) {
-    User customer = userRepository.findById(customerId)
-            .orElseThrow(() ->
-                    new CustomerNotFoundException(customerId)
-            );
+    public UserResponse getCustomerById(Long customerId) {
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
-    if (customer.getRole() != UserRole.CUSTOMER) {
-        throw new CustomerNotFoundException(customerId);
+        if (customer.getRole() != UserRole.CUSTOMER) {
+            throw new CustomerNotFoundException(customerId);
+        }
+
+        return toResponse(customer);
     }
-
-    return toResponse(customer);
-}
 
     // User story support: login later needs to load a user by email.
     @Transactional(readOnly = true)
@@ -163,16 +173,14 @@ public UserResponse getCustomerById(Long customerId) {
         return new Address(
                 addressRequest.city(),
                 addressRequest.street(),
-                addressRequest.details()
-        );
+                addressRequest.details());
     }
 
     private AddressResponse toAddressResponse(Address address) {
         return new AddressResponse(
                 address.getCity(),
                 address.getStreet(),
-                address.getDetails()
-        );
+                address.getDetails());
     }
 
     private UserResponse toResponse(User user) {
@@ -184,7 +192,6 @@ public UserResponse getCustomerById(Long customerId) {
                 user.getEmail(),
                 user.getPhoneNumber(),
                 toAddressResponse(user.getAddress()),
-                user.getRole()
-        );
+                user.getRole());
     }
 }
