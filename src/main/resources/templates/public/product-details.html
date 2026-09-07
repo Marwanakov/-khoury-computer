@@ -86,6 +86,19 @@
               &larr; Back to Order Confirmation
             </a>
 
+            <!-- Return to the previously viewed product -->
+            <a
+              th:if="${param.returnTo != null
+    and param.returnTo[0] == 'product'
+    and param.sourceProductId != null}"
+              class="product-back-link d-inline-block"
+              th:href="@{/products/{id}(
+    id=${param.sourceProductId[0]}
+  )}"
+            >
+              &larr; Back to Previous Product
+            </a>
+
             <!-- Return to the filtered Products page -->
             <a
               th:unless="${param.returnTo != null
@@ -101,7 +114,12 @@
         or (
           param.returnTo[0] == 'confirmation'
           and param.orderId != null
-)
+        )
+
+        or (
+          param.returnTo[0] == 'product'
+          and param.sourceProductId != null
+        )
       )}"
               class="product-back-link d-inline-block"
               th:href="@{/products(
@@ -138,7 +156,7 @@
             </a>
           </div>
 
-          <div class="row g-5 align-items-start">
+          <div class="row g-4 align-items-start">
             <!-- Product image -->
             <div class="col-lg-6">
               <div class="product-details-image-card">
@@ -365,7 +383,6 @@
                 <details
                   th:if="${!product.specificationItems().isEmpty()}"
                   class="product-specifications mt-4"
-                  open
                 >
                   <summary class="product-specifications-summary">
                     <span>
@@ -403,6 +420,36 @@
                     </div>
                   </div>
                 </details>
+
+                <!-- Similar products shortcut -->
+                <a
+                  th:if="${recommendationSections != null
+    and !recommendationSections.isEmpty()}"
+                  class="product-alternatives-shortcut"
+                  href="#similar-products"
+                >
+                  <span
+                    class="product-alternatives-shortcut-icon"
+                    aria-hidden="true"
+                  >
+                    ⇄
+                  </span>
+
+                  <span>
+                    <strong>Not sure about this product?</strong>
+
+                    <small>
+                      Compare similar, cheaper, and higher-priced alternatives.
+                    </small>
+                  </span>
+
+                  <span
+                    class="product-alternatives-shortcut-arrow"
+                    aria-hidden="true"
+                  >
+                    &darr;
+                  </span>
+                </a>
 
                 <!-- Product actions -->
                 <div class="product-details-actions mt-5">
@@ -472,6 +519,223 @@
                 </p>
               </div>
             </div>
+
+            <!-- Product Recommendations -->
+            <section
+              id="similar-products"
+              th:if="${recommendationSections != null
+    and !recommendationSections.isEmpty()}"
+              class="product-recommendations"
+              aria-labelledby="productRecommendationsTitle"
+            >
+              <div class="product-recommendations-heading">
+                <span>Compare your options</span>
+
+                <h2 id="productRecommendationsTitle">Similar products</h2>
+
+                <p>
+                  Explore carefully selected alternatives from the same product
+                  category.
+                </p>
+              </div>
+
+              <div class="product-recommendation-sections">
+                <section
+                  class="product-recommendation-group"
+                  th:each="recommendationSection
+               : ${recommendationSections}"
+                >
+                  <div class="product-recommendation-group-heading">
+                    <div>
+                      <h3 th:text="${recommendationSection.title()}">
+                        Same brand
+                      </h3>
+
+                      <p th:text="${recommendationSection.description()}">
+                        Related products worth considering.
+                      </p>
+                    </div>
+
+                    <span
+                      class="product-recommendation-count"
+                      th:text="|${recommendationSection.products().size()}
+                    options|"
+                    >
+                      2 options
+                    </span>
+                  </div>
+
+                  <div class="product-recommendation-grid">
+                    <a
+                      class="product-recommendation-card"
+                      th:each="recommendation
+                   : ${recommendationSection.products()}"
+                      th:href="@{/products/{id}(
+            id=${recommendation.productId()},
+            returnTo='product',
+            sourceProductId=${product.id()}
+          )}"
+                      th:aria-label="|View ${recommendation.name()}|"
+                    >
+                      <div class="product-recommendation-image-wrapper">
+                        <img
+                          th:if="${!#strings.isEmpty(
+                recommendation.imageUrl()
+              )}"
+                          class="product-recommendation-image"
+                          th:src="${recommendation.imageUrl()}"
+                          th:alt="${recommendation.name()}"
+                          loading="lazy"
+                        />
+
+                        <img
+                          th:if="${#strings.isEmpty(
+                recommendation.imageUrl()
+              )}"
+                          class="product-recommendation-image product-recommendation-fallback"
+                          th:src="@{/images/products/product-fallback.png}"
+                          th:alt="|Default image for
+                       ${recommendation.name()}|"
+                          loading="lazy"
+                        />
+                      </div>
+
+                      <div class="product-recommendation-content">
+                        <div class="product-recommendation-top-row">
+                          <span
+                            class="product-recommendation-brand"
+                            th:text="${recommendation.brand()}"
+                          >
+                            Brand
+                          </span>
+
+                          <span
+                            class="product-recommendation-status"
+                            th:classappend="${recommendation
+                  .availabilityStatus().name() == 'LOW_STOCK'}
+                  ? ' recommendation-low-stock'
+                  : ' recommendation-available'"
+                            th:text="${recommendation
+                  .availabilityStatus().displayName}"
+                          >
+                            Available
+                          </span>
+                        </div>
+
+                        <h4 th:text="${recommendation.name()}">
+                          Recommended product
+                        </h4>
+
+                        <p
+                          class="product-recommendation-reason"
+                          th:text="${recommendation.similarityReason()}"
+                        >
+                          Similar technical specifications
+                        </p>
+
+                        <div class="product-recommendation-footer">
+                          <div class="product-recommendation-pricing">
+                            <strong
+                              th:classappend="${recommendation.hasActiveDeal()}
+    ? ' product-recommendation-deal-price'
+    : ''"
+                            >
+                              <span class="product-recommendation-currency">
+                                ₪
+                              </span>
+
+                              <span
+                                th:text="${#numbers.formatDecimal(
+      recommendation.effectivePrice(),
+      0,
+      0
+    )}"
+                              >
+                                0
+                              </span>
+                            </strong>
+
+                            <span
+                              th:if="${recommendation.hasActiveDeal()}"
+                              class="product-recommendation-regular-price"
+                            >
+                              <span>₪</span>
+
+                              <span
+                                th:text="${#numbers.formatDecimal(
+                      recommendation.regularPrice(),
+                      0,
+                      0
+                    )}"
+                              >
+                                0
+                              </span>
+                            </span>
+                          </div>
+
+                          <span
+                            th:if="${recommendation.group().name()
+                  == 'SAME_BRAND'}"
+                            class="product-recommendation-context recommendation-context-brand"
+                          >
+                            Same brand
+                          </span>
+
+                          <span
+                            th:if="${recommendation.group().name()
+                  == 'CHEAPER'}"
+                            class="product-recommendation-context recommendation-context-cheaper"
+                          >
+                            Save ₪<span
+                              th:text="${#numbers.formatDecimal(
+                    recommendation.priceDifference(),
+                    0,
+                    0
+                  )}"
+                            >
+                              0
+                            </span>
+                          </span>
+
+                          <span
+                            th:if="${recommendation.group().name()
+                  == 'SIMILAR_PRICE'}"
+                            class="product-recommendation-context recommendation-context-similar"
+                          >
+                            Similar price
+                          </span>
+
+                          <span
+                            th:if="${recommendation.group().name()
+    == 'HIGHER_PRICE'}"
+                            class="product-recommendation-context recommendation-context-higher"
+                          >
+                            <span>₪</span>
+
+                            <span
+                              th:text="${#numbers.formatDecimal(
+      recommendation.priceDifference(),
+      0,
+      0
+    )}"
+                            >
+                              0
+                            </span>
+
+                            <span>more</span>
+                          </span>
+                        </div>
+
+                        <span class="product-recommendation-view">
+                          View product
+                          <span aria-hidden="true">&rarr;</span>
+                        </span>
+                      </div>
+                    </a>
+                  </div>
+                </section>
+              </div>
+            </section>
           </div>
         </div>
       </section>

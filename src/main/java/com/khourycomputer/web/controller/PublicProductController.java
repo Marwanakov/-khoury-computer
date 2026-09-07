@@ -5,6 +5,10 @@ import com.khourycomputer.application.dto.product.ProductResponse;
 import com.khourycomputer.application.service.CategoryApplicationService;
 import com.khourycomputer.application.service.ProductApplicationService;
 import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
+import com.khourycomputer.application.dto.recommendation.ProductRecommendationResponse;
+import com.khourycomputer.application.service.ProductRecommendationService;
+import com.khourycomputer.web.viewmodel.product.ProductRecommendationSectionFactory;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +32,24 @@ public class PublicProductController {
         private final ProductApplicationService productApplicationService;
         private final CategoryApplicationService categoryApplicationService;
         private final ProductDealApplicationService productDealApplicationService;
+        private final ProductRecommendationService productRecommendationService;
+        private final ProductRecommendationSectionFactory productRecommendationSectionFactory;
 
         public PublicProductController(
                         ProductApplicationService productApplicationService,
                         CategoryApplicationService categoryApplicationService,
-                        ProductDealApplicationService productDealApplicationService) {
+                        ProductDealApplicationService productDealApplicationService,
+                        ProductRecommendationService productRecommendationService,
+                        ProductRecommendationSectionFactory productRecommendationSectionFactory) {
                 this.productApplicationService = productApplicationService;
+
                 this.categoryApplicationService = categoryApplicationService;
+
                 this.productDealApplicationService = productDealApplicationService;
+
+                this.productRecommendationService = productRecommendationService;
+
+                this.productRecommendationSectionFactory = productRecommendationSectionFactory;
         }
 
         @GetMapping("/products")
@@ -154,6 +168,9 @@ public class PublicProductController {
                                 .findActiveDealByProductId(
                                                 productId);
 
+                List<ProductRecommendationResponse> recommendations = productRecommendationService
+                                .recommendAlternatives(productId);
+
                 model.addAttribute(
                                 "product",
                                 product);
@@ -166,6 +183,12 @@ public class PublicProductController {
                                 "activeDeal",
                                 activeDeal);
 
+                model.addAttribute(
+                                "recommendationSections",
+                                productRecommendationSectionFactory
+                                                .createSections(recommendations));
+
                 return "public/product-details";
         }
+
 }
