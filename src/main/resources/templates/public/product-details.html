@@ -312,6 +312,73 @@
                   Product description
                 </p>
 
+                <!-- Product actions -->
+                <div class="product-details-actions mt-4">
+                  <form
+                    th:action="@{/cart/items}"
+                    method="post"
+                    class="product-add-cart-form"
+                  >
+                    <input
+                      type="hidden"
+                      name="productId"
+                      th:value="${product.id()}"
+                    />
+
+                    <div class="number-stepper">
+                      <button
+                        type="button"
+                        class="number-stepper-btn"
+                        data-stepper-action="decrease"
+                        aria-label="Decrease quantity"
+                      >
+                        &minus;
+                      </button>
+
+                      <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        th:max="${product.stockQuantity()}"
+                        step="1"
+                        value="1"
+                        class="form-control number-stepper-input quantity-input"
+                        aria-label="Quantity"
+                      />
+
+                      <button
+                        type="button"
+                        class="number-stepper-btn"
+                        data-stepper-action="increase"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <button
+                      type="submit"
+                      class="btn btn-khoury"
+                      th:disabled="${product.availabilityStatus().name()
+                    == 'SOLD_OUT'}"
+                    >
+                      Add to Cart
+                    </button>
+                  </form>
+
+                  <a
+                    class="btn btn-outline-dark rounded-pill px-4"
+                    th:href="@{/contact}"
+                  >
+                    Contact Store
+                  </a>
+                </div>
+
+                <p class="product-order-note text-muted small mt-3 mb-0">
+                  Orders are submitted as requests. The store will contact you
+                  to confirm availability and details.
+                </p>
+
                 <!-- Product metadata -->
                 <div class="product-details-meta">
                   <div>
@@ -450,73 +517,6 @@
                     &darr;
                   </span>
                 </a>
-
-                <!-- Product actions -->
-                <div class="product-details-actions mt-5">
-                  <form
-                    th:action="@{/cart/items}"
-                    method="post"
-                    class="product-add-cart-form"
-                  >
-                    <input
-                      type="hidden"
-                      name="productId"
-                      th:value="${product.id()}"
-                    />
-
-                    <div class="number-stepper">
-                      <button
-                        type="button"
-                        class="number-stepper-btn"
-                        data-stepper-action="decrease"
-                        aria-label="Decrease quantity"
-                      >
-                        &minus;
-                      </button>
-
-                      <input
-                        type="number"
-                        name="quantity"
-                        min="1"
-                        th:max="${product.stockQuantity()}"
-                        step="1"
-                        value="1"
-                        class="form-control number-stepper-input quantity-input"
-                        aria-label="Quantity"
-                      />
-
-                      <button
-                        type="button"
-                        class="number-stepper-btn"
-                        data-stepper-action="increase"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <button
-                      type="submit"
-                      class="btn btn-khoury"
-                      th:disabled="${product.availabilityStatus().name()
-                                    == 'SOLD_OUT'}"
-                    >
-                      Add to Cart
-                    </button>
-                  </form>
-
-                  <a
-                    class="btn btn-outline-dark rounded-pill px-4"
-                    th:href="@{/contact}"
-                  >
-                    Contact Store
-                  </a>
-                </div>
-
-                <p class="text-muted small mt-3 mb-0">
-                  Orders are submitted as requests. The store will contact you
-                  to confirm availability and details.
-                </p>
               </div>
             </div>
 
@@ -565,173 +565,201 @@
                     </span>
                   </div>
 
-                  <div class="product-recommendation-grid">
-                    <a
-                      class="product-recommendation-card"
-                      th:each="recommendation
+                  <div
+                    class="product-recommendation-carousel"
+                    data-recommendation-carousel
+                  >
+                    <button
+                      th:if="${recommendationSection.products().size() > 1}"
+                      type="button"
+                      class="product-recommendation-navigation product-recommendation-navigation-previous"
+                      data-recommendation-previous
+                      aria-label="Show previous recommended product"
+                    >
+                      <span aria-hidden="true">&larr;</span>
+                    </button>
+
+                    <div
+                      class="product-recommendation-grid"
+                      data-recommendation-track
+                    >
+                      <a
+                        class="product-recommendation-card"
+                        th:each="recommendation
                    : ${recommendationSection.products()}"
-                      th:href="@{/products/{id}(
+                        th:href="@{/products/{id}(
             id=${recommendation.productId()},
             returnTo='product',
             sourceProductId=${product.id()}
           )}"
-                      th:aria-label="|View ${recommendation.name()}|"
-                    >
-                      <div class="product-recommendation-image-wrapper">
-                        <img
-                          th:if="${!#strings.isEmpty(
+                        th:aria-label="|View ${recommendation.name()}|"
+                      >
+                        <div class="product-recommendation-image-wrapper">
+                          <img
+                            th:if="${!#strings.isEmpty(
                 recommendation.imageUrl()
               )}"
-                          class="product-recommendation-image"
-                          th:src="${recommendation.imageUrl()}"
-                          th:alt="${recommendation.name()}"
-                          loading="lazy"
-                        />
+                            class="product-recommendation-image"
+                            th:src="${recommendation.imageUrl()}"
+                            th:alt="${recommendation.name()}"
+                            loading="lazy"
+                          />
 
-                        <img
-                          th:if="${#strings.isEmpty(
+                          <img
+                            th:if="${#strings.isEmpty(
                 recommendation.imageUrl()
               )}"
-                          class="product-recommendation-image product-recommendation-fallback"
-                          th:src="@{/images/products/product-fallback.png}"
-                          th:alt="|Default image for
+                            class="product-recommendation-image product-recommendation-fallback"
+                            th:src="@{/images/products/product-fallback.png}"
+                            th:alt="|Default image for
                        ${recommendation.name()}|"
-                          loading="lazy"
-                        />
-                      </div>
+                            loading="lazy"
+                          />
+                        </div>
 
-                      <div class="product-recommendation-content">
-                        <div class="product-recommendation-top-row">
-                          <span
-                            class="product-recommendation-brand"
-                            th:text="${recommendation.brand()}"
-                          >
-                            Brand
-                          </span>
+                        <div class="product-recommendation-content">
+                          <div class="product-recommendation-top-row">
+                            <span
+                              class="product-recommendation-brand"
+                              th:text="${recommendation.brand()}"
+                            >
+                              Brand
+                            </span>
 
-                          <span
-                            class="product-recommendation-status"
-                            th:classappend="${recommendation
+                            <span
+                              class="product-recommendation-status"
+                              th:classappend="${recommendation
                   .availabilityStatus().name() == 'LOW_STOCK'}
                   ? ' recommendation-low-stock'
                   : ' recommendation-available'"
-                            th:text="${recommendation
+                              th:text="${recommendation
                   .availabilityStatus().displayName}"
+                            >
+                              Available
+                            </span>
+                          </div>
+
+                          <h4 th:text="${recommendation.name()}">
+                            Recommended product
+                          </h4>
+
+                          <p
+                            class="product-recommendation-reason"
+                            th:text="${recommendation.similarityReason()}"
                           >
-                            Available
-                          </span>
-                        </div>
+                            Similar technical specifications
+                          </p>
 
-                        <h4 th:text="${recommendation.name()}">
-                          Recommended product
-                        </h4>
-
-                        <p
-                          class="product-recommendation-reason"
-                          th:text="${recommendation.similarityReason()}"
-                        >
-                          Similar technical specifications
-                        </p>
-
-                        <div class="product-recommendation-footer">
-                          <div class="product-recommendation-pricing">
-                            <strong
-                              th:classappend="${recommendation.hasActiveDeal()}
+                          <div class="product-recommendation-footer">
+                            <div class="product-recommendation-pricing">
+                              <strong
+                                th:classappend="${recommendation.hasActiveDeal()}
     ? ' product-recommendation-deal-price'
     : ''"
-                            >
-                              <span class="product-recommendation-currency">
-                                ₪
-                              </span>
+                              >
+                                <span class="product-recommendation-currency">
+                                  ₪
+                                </span>
 
-                              <span
-                                th:text="${#numbers.formatDecimal(
+                                <span
+                                  th:text="${#numbers.formatDecimal(
       recommendation.effectivePrice(),
       0,
       0
     )}"
+                                >
+                                  0
+                                </span>
+                              </strong>
+
+                              <span
+                                th:if="${recommendation.hasActiveDeal()}"
+                                class="product-recommendation-regular-price"
+                              >
+                                <span>₪</span>
+
+                                <span
+                                  th:text="${#numbers.formatDecimal(
+                      recommendation.regularPrice(),
+                      0,
+                      0
+                    )}"
+                                >
+                                  0
+                                </span>
+                              </span>
+                            </div>
+
+                            <span
+                              th:if="${recommendation.group().name()
+                  == 'SAME_BRAND'}"
+                              class="product-recommendation-context recommendation-context-brand"
+                            >
+                              Same brand
+                            </span>
+
+                            <span
+                              th:if="${recommendation.group().name()
+                  == 'CHEAPER'}"
+                              class="product-recommendation-context recommendation-context-cheaper"
+                            >
+                              Save ₪<span
+                                th:text="${#numbers.formatDecimal(
+                    recommendation.priceDifference(),
+                    0,
+                    0
+                  )}"
                               >
                                 0
                               </span>
-                            </strong>
+                            </span>
 
                             <span
-                              th:if="${recommendation.hasActiveDeal()}"
-                              class="product-recommendation-regular-price"
+                              th:if="${recommendation.group().name()
+                  == 'SIMILAR_PRICE'}"
+                              class="product-recommendation-context recommendation-context-similar"
+                            >
+                              Similar price
+                            </span>
+
+                            <span
+                              th:if="${recommendation.group().name()
+    == 'HIGHER_PRICE'}"
+                              class="product-recommendation-context recommendation-context-higher"
                             >
                               <span>₪</span>
 
                               <span
                                 th:text="${#numbers.formatDecimal(
-                      recommendation.regularPrice(),
-                      0,
-                      0
-                    )}"
-                              >
-                                0
-                              </span>
-                            </span>
-                          </div>
-
-                          <span
-                            th:if="${recommendation.group().name()
-                  == 'SAME_BRAND'}"
-                            class="product-recommendation-context recommendation-context-brand"
-                          >
-                            Same brand
-                          </span>
-
-                          <span
-                            th:if="${recommendation.group().name()
-                  == 'CHEAPER'}"
-                            class="product-recommendation-context recommendation-context-cheaper"
-                          >
-                            Save ₪<span
-                              th:text="${#numbers.formatDecimal(
-                    recommendation.priceDifference(),
-                    0,
-                    0
-                  )}"
-                            >
-                              0
-                            </span>
-                          </span>
-
-                          <span
-                            th:if="${recommendation.group().name()
-                  == 'SIMILAR_PRICE'}"
-                            class="product-recommendation-context recommendation-context-similar"
-                          >
-                            Similar price
-                          </span>
-
-                          <span
-                            th:if="${recommendation.group().name()
-    == 'HIGHER_PRICE'}"
-                            class="product-recommendation-context recommendation-context-higher"
-                          >
-                            <span>₪</span>
-
-                            <span
-                              th:text="${#numbers.formatDecimal(
       recommendation.priceDifference(),
       0,
       0
     )}"
-                            >
-                              0
-                            </span>
+                              >
+                                0
+                              </span>
 
-                            <span>more</span>
+                              <span>more</span>
+                            </span>
+                          </div>
+
+                          <span class="product-recommendation-view">
+                            View product
+                            <span aria-hidden="true">&rarr;</span>
                           </span>
                         </div>
+                      </a>
+                    </div>
 
-                        <span class="product-recommendation-view">
-                          View product
-                          <span aria-hidden="true">&rarr;</span>
-                        </span>
-                      </div>
-                    </a>
+                    <button
+                      th:if="${recommendationSection.products().size() > 1}"
+                      type="button"
+                      class="product-recommendation-navigation product-recommendation-navigation-next"
+                      data-recommendation-next
+                      aria-label="Show next recommended product"
+                    >
+                      <span aria-hidden="true">&rarr;</span>
+                    </button>
                   </div>
                 </section>
               </div>
@@ -743,6 +771,7 @@
 
     <div th:replace="~{fragments/footer :: footer}"></div>
     <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
-    <script th:src="@{/js/number-stepper.js}"></script>
+    <script th:src="@{/js/number-stepper.js}" defer></script>
+    <script th:src="@{/js/product-recommendations.js}" defer></script>
   </body>
 </html>
