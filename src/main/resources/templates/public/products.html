@@ -57,7 +57,7 @@
               value="true"
             />
 
-            <div class="col-lg-9">
+            <div class="col-lg-9 products-search-field">
               <input
                 name="keyword"
                 type="text"
@@ -67,7 +67,7 @@
               />
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 products-search-action">
               <button type="submit" class="btn btn-khoury btn-lg w-100">
                 Search
               </button>
@@ -76,9 +76,34 @@
         </div>
 
         <div class="row g-4 align-items-start">
+          <!-- Mobile filter control -->
+          <div class="col-12 d-lg-none">
+            <button
+              class="products-filter-toggle"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#productsFilters"
+              aria-expanded="false"
+              aria-controls="productsFilters"
+            >
+              <span>
+                <span class="products-filter-toggle-label">Refine results</span>
+                <strong>Filters</strong>
+              </span>
+
+              <span
+                class="products-filter-toggle-icon"
+                aria-hidden="true"
+              ></span>
+            </button>
+          </div>
+
           <!-- Left filter sidebar -->
           <aside class="col-lg-3">
-            <div class="products-sidebar">
+            <div
+              id="productsFilters"
+              class="products-sidebar collapse d-lg-block"
+            >
               <div
                 class="d-flex justify-content-between align-items-center mb-4"
               >
@@ -281,7 +306,7 @@
           </aside>
 
           <!-- Product results -->
-          <div class="col-lg-9">
+          <div class="col-lg-9 products-results">
             <!-- Empty state -->
             <div
               th:if="${#lists.isEmpty(productCards)}"
