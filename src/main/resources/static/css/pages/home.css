@@ -3,7 +3,7 @@
 ========================= */
 
 .home-hero {
-    padding: 5rem 0;
+    padding: 5rem 0 2.5rem;
     background:
         radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 34%),
         linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
@@ -79,70 +79,6 @@
         );
     pointer-events: none;
 }
-
-
-/* =========================
-   Service Badges
-========================= */
-
-.service-strip {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 1.25rem;
-    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    overflow: hidden;
-}
-
-.service-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.4rem;
-    border-right: 1px solid #e5e7eb;
-}
-
-.service-item:last-child {
-    border-right: 0;
-}
-
-.service-icon {
-    display: inline-flex;
-    width: 52px;
-    height: 52px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    color: #2563eb;
-    background:
-        linear-gradient(
-            145deg,
-            #eff6ff,
-            #dbeafe
-        );
-    border: 1px solid #bfdbfe;
-    border-radius: 1rem;
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
-}
-
-.service-icon svg {
-    width: 27px;
-    height: 27px;
-}
-
-.service-item h6 {
-    font-weight: 800;
-    margin-bottom: 0.2rem;
-    color: #111827;
-}
-
-.service-item p {
-    margin-bottom: 0;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
 
 /* =========================
    Category Cards
@@ -274,21 +210,6 @@
    Responsive
 ========================= */
 
-@media (max-width: 991px) {
-    .service-strip {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .service-item:nth-child(2) {
-        border-right: 0;
-    }
-
-    .service-item:nth-child(1),
-    .service-item:nth-child(2) {
-        border-bottom: 1px solid #e5e7eb;
-    }
-}
-
 @media (max-width: 991.98px) {
     .hero-visual-card {
         min-height: 430px;
@@ -297,7 +218,7 @@
 
 @media (max-width: 575.98px) {
     .home-hero {
-        padding: 3rem 0;
+        padding: 3rem 0 1.5rem;
     }
 
     .hero-visual-card {
@@ -333,15 +254,6 @@
 }
 
 @media (max-width: 575.98px) {
-    .service-icon {
-        width: 48px;
-        height: 48px;
-    }
-
-    .service-icon svg {
-        width: 25px;
-        height: 25px;
-    }
 
     .category-card-icon {
         width: 52px;
@@ -354,31 +266,12 @@
     }
 }
 
-.service-icon {
-    transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
-}
-
-.service-item:hover .service-icon {
-    color: #ffffff;
-    background: linear-gradient(135deg, #2563eb, #4f46e5);
-    border-color: transparent;
-    box-shadow: 0 12px 26px rgba(37, 99, 235, 0.24);
-    transform: translateY(-2px) scale(1.04);
-}
-
-
-
 /* =========================
    Store Collections
 ========================= */
 
 .home-collections-section {
-    padding: 4rem 0 1rem;
+    padding: 2.5rem 0 1rem;
 }
 
 .home-collections-heading {
@@ -546,7 +439,7 @@
 
 @media (max-width: 575.98px) {
     .home-collections-section {
-        padding-top: 3rem;
+       padding-top: 1.75rem;
     }
 
     .home-collections-grid {
@@ -811,22 +704,7 @@
     position: relative;
     overflow: hidden;
     padding: 1rem 0 5rem;
-    background:
-        radial-gradient(
-            circle at 15% 50%,
-            rgba(37, 99, 235, 0.1),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 85% 50%,
-            rgba(79, 70, 229, 0.08),
-            transparent 28%
-        ),
-        linear-gradient(
-            180deg,
-            #ffffff 0%,
-            #f8fafc 100%
-        );
+    background-color: transparent;
 }
 
 .home-brands-heading {
@@ -879,8 +757,8 @@
     background:
         linear-gradient(
             90deg,
-            #f8fafc 0%,
-            rgba(248, 250, 252, 0) 100%
+            #f4f6f9 0%,
+            rgba(244, 246, 249, 0) 100%
         );
 }
 
@@ -889,8 +767,8 @@
     background:
         linear-gradient(
             270deg,
-            #f8fafc 0%,
-            rgba(248, 250, 252, 0) 100%
+            #f4f6f9 0%,
+            rgba(244, 246, 249, 0) 100%
         );
 }
 
