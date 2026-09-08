@@ -312,6 +312,54 @@
                   Product description
                 </p>
 
+                <!-- Product metadata -->
+                <div class="product-details-meta">
+                  <div>
+                    <span class="meta-label">Stock status</span>
+
+                    <strong
+                      th:if="${product.availabilityStatus().name()
+                              == 'AVAILABLE'}"
+                      class="product-stock-available"
+                    >
+                      In stock
+                    </strong>
+
+                    <strong
+                      th:if="${product.availabilityStatus().name()
+                              == 'LOW_STOCK'}"
+                      class="product-stock-low"
+                      th:text="|Only ${product.stockQuantity()} left|"
+                    >
+                      Only 3 left
+                    </strong>
+
+                    <strong
+                      th:if="${product.availabilityStatus().name()
+                              == 'SOLD_OUT'}"
+                      class="product-stock-out"
+                    >
+                      No stock remaining
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span class="meta-label">Category</span>
+
+                    <strong th:text="${category.name()}"> Category </strong>
+                  </div>
+
+                  <div>
+                    <span class="meta-label">Availability</span>
+
+                    <strong
+                      th:text="${product.availabilityStatus().displayName}"
+                    >
+                      Available
+                    </strong>
+                  </div>
+                </div>
+
                 <!-- Product actions -->
                 <div class="product-details-actions mt-4">
                   <form
@@ -374,58 +422,12 @@
                   </a>
                 </div>
 
-                <p class="product-order-note text-muted small mt-3 mb-0">
-                  Orders are submitted as requests. The store will contact you
+                <p
+                  class="product-order-note text-muted small fw-bold mt-3 mb-0"
+                >
+                  * Orders are submitted as requests. The store will contact you
                   to confirm availability and details.
                 </p>
-
-                <!-- Product metadata -->
-                <div class="product-details-meta">
-                  <div>
-                    <span class="meta-label">Stock status</span>
-
-                    <strong
-                      th:if="${product.availabilityStatus().name()
-                              == 'AVAILABLE'}"
-                      class="product-stock-available"
-                    >
-                      In stock
-                    </strong>
-
-                    <strong
-                      th:if="${product.availabilityStatus().name()
-                              == 'LOW_STOCK'}"
-                      class="product-stock-low"
-                      th:text="|Only ${product.stockQuantity()} left|"
-                    >
-                      Only 3 left
-                    </strong>
-
-                    <strong
-                      th:if="${product.availabilityStatus().name()
-                              == 'SOLD_OUT'}"
-                      class="product-stock-out"
-                    >
-                      No stock remaining
-                    </strong>
-                  </div>
-
-                  <div>
-                    <span class="meta-label">Category</span>
-
-                    <strong th:text="${category.name()}"> Category </strong>
-                  </div>
-
-                  <div>
-                    <span class="meta-label">Availability</span>
-
-                    <strong
-                      th:text="${product.availabilityStatus().displayName}"
-                    >
-                      Available
-                    </strong>
-                  </div>
-                </div>
 
                 <!-- Tags -->
                 <div
