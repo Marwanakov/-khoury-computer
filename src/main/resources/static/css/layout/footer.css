@@ -1,0 +1,266 @@
+/* =========================
+   Footer
+========================= */
+
+.site-footer {
+  padding: 4rem 0 1.5rem;
+  color: #e5e7eb;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(37, 99, 235, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #0f172a, #111827);
+}
+
+.footer-main {
+  padding-bottom: 2rem;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: #ffffff;
+}
+
+.footer-logo {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background-color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 1rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+.footer-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.footer-brand-name {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+}
+
+.footer-brand-subtitle {
+  margin-top: 0.2rem;
+  color: #94a3b8;
+  font-size: 0.82rem;
+}
+
+.footer-description {
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+.footer-title {
+  margin-bottom: 1rem;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.footer-links a:hover,
+.footer-links a:focus {
+  color: #ffffff;
+}
+
+.footer-contact-card {
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* =========================
+   Footer Category Dropdown
+========================= */
+
+.footer-category-dropdown {
+  width: 100%;
+}
+
+.footer-category-button {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.75rem;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.footer-category-button:hover,
+.footer-category-button:focus {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.footer-category-arrow {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.footer-category-button[aria-expanded="true"] .footer-category-arrow {
+  transform: rotate(180deg);
+}
+
+.footer-category-menu {
+  width: 100%;
+  min-width: 230px;
+  max-height: 320px;
+  padding: 0.65rem;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.9rem;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.footer-category-item {
+  padding: 0.6rem 0.75rem;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 0.6rem;
+}
+
+.footer-category-item:hover,
+.footer-category-item:focus {
+  color: #1d4ed8;
+  background-color: #eff6ff;
+}
+
+.footer-category-empty {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* =========================
+   Footer Opening Hours
+========================= */
+
+.footer-opening-hours {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.footer-opening-hours p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+}
+
+.footer-opening-hours strong {
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.footer-opening-hours span {
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.footer-opening-hours p:last-child span {
+  color: #fca5a5;
+  font-weight: 800;
+}
+
+/* =========================
+   Tablet / Mobile Header
+========================= */
+
+@media (max-width: 991.98px) {
+  /* Always-visible mobile store navigation */
+
+  .footer-contact-card {
+    height: 100%;
+  }
+}
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 575.98px) {
+  .site-footer {
+    padding-top: 3rem;
+  }
+
+  .footer-logo {
+    width: 58px;
+    height: 58px;
+  }
+
+  .footer-opening-hours {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+  }
+
+  .footer-contact-card {
+    height: auto;
+    padding: 1.25rem;
+  }
+
+  .footer-contact-card .btn {
+    display: inline-flex;
+    width: auto;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding-right: 1.25rem !important;
+    padding-left: 1.25rem !important;
+    white-space: nowrap;
+  }
+}

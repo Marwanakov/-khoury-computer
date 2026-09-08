@@ -1,22 +1,6 @@
 /* =========================
-   Base Layout
+   Global Styles
 ========================= */
-
-html,
-body {
-    min-height: 100%;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    background: #f4f6f9;
-    color: #1f2937;
-}
-
-main {
-    flex: 1;
-}
 
 .section-title {
     font-weight: 800;
