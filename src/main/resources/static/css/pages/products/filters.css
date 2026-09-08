@@ -1,0 +1,226 @@
+.products-sidebar {
+    position: sticky;
+    top: 150px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
+}
+
+.sidebar-title {
+    color: #111827;
+    font-weight: 900;
+}
+
+.filter-group {
+    border-bottom: 1px solid #eef2f7;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.filter-title {
+    display: block;
+    color: #111827;
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+}
+
+/* =========================
+   Collection Filters
+========================= */
+
+.collection-filter {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    cursor: pointer;
+    border: 1px solid;
+    border-radius: 0.85rem;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.collection-filter + .collection-filter {
+    margin-top: 0.85rem;
+}
+
+.collection-filter:hover {
+    transform: translateY(-1px);
+}
+
+.collection-filter .form-check-input {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.collection-filter strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.collection-filter small {
+    display: block;
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+/* Deals: red */
+.collection-filter-deals {
+    background-color: #fff1f2;
+    border-color: #fecaca;
+}
+
+.collection-filter-deals:hover {
+    border-color: #ef4444;
+    box-shadow: 0 7px 18px rgba(220, 38, 38, 0.1);
+}
+
+.collection-filter-deals strong,
+.collection-filter-deals small {
+    color: #991b1b;
+}
+
+.collection-filter-deals .form-check-input:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+/* New Arrivals: violet */
+.collection-filter-new-arrivals {
+    background-color: #f5f3ff;
+    border-color: #ddd6fe;
+}
+
+.collection-filter-new-arrivals:hover {
+    border-color: #7c3aed;
+    box-shadow: 0 7px 18px rgba(124, 58, 237, 0.1);
+}
+
+.collection-filter-new-arrivals strong {
+    color: #5b21b6;
+}
+
+.collection-filter-new-arrivals small {
+    color: #6d28d9;
+}
+
+.collection-filter-new-arrivals .form-check-input:checked {
+    background-color: #7c3aed;
+    border-color: #7c3aed;
+}
+
+/* Best Sellers: gold */
+.collection-filter-best-sellers {
+    background-color: #fffbeb;
+    border-color: #fde68a;
+}
+
+.collection-filter-best-sellers:hover {
+    border-color: #d97706;
+    box-shadow: 0 7px 18px rgba(217, 119, 6, 0.12);
+}
+
+.collection-filter-best-sellers strong {
+    color: #78350f;
+}
+
+.collection-filter-best-sellers small {
+    color: #92400e;
+}
+
+.collection-filter-best-sellers .form-check-input:checked {
+    background-color: #d97706;
+    border-color: #d97706;
+}
+
+/* =========================
+   Mobile Filter Toggle
+========================= */
+
+.products-filter-toggle {
+    display: flex;
+    width: 100%;
+    min-height: 58px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    color: #0f172a;
+    text-align: left;
+    background-color: #ffffff;
+    border: 1px solid #dbe3ef;
+    border-radius: 1rem;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.products-filter-toggle > span:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.products-filter-toggle-label {
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.products-filter-toggle strong {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.products-filter-toggle-icon {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+}
+
+.products-filter-toggle-icon::before,
+.products-filter-toggle-icon::after {
+    position: absolute;
+    top: 8px;
+    left: 1px;
+    width: 16px;
+    height: 2px;
+    background-color: #2563eb;
+    border-radius: 999px;
+    content: "";
+    transition: transform 0.2s ease;
+}
+
+.products-filter-toggle-icon::after {
+    transform: rotate(90deg);
+}
+
+.products-filter-toggle[aria-expanded="true"]
+.products-filter-toggle-icon::after {
+    transform: rotate(0);
+}
+
+/* =========================
+   Filter Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+    .products-sidebar {
+        position: static;
+        top: auto;
+        margin-top: 0.75rem;
+        padding: 1.25rem;
+    }
+
+    .products-sidebar.collapsing {
+        transition: height 0.25s ease;
+    }
+}

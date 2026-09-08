@@ -1,0 +1,152 @@
+/* =========================
+   Products Page
+========================= */
+
+.products-hero {
+    padding: 2.25rem 0;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f7fb 100%
+        );
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.products-title {
+    max-width: 760px;
+    color: #0f172a;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+}
+
+.products-subtitle {
+    max-width: 780px;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.products-content {
+    padding-top: 2.25rem;
+    padding-bottom: 4rem;
+}
+
+.products-search-panel {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1.1rem;
+    padding: 1rem;
+}
+
+.empty-products-card {
+  background-color: #ffffff;
+  border: 1px dashed #bfdbfe;
+  border-radius: 1.25rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+}
+
+.empty-products-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  margin: 0 auto 1rem;
+}
+
+/* =========================
+   Catalog Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+    .products-hero {
+        padding: 1.75rem 0;
+    }
+
+    .products-content {
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+    }
+
+    .products-search-panel {
+        padding: 0.65rem;
+        border-radius: 1rem;
+    }
+
+    .products-search-panel form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .products-search-field,
+    .products-search-action {
+        width: auto;
+        padding: 0;
+    }
+
+    .products-search-field .form-control {
+        min-height: 46px;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.95rem;
+        border-radius: 0.8rem;
+    }
+
+    .products-search-action .btn {
+        width: auto !important;
+        min-width: 92px;
+        min-height: 46px;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .products-hero {
+        padding: 1.4rem 0;
+    }
+
+    .products-title {
+        font-size: 1.85rem;
+        line-height: 1.08;
+    }
+
+    .products-subtitle {
+        font-size: 0.88rem;
+        line-height: 1.55;
+    }
+
+    .products-content {
+        padding-top: 1.25rem;
+    }
+
+    .products-search-panel {
+        margin-bottom: 1rem !important;
+    }
+
+    .products-search-field .form-control {
+        font-size: 0.85rem;
+    }
+
+    .products-search-action .btn {
+        min-width: 78px;
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+        font-size: 0.82rem;
+    }
+}
