@@ -252,13 +252,6 @@
 }
 
 .deal-price-comparison > div {
-    padding: 0.7rem;
-    background-color: #f8fafc;
-    border: 1px solid #eef2f7;
-    border-radius: 0.75rem;
-}
-
-.deal-price-comparison > div {
     padding: 0.85rem;
     background-color: #f8fafc;
     border: 1px solid #eef2f7;
@@ -469,8 +462,7 @@
 }
 
 @media (max-width: 575.98px) {
-    .deals-grid,
-    .deal-price-comparison {
+    .deals-grid {
         grid-template-columns: 1fr;
     }
 
