@@ -1,4 +1,10 @@
 /* =========================
+   New Arrivals Page Styles
+========================= */
+
+@import url("./products/catalog.css");
+
+/* =========================
    Best Sellers Page
 ========================= */
 
@@ -8,7 +14,7 @@
 }
 
 .best-sellers-hero {
-  padding: 2.25rem 0;
+  padding: 1.75rem 0;
   background:
     radial-gradient(
       circle at top right,
