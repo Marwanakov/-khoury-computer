@@ -1,0 +1,35 @@
+/* =========================
+   Empty Cart
+========================= */
+
+.empty-cart-card {
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px dashed #bfdbfe;
+  border-radius: 1.25rem;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+}
+
+.empty-cart-icon {
+  display: flex;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 1rem;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  font-weight: 900;
+  background-color: #eff6ff;
+  border-radius: 50%;
+}
+
+/* =========================
+   Empty Cart Responsive
+========================= */
+
+@media (max-width: 575.98px) {
+  .empty-cart-card {
+    padding: 3rem 1.25rem;
+  }
+}

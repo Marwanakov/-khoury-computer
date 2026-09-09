@@ -1,0 +1,98 @@
+/* =========================
+   Cart Hero
+========================= */
+
+.cart-hero {
+  padding: 2.25rem 0;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(37, 99, 235, 0.14),
+      transparent 35%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cart-hero-label {
+  display: inline-flex;
+  margin-bottom: 0.7rem;
+  padding: 0.35rem 0.65rem;
+  color: #1d4ed8;
+  font-size: 0.67rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background-color: #dbeafe;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+}
+
+.cart-title {
+  max-width: 760px;
+  color: #0f172a;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cart-subtitle {
+  max-width: 700px;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.cart-summary-card {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
+}
+
+.cart-summary-card strong {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+/* =========================
+   Cart Hero Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+  .cart-hero {
+    padding: 1.75rem 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .cart-hero {
+    padding: 1.4rem 0;
+  }
+
+  .cart-title {
+    font-size: 1.85rem;
+    line-height: 1.08;
+  }
+
+  .cart-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .cart-summary-card {
+    padding: 1.25rem;
+  }
+
+  .cart-summary-card strong {
+    font-size: 1.65rem;
+  }
+}

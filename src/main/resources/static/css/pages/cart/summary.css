@@ -1,0 +1,48 @@
+/* =========================
+   Cart Order Summary
+========================= */
+
+.cart-order-summary {
+  position: sticky;
+  top: 150px;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
+}
+
+.summary-row,
+.summary-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.summary-row span {
+  color: #64748b;
+}
+
+.summary-row strong {
+  color: #0f172a;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.summary-total {
+  margin-top: 0.5rem;
+}
+
+.summary-total span {
+  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.summary-total strong {
+  color: #0f172a;
+  font-size: 1.45rem;
+  font-weight: 950;
+}
