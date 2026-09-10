@@ -1,0 +1,129 @@
+/* =========================
+   Profile Overview Card
+========================= */
+
+.profile-card {
+  position: relative;
+  padding: 2rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.profile-card-header {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-right: 175px;
+}
+
+.profile-card-actions {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
+.profile-card-actions .btn {
+  min-width: 145px;
+}
+
+.profile-customer-name {
+  margin-bottom: 0;
+  color: #0f172a;
+  font-size: 1.8rem;
+  font-weight: 950;
+}
+
+/* =========================
+   Profile Section Headings
+========================= */
+
+.profile-section-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profile-section-title {
+  margin-bottom: 0;
+  color: #0f172a;
+  font-size: 1.4rem;
+  font-weight: 950;
+}
+
+/* =========================
+   Profile Information
+========================= */
+
+.profile-information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.profile-information-item {
+  padding: 1.1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+}
+
+.profile-information-item strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #0f172a;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.profile-information-wide {
+  grid-column: 1 / -1;
+}
+
+.profile-empty-value {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 767.98px) {
+  .profile-card {
+    padding: 1.35rem;
+  }
+
+  .profile-card-header {
+    min-height: 0;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-right: 0;
+  }
+
+  .profile-information-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-information-wide {
+    grid-column: auto;
+  }
+
+  .profile-card-actions {
+    position: static;
+    margin-top: 1.5rem;
+  }
+
+  .profile-card-actions .btn {
+    width: 100%;
+  }
+}

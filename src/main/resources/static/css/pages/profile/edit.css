@@ -1,0 +1,151 @@
+/* =========================
+   Profile Back Link
+========================= */
+
+.profile-back-link {
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.profile-back-link:hover,
+.profile-back-link:focus {
+  color: #2563eb;
+  transform: translateX(-3px);
+}
+
+.profile-back-link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+  border-radius: 0.25rem;
+}
+
+/* =========================
+   Edit Profile Card
+========================= */
+
+.profile-edit-card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================
+   Edit Profile Headings
+========================= */
+
+.profile-edit-heading {
+  margin-bottom: 1.5rem;
+}
+
+.profile-edit-heading h2 {
+  margin-bottom: 0.4rem;
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.profile-edit-heading p {
+  max-width: 720px;
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* =========================
+   Profile Form Fields
+========================= */
+
+.profile-edit-card .form-label {
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.profile-edit-card .form-control {
+  min-height: 48px;
+  padding: 0.75rem 0.9rem;
+  border-color: #cbd5e1;
+  border-radius: 0.8rem;
+}
+
+.profile-edit-card textarea.form-control {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.profile-edit-card .form-control:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12);
+}
+
+.profile-edit-card .form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.profile-edit-card .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.12);
+}
+
+.profile-edit-card .invalid-feedback {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.profile-edit-card .form-text {
+  color: #64748b;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.profile-edit-card .profile-form-note {
+  margin-top: 0.45rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+/* =========================
+   Form Actions
+========================= */
+
+.profile-edit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.profile-edit-actions .btn {
+  min-width: 145px;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 767.98px) {
+  .profile-edit-card {
+    padding: 1.35rem;
+  }
+
+  .profile-edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .profile-edit-actions .btn {
+    width: 100%;
+  }
+}
