@@ -99,9 +99,10 @@
     text-decoration: none;
 }
 
-.auth-switch-text a:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
+.auth-switch-text a:hover,
+.auth-switch-text a:focus {
+  color: #1d4ed8;
+  text-decoration: underline;
 }
 
 .auth-login-card {
@@ -122,4 +123,35 @@
         padding: 1.35rem;
         border-radius: 1.25rem;
     }
+}
+
+@media (max-width: 575.98px) {
+  .auth-section {
+    padding: 1.5rem 0 2.5rem;
+  }
+
+  .auth-card {
+    padding: 1.2rem;
+  }
+
+  .auth-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-divider {
+    margin: 1.5rem 0;
+  }
+
+  .auth-card .row {
+    --bs-gutter-y: 0.85rem;
+  }
+
+  .auth-card .form-control {
+    min-height: 44px;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .auth-card textarea.form-control {
+    min-height: 95px;
+  }
 }
