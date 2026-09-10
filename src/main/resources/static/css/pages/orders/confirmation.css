@@ -1,0 +1,119 @@
+/* =========================
+   Order Confirmation
+========================= */
+
+.order-number {
+  color: #0f172a;
+  font-size: 2rem;
+  font-weight: 950;
+}
+
+/* =========================
+   Order Information
+========================= */
+
+.order-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.order-meta-grid > div {
+  padding: 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+}
+
+.order-meta-grid strong {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+/* =========================
+   Customer Information
+========================= */
+
+.order-customer-section {
+  padding-top: 1.5rem;
+  border-top: 1px solid #eef2f7;
+}
+
+.order-customer-card {
+  padding: 1.25rem;
+  background-color: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+}
+
+.order-customer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.order-customer-grid strong {
+  display: block;
+  color: #0f172a;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.order-address-details {
+  margin-top: 0.35rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* =========================
+   Order Summary
+========================= */
+
+.order-summary-card {
+  position: sticky;
+  top: 150px;
+}
+
+.order-summary-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.order-summary-total > span {
+  color: #0f172a;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.order-summary-total strong {
+  color: #0f172a;
+  font-size: 1.5rem;
+  font-weight: 950;
+}
+
+.order-request-note {
+  margin-bottom: 1rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 767.98px) {
+  .order-summary-card {
+    position: static;
+  }
+
+  .order-meta-grid,
+  .order-customer-grid {
+    grid-template-columns: 1fr;
+  }
+}

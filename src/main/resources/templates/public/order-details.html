@@ -8,7 +8,7 @@
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <main>
-      <section class="order-page-hero">
+      <section class="order-page-hero order-details-hero">
         <div class="container">
           <a
             class="order-back-link d-inline-block mb-3"
@@ -328,8 +328,8 @@
                   </span>
                 </div>
 
-                <p class="text-muted small mb-4">
-                  The store will contact you after reviewing product
+                <p class="order-status-note">
+                  * The store will contact you after reviewing product
                   availability and the order request.
                 </p>
 
@@ -351,24 +351,24 @@
 
                 <p
                   th:if="${order.status().name() == 'CONFIRMED'}"
-                  class="small text-muted mb-3"
+                  class="order-status-note"
                 >
-                  This order has already been confirmed. Please contact the
+                  * This order has already been confirmed. Please contact the
                   store if you need assistance.
                 </p>
 
                 <p
                   th:if="${order.status().name() == 'COMPLETED'}"
-                  class="small text-muted mb-3"
+                  class="order-status-note"
                 >
-                  This order has already been completed.
+                  * This order has already been completed.
                 </p>
 
                 <p
                   th:if="${order.status().name() == 'CANCELLED'}"
-                  class="small text-muted mb-3"
+                  class="order-status-note"
                 >
-                  This order has been cancelled.
+                  * This order has been cancelled.
                 </p>
 
                 <a

@@ -1,0 +1,151 @@
+/* =========================
+   Shared Order Page Hero
+========================= */
+
+.order-page-hero {
+  padding: 2.25rem 0;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(37, 99, 235, 0.14),
+      transparent 35%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-page-label {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #2563eb;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.order-page-title {
+  max-width: 900px;
+  color: #0f172a;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+/* =========================
+   Back Link
+========================= */
+
+.order-back-link {
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.order-back-link:hover,
+.order-back-link:focus {
+  color: #2563eb;
+  transform: translateX(-3px);
+}
+
+/* =========================
+   Shared Cards and Labels
+========================= */
+
+.order-content-card,
+.order-summary-card {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
+}
+
+.order-card-title {
+  color: #0f172a;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.order-section-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* =========================
+   Order Status
+========================= */
+
+.order-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  border-radius: 999px;
+}
+
+.status-pending {
+  color: #92400e;
+  background-color: #fef3c7;
+}
+
+.status-confirmed {
+  color: #1d4ed8;
+  background-color: #dbeafe;
+}
+
+.status-completed {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.status-cancelled {
+  color: #374151;
+  background-color: #e5e7eb;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+  .order-page-hero {
+    padding: 1.75rem 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .order-content-card,
+  .order-summary-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .order-page-hero {
+    padding: 1.4rem 0;
+  }
+
+  .order-page-title {
+    font-size: 1.85rem;
+    line-height: 1.08;
+  }
+
+  .order-content-card,
+  .order-summary-card {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+}

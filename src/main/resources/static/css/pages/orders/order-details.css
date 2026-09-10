@@ -1,0 +1,81 @@
+/* =========================
+   Order Details Page
+========================= */
+
+.order-details-hero {
+  padding-top: 1.65rem;
+  padding-bottom: 1.65rem;
+}
+
+.order-details-hero .order-back-link {
+  margin-bottom: 0.65rem !important;
+}
+
+.order-details-hero .order-page-label {
+  margin-bottom: 0.5rem;
+}
+
+.order-details-hero .order-page-title {
+  margin-bottom: 0.45rem;
+}
+
+.order-details-hero .order-page-subtitle {
+  max-width: 760px;
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* =========================
+   Status Information Notes
+========================= */
+
+.order-status-note {
+  margin-bottom: 1.5rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.order-status-note:last-of-type {
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+  .order-details-hero {
+    padding-top: 1.4rem;
+    padding-bottom: 1.4rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .order-details-hero {
+    padding-top: 1.15rem;
+    padding-bottom: 1.15rem;
+  }
+
+  .order-details-hero .order-back-link {
+    margin-bottom: 0.55rem !important;
+  }
+
+  .order-details-hero .order-page-label {
+    margin-bottom: 0.4rem;
+  }
+
+  .order-details-hero .order-page-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .order-status-note {
+    font-size: 0.76rem;
+    line-height: 1.5;
+  }
+}
