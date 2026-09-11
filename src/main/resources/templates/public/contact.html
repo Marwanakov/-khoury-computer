@@ -10,13 +10,9 @@
     <main>
       <section class="contact-hero">
         <div class="container">
-          <span class="contact-label">
-            Contact Khoury Computer
-          </span>
+          <span class="contact-label"> Contact Khoury Computer </span>
 
-          <h1 class="contact-title">
-            We are here to help
-          </h1>
+          <h1 class="contact-title">We are here to help</h1>
 
           <p class="contact-subtitle">
             Contact us for product questions, laptop repairs, order assistance,
@@ -31,9 +27,7 @@
             <!-- Main contact information -->
             <div class="contact-card">
               <div class="contact-card-heading">
-                <span class="contact-section-label">
-                  Store information
-                </span>
+                <span class="contact-section-label"> Store information </span>
 
                 <h2>Get in touch</h2>
 
@@ -71,9 +65,7 @@
                 <!-- Email -->
                 <div class="contact-information-item">
                   <div>
-                    <span class="contact-information-label">
-                      Email
-                    </span>
+                    <span class="contact-information-label"> Email </span>
 
                     <a
                       class="contact-information-value"
@@ -96,11 +88,10 @@
                 <div
                   class="contact-information-item"
                   th:if="${!#strings.isEmpty(contactInfo.whatsappNumber())}"
+                  th:with="whatsappDigits=${#strings.replace(#strings.replace(#strings.replace(contactInfo.whatsappNumber(), '+', ''), ' ', ''), '-', '')}"
                 >
                   <div>
-                    <span class="contact-information-label">
-                      WhatsApp
-                    </span>
+                    <span class="contact-information-label"> WhatsApp </span>
 
                     <span
                       class="contact-information-value"
@@ -112,7 +103,7 @@
 
                   <a
                     class="btn btn-outline-khoury contact-action-button"
-                    th:href="|https://wa.me/${contactInfo.whatsappNumber()}|"
+                    th:href="|https://wa.me/${whatsappDigits}|"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -149,9 +140,7 @@
 
             <!-- Address and opening hours -->
             <aside class="contact-address-card">
-              <span class="contact-section-label">
-                Visit the store
-              </span>
+              <span class="contact-section-label"> Visit the store </span>
 
               <h2>Store Address</h2>
 
@@ -205,9 +194,7 @@
             <div class="contact-map-card">
               <div class="contact-map-heading">
                 <div>
-                  <span class="contact-section-label">
-                    Find us
-                  </span>
+                  <span class="contact-section-label"> Find us </span>
 
                   <h2>Khoury Computer on Google Maps</h2>
 
