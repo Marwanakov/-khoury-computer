@@ -27,8 +27,48 @@ document.addEventListener("DOMContentLoaded", () => {
         "(prefers-reduced-motion: reduce)"
     );
 
-    const moveBrands = (direction) => {
-        const animation = track.getAnimations()[0];
+    const brandImages = Array.from(
+        track.querySelectorAll("img")
+    );
+
+    const waitForImage = image => {
+        if (image.complete) {
+            return Promise.resolve();
+        }
+
+        return new Promise(resolve => {
+            image.addEventListener("load", resolve, {
+                once: true
+            });
+
+            image.addEventListener("error", resolve, {
+                once: true
+            });
+        });
+    };
+
+    /*
+     * Start the marquee after every brand image has either
+     * loaded or failed. This prevents transformed lazy images
+     * from temporarily disappearing while the strip moves.
+     */
+    Promise.all(
+        brandImages.map(waitForImage)
+    ).then(() => {
+        marquee.classList.add("is-ready");
+    });
+
+    const getTrackAnimation = () => {
+        return track
+            .getAnimations()
+            .find(animation => {
+                return animation.animationName ===
+                    "home-brand-scroll";
+            });
+    };
+
+    const moveBrands = direction => {
+        const animation = getTrackAnimation();
 
         if (!animation) {
             marquee.scrollBy({
@@ -51,18 +91,18 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         /*
-         * Moving forward through the animation moves the
-         * track to the left and reveals later brands.
+         * Use a larger time step because the automatic
+         * animation now has a longer duration.
          */
-        const navigationStep = 3000;
+        const navigationStep = 5000;
 
         const nextTime =
-                (
-                    currentTime
-                    + direction * navigationStep
-                    + duration
-                )
-                % duration;
+            (
+                currentTime
+                + direction * navigationStep
+                + duration
+            )
+            % duration;
 
         animation.currentTime = nextTime;
     };
@@ -76,9 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /*
-     * Mouse clicks should not leave the whole marquee paused
-     * because of the button retaining focus. Keyboard focus
-     * is preserved for accessible navigation.
+     * Mouse clicks should not leave the marquee paused
+     * because a navigation button retained focus.
      */
     for (const button of [
         previousButton,

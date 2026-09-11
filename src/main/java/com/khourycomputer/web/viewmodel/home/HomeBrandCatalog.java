@@ -14,7 +14,10 @@ public final class HomeBrandCatalog {
                             "Dell",
                             "/images/brand/dell.png"
                     ),
-                    brand("Lexmark"),
+                    brand(
+                            "Lexmark",
+                            "/images/brand/lexmark.png"
+                    ),
                     brand(
                             "Canon",
                             "/images/brand/canon.png"
@@ -23,12 +26,18 @@ public final class HomeBrandCatalog {
                             "Epson",
                             "/images/brand/epson.png"
                     ),
-                    brand("Verico"),
+                    brand(
+                            "Verico",
+                            "/images/brand/verico.png"
+                    ),
                     brand(
                             "Silicon Power",
                             "/images/brand/silicon-power.png"
                     ),
-                    brand("ADATA"),
+                    brand(
+                            "ADATA",
+                            "/images/brand/adata.png"
+                    ),
                     brand(
                             "SanDisk",
                             "/images/brand/sandisk.png"
@@ -37,8 +46,14 @@ public final class HomeBrandCatalog {
                             "Kingston",
                             "/images/brand/kingston.png"
                     ),
-                    brand("WD"),
-                    brand("Toshiba"),
+                    brand(
+                            "WD",
+                            "/images/brand/wd.png"
+                    ),
+                    brand(
+                            "Toshiba",
+                            "/images/brand/toshiba.png"
+                    ),
                     brand(
                             "Microsoft",
                             "/images/brand/microsoft.png"
@@ -63,9 +78,18 @@ public final class HomeBrandCatalog {
                             "LP-Link",
                             "/images/brand/lp-link.png"
                     ),
-                    brand("Tenda"),
-                    brand("UBIQUITI"),
-                    brand("EDIMAX"),
+                    brand(
+                            "Tenda",
+                            "/images/brand/tenda.png"
+                    ),
+                    brand(
+                            "UBIQUITI",
+                            "/images/brand/ubiquiti.png"
+                    ),
+                    brand(
+                            "EDIMAX",
+                            "/images/brand/edimax.png"
+                    ),
                     brand(
                             "MSI",
                             "/images/brand/msi.png"
@@ -82,9 +106,18 @@ public final class HomeBrandCatalog {
                             "JBL",
                             "/images/brand/jbl.png"
                     ),
-                    brand("Nikon"),
-                    brand("Vtech"),
-                    brand("Panasonic"),
+                    brand(
+                            "Nikon",
+                            "/images/brand/nikon.png"
+                    ),
+                    brand(
+                            "Vtech",
+                            "/images/brand/vtech.png"
+                    ),
+                    brand(
+                            "Panasonic",
+                            "/images/brand/panasonic.png"
+                    ),
                     brand(
                             "Apple",
                             "/images/brand/apple.png"
@@ -105,10 +138,22 @@ public final class HomeBrandCatalog {
                             "Samsung",
                             "/images/brand/samsung.png"
                     ),
-                    brand("Hama"),
-                    brand("GP"),
-                    brand("Cudy"),
-                    brand("MERCUSYS")
+                    brand(
+                            "Hama",
+                            "/images/brand/hama.png"
+                    ),
+                    brand(
+                            "GP",
+                            "/images/brand/gp.png"
+                    ),
+                    brand(
+                            "Cudy",
+                            "/images/brand/cudy.png"
+                    ),
+                    brand(
+                            "MERCUSYS",
+                            "/images/brand/mercusys.png"
+                    )
             );
 
     private HomeBrandCatalog() {
@@ -116,13 +161,6 @@ public final class HomeBrandCatalog {
 
     public static List<HomeBrandViewModel> getBrands() {
         return BRANDS;
-    }
-
-    private static HomeBrandViewModel brand(String name) {
-        return new HomeBrandViewModel(
-                name,
-                null
-        );
     }
 
     private static HomeBrandViewModel brand(

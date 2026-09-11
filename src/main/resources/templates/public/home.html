@@ -299,10 +299,11 @@
               >
                 <img
                   th:if="${brand.logoUrl() != null
-                                and !#strings.isEmpty(brand.logoUrl())}"
+            and !#strings.isEmpty(brand.logoUrl())}"
                   th:src="${brand.logoUrl()}"
                   th:alt="${brand.name()}"
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                 />
 
                 <span
@@ -325,10 +326,11 @@
               >
                 <img
                   th:if="${brand.logoUrl() != null
-                                and !#strings.isEmpty(brand.logoUrl())}"
+            and !#strings.isEmpty(brand.logoUrl())}"
                   th:src="${brand.logoUrl()}"
                   alt=""
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                 />
 
                 <span
