@@ -38,3 +38,11 @@ out/
 
 ### Runtime uploads ###
 /uploads/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log

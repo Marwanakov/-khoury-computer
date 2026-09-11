@@ -2,11 +2,8 @@ spring:
   application:
     name: khoury-computer
 
-  datasource:
-    url: jdbc:postgresql://localhost:5433/khoury_computer_db
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    default: dev
 
   servlet:
     multipart:
