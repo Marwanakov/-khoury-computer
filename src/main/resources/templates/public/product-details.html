@@ -169,7 +169,7 @@
 
                 <img
                   th:if="${#strings.isEmpty(product.imageUrl())}"
-                  th:src="@{/images/products/product-fallback.png}"
+                  th:src="@{/images/products/product-fallback.webp}"
                   th:alt="|Default image for ${product.name()}|"
                   class="product-details-image product-details-fallback-image"
                 />
@@ -612,7 +612,7 @@
                 recommendation.imageUrl()
               )}"
                             class="product-recommendation-image product-recommendation-fallback"
-                            th:src="@{/images/products/product-fallback.png}"
+                            th:src="@{/images/products/product-fallback.webp}"
                             th:alt="|Default image for
                        ${recommendation.name()}|"
                             loading="lazy"

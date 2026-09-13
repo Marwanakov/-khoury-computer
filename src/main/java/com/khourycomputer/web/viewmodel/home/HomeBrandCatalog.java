@@ -8,151 +8,151 @@ public final class HomeBrandCatalog {
             List.of(
                     brand(
                             "HP",
-                            "/images/brand/hp.png"
+                            "/images/brand/hp.webp"
                     ),
                     brand(
                             "Dell",
-                            "/images/brand/dell.png"
+                            "/images/brand/dell.webp"
                     ),
                     brand(
                             "Lexmark",
-                            "/images/brand/lexmark.png"
+                            "/images/brand/lexmark.webp"
                     ),
                     brand(
                             "Canon",
-                            "/images/brand/canon.png"
+                            "/images/brand/canon.webp"
                     ),
                     brand(
                             "Epson",
-                            "/images/brand/epson.png"
+                            "/images/brand/epson.webp"
                     ),
                     brand(
                             "Verico",
-                            "/images/brand/verico.png"
+                            "/images/brand/verico.webp"
                     ),
                     brand(
                             "Silicon Power",
-                            "/images/brand/silicon-power.png"
+                            "/images/brand/silicon-power.webp"
                     ),
                     brand(
                             "ADATA",
-                            "/images/brand/adata.png"
+                            "/images/brand/adata.webp"
                     ),
                     brand(
                             "SanDisk",
-                            "/images/brand/sandisk.png"
+                            "/images/brand/sandisk.webp"
                     ),
                     brand(
                             "Kingston",
-                            "/images/brand/kingston.png"
+                            "/images/brand/kingston.webp"
                     ),
                     brand(
                             "WD",
-                            "/images/brand/wd.png"
+                            "/images/brand/wd.webp"
                     ),
                     brand(
                             "Toshiba",
-                            "/images/brand/toshiba.png"
+                            "/images/brand/toshiba.webp"
                     ),
                     brand(
                             "Microsoft",
-                            "/images/brand/microsoft.png"
+                            "/images/brand/microsoft.webp"
                     ),
                     brand(
                             "SONY",
-                            "/images/brand/sony.png"
+                            "/images/brand/sony.webp"
                     ),
                     brand(
                             "Logitech",
-                            "/images/brand/logitech.png"
+                            "/images/brand/logitech.webp"
                     ),
                     brand(
                             "Fantech",
-                            "/images/brand/fantech.png"
+                            "/images/brand/fantech.webp"
                     ),
                     brand(
                             "TP-Link",
-                            "/images/brand/tp-link.png"
+                            "/images/brand/tp-link.webp"
                     ),
                     brand(
                             "LP-Link",
-                            "/images/brand/lp-link.png"
+                            "/images/brand/lp-link.webp"
                     ),
                     brand(
                             "Tenda",
-                            "/images/brand/tenda.png"
+                            "/images/brand/tenda.webp"
                     ),
                     brand(
                             "UBIQUITI",
-                            "/images/brand/ubiquiti.png"
+                            "/images/brand/ubiquiti.webp"
                     ),
                     brand(
                             "EDIMAX",
-                            "/images/brand/edimax.png"
+                            "/images/brand/edimax.webp"
                     ),
                     brand(
                             "MSI",
-                            "/images/brand/msi.png"
+                            "/images/brand/msi.webp"
                     ),
                     brand(
                             "Kaspersky",
-                            "/images/brand/kaspersky.png"
+                            "/images/brand/kaspersky.webp"
                     ),
                     brand(
                             "Lenovo",
-                            "/images/brand/lenovo.png"
+                            "/images/brand/lenovo.webp"
                     ),
                     brand(
                             "JBL",
-                            "/images/brand/jbl.png"
+                            "/images/brand/jbl.webp"
                     ),
                     brand(
                             "Nikon",
-                            "/images/brand/nikon.png"
+                            "/images/brand/nikon.webp"
                     ),
                     brand(
                             "Vtech",
-                            "/images/brand/vtech.png"
+                            "/images/brand/vtech.webp"
                     ),
                     brand(
                             "Panasonic",
-                            "/images/brand/panasonic.png"
+                            "/images/brand/panasonic.webp"
                     ),
                     brand(
                             "Apple",
-                            "/images/brand/apple.png"
+                            "/images/brand/apple.webp"
                     ),
                     brand(
                             "LG",
-                            "/images/brand/lg.png"
+                            "/images/brand/lg.webp"
                     ),
                     brand(
                             "Asus",
-                            "/images/brand/asus.png"
+                            "/images/brand/asus.webp"
                     ),
                     brand(
                             "Acer",
-                            "/images/brand/acer.png"
+                            "/images/brand/acer.webp"
                     ),
                     brand(
                             "Samsung",
-                            "/images/brand/samsung.png"
+                            "/images/brand/samsung.webp"
                     ),
                     brand(
                             "Hama",
-                            "/images/brand/hama.png"
+                            "/images/brand/hama.webp"
                     ),
                     brand(
                             "GP",
-                            "/images/brand/gp.png"
+                            "/images/brand/gp.webp"
                     ),
                     brand(
                             "Cudy",
-                            "/images/brand/cudy.png"
+                            "/images/brand/cudy.webp"
                     ),
                     brand(
                             "MERCUSYS",
-                            "/images/brand/mercusys.png"
+                            "/images/brand/mercusys.webp"
                     )
             );
 

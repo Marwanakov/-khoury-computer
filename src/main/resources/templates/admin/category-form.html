@@ -121,7 +121,7 @@
                   <img
                     id="categoryImagePreview"
                     th:if="${#strings.isEmpty(currentImageUrl)}"
-                    th:src="@{/images/categories/category-fallback.png}"
+                    th:src="@{/images/categories/category-fallback.webp}"
                     alt="Default category image"
                   />
                 </div>
@@ -196,7 +196,7 @@
         const removeCheckbox = document.getElementById("removeImage");
 
         const fallbackUrl =
-          /*[[@{/images/categories/category-fallback.png}]]*/ "";
+          /*[[@{/images/categories/category-fallback.webp}]]*/ "";
 
         if (!imageInput || !preview) {
           return;

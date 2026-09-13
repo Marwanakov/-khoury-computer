@@ -40,8 +40,11 @@
               <div class="hero-visual-card">
                 <img
                   class="hero-visual-image"
-                  th:src="@{/images/home/computer-shop-hero.png}"
+                  th:src="@{/images/home/computer-shop-hero.webp}"
                   alt="Laptop, computer accessories, components, and repair tools"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
                 />
 
                 <div class="hero-visual-overlay"></div>
@@ -73,8 +76,10 @@
             >
               <div class="home-collection-card-media">
                 <img
-                  th:src="@{/images/home/deals-banner.png}"
+                  th:src="@{/images/home/deals-banner.webp}"
                   alt="Current deals and special offers"
+                  loading="lazy"
+                  decoding="async"
                 />
 
                 <div class="home-collection-card-overlay"></div>
@@ -104,8 +109,10 @@
             >
               <div class="home-collection-card-media">
                 <img
-                  th:src="@{/images/home/new-arrivals-banner.png}"
+                  th:src="@{/images/home/new-arrivals-banner.webp}"
                   alt="Latest computers and technology products"
+                  loading="lazy"
+                  decoding="async"
                 />
 
                 <div class="home-collection-card-overlay"></div>
@@ -135,8 +142,10 @@
             >
               <div class="home-collection-card-media">
                 <img
-                  th:src="@{/images/home/best-sellers-banner.png}"
+                  th:src="@{/images/home/best-sellers-banner.webp}"
                   alt="Popular and best selling technology products"
+                  loading="lazy"
+                  decoding="async"
                 />
 
                 <div class="home-collection-card-overlay"></div>
@@ -214,7 +223,7 @@
 
                 <img
                   th:if="${#strings.isEmpty(category.imageUrl())}"
-                  th:src="@{/images/categories/category-fallback.png}"
+                  th:src="@{/images/categories/category-fallback.webp}"
                   th:alt="|${category.name()} category|"
                   loading="lazy"
                 />

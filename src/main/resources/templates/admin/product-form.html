@@ -396,7 +396,7 @@
                   <img
                     id="productImagePreview"
                     th:if="${#strings.isEmpty(currentImageUrl)}"
-                    th:src="@{/images/products/product-fallback.png}"
+                    th:src="@{/images/products/product-fallback.webp}"
                     alt="Default product image"
                   />
                 </div>
@@ -475,7 +475,7 @@
       const removeImageCheckbox = document.getElementById("removeImage");
 
       const fallbackImageUrl =
-        /*[[@{/images/products/product-fallback.png}]]*/ "";
+        /*[[@{/images/products/product-fallback.webp}]]*/ "";
 
       if (productImageInput && productImagePreview) {
         productImageInput.addEventListener("change", function () {
