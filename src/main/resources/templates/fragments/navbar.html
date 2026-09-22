@@ -124,13 +124,14 @@ ADMIN: Admin Dashboard and Logout
       </div>
 
       <!-- Main store navigation -->
-      <nav class="category-nav border-top">
+      <nav class="category-nav border-top" aria-label="Store navigation">
         <div class="container">
           <div class="category-nav-scroll">
             <a class="category-nav-link" th:href="@{/}"> Home </a>
 
             <a class="category-nav-link" th:href="@{/products}"> Products </a>
 
+            <!-- Categories dropdown -->
             <div class="dropdown category-dropdown">
               <button
                 class="category-nav-link category-dropdown-button"
@@ -159,26 +160,17 @@ ADMIN: Admin Dashboard and Logout
                   <hr class="dropdown-divider" />
                 </li>
 
-                <li
-                  th:each="category
-                        : ${navigationCategories}"
-                >
+                <li th:each="category : ${navigationCategories}">
                   <a
                     class="dropdown-item category-dropdown-item"
-                    th:href="@{/products(
-                               categoryId=${category.id()}
-                           )}"
+                    th:href="@{/products(categoryId=${category.id()})}"
                     th:text="${category.name()}"
                   >
                     Category
                   </a>
                 </li>
 
-                <li
-                  th:if="${#lists.isEmpty(
-                        navigationCategories
-                    )}"
-                >
+                <li th:if="${#lists.isEmpty(navigationCategories)}">
                   <span class="dropdown-item-text category-dropdown-empty">
                     No categories available
                   </span>
@@ -186,15 +178,52 @@ ADMIN: Admin Dashboard and Logout
               </ul>
             </div>
 
-            <a class="category-nav-link" th:href="@{/deals}"> Deals </a>
+            <!-- Collections dropdown -->
+            <div class="dropdown category-dropdown">
+              <button
+                class="category-nav-link category-dropdown-button"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Collections
 
-            <a class="category-nav-link" th:href="@{/new-arrivals}">
-              New Arrivals
-            </a>
+                <span class="category-dropdown-arrow" aria-hidden="true">
+                  ▾
+                </span>
+              </button>
 
-            <a class="category-nav-link" th:href="@{/best-sellers}">
-              Best Sellers
-            </a>
+              <ul
+                class="dropdown-menu category-dropdown-menu collection-dropdown-menu"
+              >
+                <li>
+                  <a
+                    class="dropdown-item category-dropdown-item"
+                    th:href="@{/deals}"
+                  >
+                    Deals
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    class="dropdown-item category-dropdown-item"
+                    th:href="@{/new-arrivals}"
+                  >
+                    New Arrivals
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    class="dropdown-item category-dropdown-item"
+                    th:href="@{/best-sellers}"
+                  >
+                    Best Sellers
+                  </a>
+                </li>
+              </ul>
+            </div>
 
             <a class="category-nav-link" th:href="@{/contact}"> Contact </a>
           </div>
