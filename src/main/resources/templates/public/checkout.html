@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Checkout', '/css/pages/checkout.css')}"
+  ></head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main>
+      <section class="checkout-hero">
+        <div class="container">
+          <a class="checkout-back-link" th:href="@{/cart}">
+            &larr; Back to Cart
+          </a>
+
+          <span class="checkout-label">Secure checkout</span>
+
+          <h1 class="checkout-title">Complete your order request</h1>
+
+          <p class="checkout-subtitle">
+            Enter the phone number and delivery address the store should use
+            for this order.
+          </p>
+        </div>
+      </section>
+
+      <section class="checkout-section">
+        <div class="container">
+          <form
+            th:action="@{/checkout/submit}"
+            th:object="${checkoutForm}"
+            method="post"
+          >
+            <div class="row g-4 align-items-start">
+              <div class="col-lg-8">
+                <div
+                  th:if="${#fields.hasGlobalErrors()}"
+                  class="alert alert-danger border-0 shadow-sm mb-4"
+                >
+                  <p
+                    th:each="error : ${#fields.globalErrors()}"
+                    th:text="${error}"
+                    class="mb-0"
+                  >
+                    The order could not be submitted.
+                  </p>
+                </div>
+
+                <div class="checkout-card mb-4">
+                  <div class="checkout-card-heading">
+                    <span class="checkout-step">1</span>
+
+                    <div>
+                      <h2>Google account</h2>
+
+                      <p>
+                        Your name and email come from your signed-in Google
+                        account.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="checkout-identity-grid">
+                    <div class="checkout-information-item">
+                      <span>Customer name</span>
+                      <strong th:text="${user.fullName()}">
+                        Customer Name
+                      </strong>
+                    </div>
+
+                    <div class="checkout-information-item">
+                      <span>Email</span>
+                      <strong th:text="${user.email()}">
+                        customer@example.com
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="checkout-card">
+                  <div class="checkout-card-heading">
+                    <span class="checkout-step">2</span>
+
+                    <div>
+                      <h2>Contact and delivery information</h2>
+
+                      <p>
+                        These details will be saved with this order request.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="phoneNumber" class="form-label">
+                      Phone number
+                    </label>
+
+                    <div class="input-group">
+                      <label
+                        class="visually-hidden"
+                        for="phoneCountryCode"
+                      >
+                        Country code
+                      </label>
+
+                      <select
+                        id="phoneCountryCode"
+                        class="form-select checkout-country-code"
+                        th:field="*{phoneCountryCode}"
+                        th:errorclass="is-invalid"
+                        aria-label="Phone country code"
+                      >
+                        <option value="+970">+970</option>
+                        <option value="+972">+972</option>
+                      </select>
+
+                      <input
+                        id="phoneNumber"
+                        type="tel"
+                        class="form-control"
+                        th:field="*{phoneNumber}"
+                        th:errorclass="is-invalid"
+                        autocomplete="tel-national"
+                        inputmode="tel"
+                        maxlength="20"
+                        placeholder="59 123 4567"
+                        aria-describedby="phoneNumberHelp"
+                      />
+                    </div>
+
+                    <div
+                      id="phoneNumberHelp"
+                      class="form-text checkout-form-note"
+                    >
+                      Enter 59 123 4567, or include the first zero:
+                      059 123 4567.
+                    </div>
+
+                    <div
+                      class="invalid-feedback d-block"
+                      th:if="${#fields.hasErrors('phoneCountryCode')}"
+                      th:errors="*{phoneCountryCode}"
+                    >
+                      Country code error
+                    </div>
+
+                    <div
+                      class="invalid-feedback d-block"
+                      th:if="${#fields.hasErrors('phoneNumber')}"
+                      th:errors="*{phoneNumber}"
+                    >
+                      Phone number error
+                    </div>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-md-5">
+                      <label for="city" class="form-label">City</label>
+
+                      <input
+                        id="city"
+                        type="text"
+                        class="form-control"
+                        th:field="*{city}"
+                        th:errorclass="is-invalid"
+                        autocomplete="address-level2"
+                        maxlength="100"
+                      />
+
+                      <div class="invalid-feedback" th:errors="*{city}">
+                        City error
+                      </div>
+                    </div>
+
+                    <div class="col-md-7">
+                      <label for="street" class="form-label">Street</label>
+
+                      <input
+                        id="street"
+                        type="text"
+                        class="form-control"
+                        th:field="*{street}"
+                        th:errorclass="is-invalid"
+                        autocomplete="street-address"
+                        maxlength="150"
+                      />
+
+                      <div class="invalid-feedback" th:errors="*{street}">
+                        Street error
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-3">
+                    <label for="addressDetails" class="form-label">
+                      Additional address details
+                    </label>
+
+                    <textarea
+                      id="addressDetails"
+                      class="form-control"
+                      th:field="*{addressDetails}"
+                      th:errorclass="is-invalid"
+                      rows="3"
+                      maxlength="300"
+                      placeholder="Building, floor, nearby landmark..."
+                    ></textarea>
+
+                    <div
+                      class="invalid-feedback"
+                      th:errors="*{addressDetails}"
+                    >
+                      Address details error
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="col-lg-4">
+                <div class="checkout-summary-card">
+                  <h2>Order summary</h2>
+
+                  <div class="checkout-product-list">
+                    <div
+                      class="checkout-product"
+                      th:each="item : ${cart.items()}"
+                    >
+                      <div>
+                        <strong th:text="${item.productName()}">
+                          Product name
+                        </strong>
+
+                        <span>
+                          Quantity:
+                          <span th:text="${item.quantity()}">1</span>
+                        </span>
+                      </div>
+
+                      <strong class="money-amount">
+                        <span class="money-symbol">₪</span>
+                        <span
+                          th:text="${#numbers.formatDecimal(
+                            item.subtotal(),
+                            0,
+                            0
+                          )}"
+                        >
+                          0
+                        </span>
+                      </strong>
+                    </div>
+                  </div>
+
+                  <hr />
+
+                  <div class="checkout-total">
+                    <span>Total</span>
+
+                    <strong class="money-amount">
+                      <span class="money-symbol">₪</span>
+                      <span
+                        th:text="${#numbers.formatDecimal(
+                          cart.totalPrice(),
+                          0,
+                          0
+                        )}"
+                      >
+                        0
+                      </span>
+                    </strong>
+                  </div>
+
+                  <p class="checkout-request-note">
+                    This is an order request. The store will contact you to
+                    confirm product availability and delivery details.
+                  </p>
+
+                  <button
+                    type="submit"
+                    class="btn btn-khoury w-100"
+                  >
+                    Submit Order Request
+                  </button>
+
+                  <a
+                    class="btn btn-outline-secondary rounded-pill w-100 mt-2"
+                    th:href="@{/cart}"
+                  >
+                    Return to Cart
+                  </a>
+                </div>
+              </aside>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>

@@ -1,6 +1,5 @@
 package com.khourycomputer.web.controller;
 
-import com.khourycomputer.application.dto.order.SubmitOrderResponse;
 import com.khourycomputer.application.service.OrderApplicationService;
 import com.khourycomputer.config.security.CurrentUserService;
 import org.springframework.stereotype.Controller;
@@ -23,33 +22,12 @@ public class OrderController {
                 this.currentUserService = currentUserService;
         }
 
-        @PostMapping("/orders/submit")
-        public String submitOrder(RedirectAttributes redirectAttributes) {
-                Long currentUserId = currentUserService.getCurrentUserId();
-
-                try {
-                        SubmitOrderResponse response = orderApplicationService.submitOrder(currentUserId);
-
-                        redirectAttributes.addFlashAttribute(
-                                        "confirmationMessage",
-                                        response.confirmationMessage());
-
-                        return "redirect:/orders/confirmation/" + response.order().id();
-
-                } catch (IllegalArgumentException exception) {
-                        redirectAttributes.addFlashAttribute(
-                                        "errorMessage",
-                                        exception.getMessage());
-
-                        return "redirect:/cart";
-                }
-        }
-
         @GetMapping("/orders/confirmation/{orderId}")
         public String showOrderConfirmation(
                         @PathVariable Long orderId,
                         Model model) {
-                Long currentUserId = currentUserService.getCurrentUserId();
+                Long currentUserId =
+                                currentUserService.getCurrentUserId();
 
                 model.addAttribute(
                                 "order",
@@ -62,11 +40,13 @@ public class OrderController {
 
         @GetMapping("/orders/my-orders")
         public String showMyOrders(Model model) {
-                Long currentUserId = currentUserService.getCurrentUserId();
+                Long currentUserId =
+                                currentUserService.getCurrentUserId();
 
                 model.addAttribute(
                                 "orders",
-                                orderApplicationService.listOrdersByUserId(currentUserId));
+                                orderApplicationService.listOrdersByUserId(
+                                                currentUserId));
 
                 return "public/my-orders";
         }
@@ -75,7 +55,8 @@ public class OrderController {
         public String showOrderDetails(
                         @PathVariable Long orderId,
                         Model model) {
-                Long currentUserId = currentUserService.getCurrentUserId();
+                Long currentUserId =
+                                currentUserService.getCurrentUserId();
 
                 model.addAttribute(
                                 "order",
@@ -90,7 +71,8 @@ public class OrderController {
         public String cancelOrder(
                         @PathVariable Long orderId,
                         RedirectAttributes redirectAttributes) {
-                Long currentUserId = currentUserService.getCurrentUserId();
+                Long currentUserId =
+                                currentUserService.getCurrentUserId();
 
                 try {
                         orderApplicationService.cancelOrderByCustomer(

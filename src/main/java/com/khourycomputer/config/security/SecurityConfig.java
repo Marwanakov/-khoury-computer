@@ -39,8 +39,6 @@ public class SecurityConfig {
                                                                 "/best-sellers",
                                                                 "/contact",
                                                                 "/login",
-                                                                "/oauth2/**",
-                                                                "/login/oauth2/**",
                                                                 "/access-denied",
                                                                 "/error",
                                                                 "/favicon.ico",
@@ -86,6 +84,7 @@ public class SecurityConfig {
                                                 // Customer-only pages.
                                                 .requestMatchers(
                                                                 "/cart/**",
+                                                                "/checkout/**",
                                                                 "/orders/**",
                                                                 "/profile/**")
                                                 .hasRole("CUSTOMER")
