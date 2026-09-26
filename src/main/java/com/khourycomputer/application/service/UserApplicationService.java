@@ -1,6 +1,5 @@
 package com.khourycomputer.application.service;
 
-import com.khourycomputer.application.dto.common.address.AddressRequest;
 import com.khourycomputer.application.dto.common.address.AddressResponse;
 import com.khourycomputer.application.dto.user.UserResponse;
 import com.khourycomputer.application.repository.UserRepository;
@@ -8,7 +7,6 @@ import com.khourycomputer.domain.enums.UserRole;
 import com.khourycomputer.domain.exception.CustomerNotFoundException;
 import com.khourycomputer.domain.model.Address;
 import com.khourycomputer.domain.model.User;
-import com.khourycomputer.domain.model.PalestinianPhoneNumber;
 import com.khourycomputer.application.dto.user.ExternalAuthenticationRequest;
 import com.khourycomputer.domain.enums.UserAuthProvider;
 import org.springframework.stereotype.Service;
@@ -153,17 +151,6 @@ public class UserApplicationService {
                 }
 
                 return email.trim().toLowerCase();
-        }
-
-        private Address toAddress(AddressRequest addressRequest) {
-                if (addressRequest == null) {
-                        throw new IllegalArgumentException("Address cannot be empty.");
-                }
-
-                return new Address(
-                                addressRequest.city(),
-                                addressRequest.street(),
-                                addressRequest.details());
         }
 
         private AddressResponse toAddressResponse(Address address) {
