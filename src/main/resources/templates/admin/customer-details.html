@@ -1,362 +1,391 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Customer Details', '/css/pages/admin-customers.css')}"
+  >
+  </head>
 
-<head th:replace="~{fragments/head :: head('Customer Details', '/css/pages/admin-customers.css')}">
-</head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<body>
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<main class="admin-customer-details-page">
-
-    <!-- Header -->
-    <section class="admin-customer-details-header">
+    <main class="admin-customer-details-page">
+      <!-- Header -->
+      <section class="admin-customer-details-header">
         <div class="container">
+          <a class="admin-customer-back-link" th:href="@{/admin/customers}">
+            &larr; Manage Customers
+          </a>
 
-            <a class="admin-customer-back-link"
-               th:href="@{/admin/customers}">
-                &larr; Manage Customers
-            </a>
+          <span class="admin-customers-label"> Customer management </span>
 
-            <span class="admin-customers-label">
-                Customer management
-            </span>
+          <h1 th:text="${customer.fullName()}">Customer Name</h1>
 
-            <h1 th:text="${customer.fullName()}">
-                Customer Name
-            </h1>
-
-            <p>
-                Review this customer’s contact information,
-                delivery address, and complete order history.
-            </p>
-
+          <p>
+            Review this customer’s Google account, most recent checkout
+            information, and complete order history.
+          </p>
         </div>
-    </section>
+      </section>
 
-    <section class="admin-customer-details-content">
+      <section class="admin-customer-details-content">
         <div class="container">
+          <!-- Summary -->
+          <div class="admin-customer-order-summary-grid">
+            <div class="admin-customer-summary-card">
+              <span>Total orders</span>
 
-            <!-- Summary -->
-            <div class="admin-customer-order-summary-grid">
-
-                <div class="admin-customer-summary-card">
-                    <span>Total orders</span>
-
-                    <strong th:text="${totalOrderCount}">
-                        0
-                    </strong>
-                </div>
-
-                <div class="admin-customer-summary-card customer-pending">
-                    <span>Pending</span>
-
-                    <strong th:text="${pendingOrderCount}">
-                        0
-                    </strong>
-                </div>
-
-                <div class="admin-customer-summary-card customer-confirmed">
-                    <span>Confirmed</span>
-
-                    <strong th:text="${confirmedOrderCount}">
-                        0
-                    </strong>
-                </div>
-
-                <div class="admin-customer-summary-card customer-completed">
-                    <span>Completed</span>
-
-                    <strong th:text="${completedOrderCount}">
-                        0
-                    </strong>
-                </div>
-
-                <div class="admin-customer-summary-card customer-cancelled">
-                    <span>Cancelled</span>
-
-                    <strong th:text="${cancelledOrderCount}">
-                        0
-                    </strong>
-                </div>
-
+              <strong th:text="${totalOrderCount}"> 0 </strong>
             </div>
 
-            <div class="row g-4">
+            <div class="admin-customer-summary-card customer-pending">
+              <span>Pending</span>
 
-                <!-- Customer information -->
-                <div class="col-lg-8">
+              <strong th:text="${pendingOrderCount}"> 0 </strong>
+            </div>
 
-                    <div class="admin-customer-detail-card">
+            <div class="admin-customer-summary-card customer-confirmed">
+              <span>Confirmed</span>
 
-                        <div class="admin-customer-detail-heading">
-                            <span>Customer account</span>
-                            <h2>Contact information</h2>
-                        </div>
+              <strong th:text="${confirmedOrderCount}"> 0 </strong>
+            </div>
 
-                        <div class="admin-customer-detail-grid">
+            <div class="admin-customer-summary-card customer-completed">
+              <span>Completed</span>
 
-                            <div>
-                                <span>Customer ID</span>
+              <strong th:text="${completedOrderCount}"> 0 </strong>
+            </div>
 
-                                <strong>
-                                    #<span th:text="${customer.id()}">
-                                        1
-                                    </span>
-                                </strong>
-                            </div>
+            <div class="admin-customer-summary-card customer-cancelled">
+              <span>Cancelled</span>
 
-                            <div>
-                                <span>Full name</span>
+              <strong th:text="${cancelledOrderCount}"> 0 </strong>
+            </div>
+          </div>
 
-                                <strong th:text="${customer.fullName()}">
-                                    Customer Name
-                                </strong>
-                            </div>
-
-                            <div>
-                                <span>Email address</span>
-
-                                <a th:href="|mailto:${customer.email()}|"
-                                   th:text="${customer.email()}">
-                                    customer@example.com
-                                </a>
-                            </div>
-
-                            <div>
-                                <span>Phone number</span>
-
-                                <a th:href="|tel:${customer.phoneNumber()}|"
-                                   th:text="${customer.phoneNumber()}">
-                                    0599999999
-                                </a>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="admin-customer-detail-card">
-
-                        <div class="admin-customer-detail-heading">
-                            <span>Delivery information</span>
-                            <h2>Customer address</h2>
-                        </div>
-
-                        <div class="admin-customer-address-grid">
-
-                            <div>
-                                <span>City</span>
-
-                                <strong th:text="${customer.address().city()}">
-                                    City
-                                </strong>
-                            </div>
-
-                            <div>
-                                <span>Street</span>
-
-                                <strong th:text="${customer.address().street()}">
-                                    Street
-                                </strong>
-                            </div>
-
-                            <div class="admin-customer-address-details">
-                                <span>Additional details</span>
-
-                                <strong
-                                    th:if="${!#strings.isEmpty(
-                                        customer.address().details()
-                                    )}"
-                                    th:text="${customer.address().details()}">
-                                    Address details
-                                </strong>
-
-                                <span
-                                    th:if="${#strings.isEmpty(
-                                        customer.address().details()
-                                    )}"
-                                    class="admin-customer-empty-value">
-                                    No additional details provided.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+          <div class="row g-4">
+            <!-- Customer information -->
+            <div class="col-lg-8">
+              <!-- Google account identity -->
+              <div class="admin-customer-detail-card">
+                <div class="admin-customer-detail-heading">
+                  <span>Google account</span>
+                  <h2>Customer identity</h2>
                 </div>
 
-                <!-- Sidebar -->
-                <div class="col-lg-4">
+                <div class="admin-customer-detail-grid">
+                  <div>
+                    <span>Customer ID</span>
 
-                    <aside class="admin-customer-value-card">
+                    <strong>
+                      #<span th:text="${customer.id()}">1</span>
+                    </strong>
+                  </div>
 
-                        <span class="admin-customer-value-label">
-                            Non-cancelled order value
-                        </span>
+                  <div>
+                    <span>Full name</span>
 
-                        <strong class="admin-customer-total-value">
-                            &#8362;<span
-                                th:text="${#numbers.formatDecimal(
+                    <strong th:text="${customer.fullName()}">
+                      Customer Name
+                    </strong>
+                  </div>
+
+                  <div class="admin-customer-account-email">
+                    <span>Email address</span>
+
+                    <a
+                      th:href="|mailto:${customer.email()}|"
+                      th:text="${customer.email()}"
+                    >
+                      customer@example.com
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Latest checkout information -->
+              <div
+                th:if="${latestOrder != null}"
+                class="admin-customer-detail-card"
+              >
+                <div
+                  class="admin-customer-detail-heading admin-customer-latest-heading"
+                >
+                  <div>
+                    <span>Most recent order</span>
+                    <h2>Latest checkout details</h2>
+                  </div>
+
+                  <a
+                    class="admin-customer-latest-order-link"
+                    th:href="@{/admin/orders/{id}(id=${latestOrder.id()})}"
+                    th:text="|View Order #${latestOrder.id()}|"
+                  >
+                    View Order #1
+                  </a>
+                </div>
+
+                <p class="admin-customer-checkout-note">
+                  These contact and delivery details belong specifically to
+
+                  <strong th:text="|Order #${latestOrder.id()}|">
+                    Order #1
+                  </strong>
+
+                  submitted on
+
+                  <strong
+                    th:text="${#temporals.format(
+          latestOrder.createdAt(),
+          'dd MMM yyyy, HH:mm'
+        )}"
+                  >
+                    26 Sep 2026, 16:10 </strong
+                  >.
+                </p>
+
+                <div class="admin-customer-address-grid">
+                  <div>
+                    <span>Phone number</span>
+
+                    <a
+                      class="admin-customer-checkout-phone"
+                      th:href="|tel:${latestOrder.customerPhoneNumber()}|"
+                      th:text="${latestOrder.customerPhoneNumber()}"
+                    >
+                      +970591234567
+                    </a>
+                  </div>
+
+                  <div>
+                    <span>City</span>
+
+                    <strong th:text="${latestOrder.deliveryAddress().city()}">
+                      City
+                    </strong>
+                  </div>
+
+                  <div class="admin-customer-address-details">
+                    <span>Street</span>
+
+                    <strong th:text="${latestOrder.deliveryAddress().street()}">
+                      Street
+                    </strong>
+                  </div>
+
+                  <div class="admin-customer-address-details">
+                    <span>Additional details</span>
+
+                    <strong
+                      th:if="${!#strings.isEmpty(
+            latestOrder.deliveryAddress().details()
+          )}"
+                      th:text="${latestOrder.deliveryAddress().details()}"
+                    >
+                      Address details
+                    </strong>
+
+                    <span
+                      th:if="${#strings.isEmpty(
+            latestOrder.deliveryAddress().details()
+          )}"
+                      class="admin-customer-empty-value"
+                    >
+                      No additional details provided.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Customer has no orders -->
+              <div
+                th:if="${latestOrder == null}"
+                class="admin-customer-detail-card"
+              >
+                <div class="admin-customer-detail-heading">
+                  <span>Checkout information</span>
+                  <h2>No delivery details yet</h2>
+                </div>
+
+                <div class="admin-customer-no-checkout-details">
+                  <div class="admin-customers-empty-icon">i</div>
+
+                  <div>
+                    <h3>No checkout information is available</h3>
+
+                    <p>
+                      Phone and delivery information will appear after this
+                      customer submits their first order request.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+              <aside class="admin-customer-value-card">
+                <span class="admin-customer-value-label">
+                  Non-cancelled order value
+                </span>
+
+                <strong class="admin-customer-total-value">
+                  &#8362;<span
+                    th:text="${#numbers.formatDecimal(
                                     totalOrderValue,
                                     1,
                                     2
-                                )}">
-                                0.00
-                            </span>
-                        </strong>
+                                )}"
+                  >
+                    0.00
+                  </span>
+                </strong>
 
-                        <p>
-                            This total includes pending, confirmed, and
-                            completed orders. Cancelled orders are excluded.
-                        </p>
+                <p>
+                  This total includes pending, confirmed, and completed orders.
+                  Cancelled orders are excluded.
+                </p>
 
-                        <hr>
+                <hr />
 
-                        <a class="btn btn-outline-secondary w-100"
-                           th:href="|mailto:${customer.email()}|">
-                            Send Email
-                        </a>
+                <a
+                  class="btn btn-outline-secondary w-100"
+                  th:href="|mailto:${customer.email()}|"
+                >
+                  Send Email
+                </a>
 
-                        <a class="btn btn-khoury w-100 mt-2"
-                           th:href="|tel:${customer.phoneNumber()}|">
-                            Call Customer
-                        </a>
+                <a
+                  th:if="${latestOrder != null}"
+                  class="btn btn-khoury w-100 mt-2"
+                  th:href="|tel:${latestOrder.customerPhoneNumber()}|"
+                >
+                  Call Latest Number
+                </a>
 
-                    </aside>
+                <span
+                  th:if="${latestOrder == null}"
+                  class="btn btn-secondary w-100 mt-2 disabled"
+                  aria-disabled="true"
+                >
+                  No Phone Available
+                </span>
+              </aside>
+            </div>
+          </div>
 
-                </div>
+          <!-- Order history -->
+          <div class="admin-customer-order-history">
+            <div
+              class="admin-customer-section-heading admin-customer-history-heading"
+            >
+              <div>
+                <span>Order history</span>
+                <h2>Customer orders</h2>
+              </div>
 
+              <p>
+                <strong th:text="${orders.size()}">0</strong>
+                orders
+              </p>
             </div>
 
-            <!-- Order history -->
-            <div class="admin-customer-order-history">
+            <!-- No orders -->
+            <div
+              th:if="${#lists.isEmpty(orders)}"
+              class="admin-customer-no-orders"
+            >
+              <div class="admin-customers-empty-icon">0</div>
 
-                <div class="admin-customer-section-heading admin-customer-history-heading">
+              <h3>No orders yet</h3>
 
-                    <div>
-                        <span>Order history</span>
-                        <h2>Customer orders</h2>
-                    </div>
+              <p>This customer has not submitted any orders.</p>
+            </div>
 
-                    <p>
-                        <strong th:text="${orders.size()}">0</strong>
-                        orders
-                    </p>
+            <!-- Orders -->
+            <div th:if="${!#lists.isEmpty(orders)}" class="table-responsive">
+              <table class="table admin-customer-orders-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Submitted</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
 
-                </div>
+                <tbody>
+                  <tr th:each="order : ${orders}">
+                    <td>
+                      <strong class="admin-customer-order-number">
+                        #<span th:text="${order.id()}">1</span>
+                      </strong>
+                    </td>
 
-                <!-- No orders -->
-                <div th:if="${#lists.isEmpty(orders)}"
-                     class="admin-customer-no-orders">
-
-                    <div class="admin-customers-empty-icon">0</div>
-
-                    <h3>No orders yet</h3>
-
-                    <p>
-                        This customer has not submitted any orders.
-                    </p>
-
-                </div>
-
-                <!-- Orders -->
-                <div th:if="${!#lists.isEmpty(orders)}"
-                     class="table-responsive">
-
-                    <table class="table admin-customer-orders-table">
-
-                        <thead>
-                        <tr>
-                            <th>Order</th>
-                            <th>Submitted</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <tr th:each="order : ${orders}">
-
-                            <td>
-                                <strong class="admin-customer-order-number">
-                                    #<span th:text="${order.id()}">1</span>
-                                </strong>
-                            </td>
-
-                            <td>
-                                <span class="admin-customer-order-date"
-                                      th:text="${#temporals.format(
+                    <td>
+                      <span
+                        class="admin-customer-order-date"
+                        th:text="${#temporals.format(
                                           order.createdAt(),
                                           'dd MMM yyyy, HH:mm'
-                                      )}">
-                                    06 Aug 2026, 12:00
-                                </span>
-                            </td>
+                                      )}"
+                      >
+                        06 Aug 2026, 12:00
+                      </span>
+                    </td>
 
-                            <td th:text="${order.items().size()}">
-                                1
-                            </td>
+                    <td th:text="${order.items().size()}">1</td>
 
-                            <td>
-                                <strong class="admin-customer-order-total">
-                                    &#8362;<span
-                                        th:text="${#numbers.formatDecimal(
+                    <td>
+                      <strong class="admin-customer-order-total">
+                        &#8362;<span
+                          th:text="${#numbers.formatDecimal(
                                             order.totalPrice(),
                                             1,
                                             2
-                                        )}">
-                                        0.00
-                                    </span>
-                                </strong>
-                            </td>
+                                        )}"
+                        >
+                          0.00
+                        </span>
+                      </strong>
+                    </td>
 
-                            <td>
-                                <span class="admin-customer-order-status"
-                                      th:classappend="' status-'
+                    <td>
+                      <span
+                        class="admin-customer-order-status"
+                        th:classappend="' status-'
                                           + ${#strings.toLowerCase(
                                               order.status().name()
                                           )}"
-                                      th:text="${order.status()}">
-                                    PENDING
-                                </span>
-                            </td>
+                        th:text="${order.status()}"
+                      >
+                        PENDING
+                      </span>
+                    </td>
 
-                            <td>
-                                <div class="admin-customer-order-actions">
-
-                                    <a class="btn btn-sm btn-outline-primary"
-                                       th:href="@{/admin/orders/{id}(
+                    <td>
+                      <div class="admin-customer-order-actions">
+                        <a
+                          class="btn btn-sm btn-outline-primary"
+                          th:href="@{/admin/orders/{id}(
                                            id=${order.id()}
-                                       )}">
-                                        View Order
-                                    </a>
-
-                                </div>
-                            </td>
-
-                        </tr>
-                        </tbody>
-
-                    </table>
-
-                </div>
-
+                                       )}"
+                        >
+                          View Order
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+          </div>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
-
-</body>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
 </html>

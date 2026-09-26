@@ -847,16 +847,17 @@
 .admin-customer-empty-state {
   display: inline-flex;
   width: fit-content;
+  min-height: 30px;
   align-items: center;
   justify-content: center;
-  padding: 0.38rem 0.7rem;
-  color: #64748b;
+  padding: 0.38rem 0.75rem;
+  color: #1d4ed8;
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1;
   white-space: nowrap;
-  background-color: #f8fafc;
-  border: 1px dashed #cbd5e1;
+  background-color: #eff6ff;
+  border: 0;
   border-radius: 999px;
 }
 
@@ -868,5 +869,139 @@
   .admin-customer-empty-state {
     padding: 0.34rem 0.62rem;
     font-size: 0.72rem;
+  }
+}
+
+/* =========================
+   Latest Checkout Details
+========================= */
+
+.admin-customer-account-email {
+  grid-column: 1 / -1;
+}
+
+.admin-customer-latest-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-customer-latest-order-link {
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  color: #1d4ed8;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-decoration: none;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.admin-customer-latest-order-link:hover,
+.admin-customer-latest-order-link:focus {
+  color: #ffffff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.admin-customer-checkout-note {
+  margin: -0.5rem 0 1.25rem;
+  padding: 0.85rem 1rem;
+  color: #475569;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.85rem;
+}
+
+.admin-customer-checkout-note strong {
+  color: #1e3a8a;
+  font-weight: 900;
+}
+
+.admin-customer-checkout-phone {
+  color: #2563eb;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.admin-customer-checkout-phone:hover,
+.admin-customer-checkout-phone:focus {
+  text-decoration: underline;
+}
+
+.admin-customer-no-checkout-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+}
+
+.admin-customer-no-checkout-details
+  .admin-customers-empty-icon {
+  flex: 0 0 54px;
+  margin: 0;
+}
+
+.admin-customer-no-checkout-details h3 {
+  margin-bottom: 0.3rem;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.admin-customer-no-checkout-details p {
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+/* Tablet */
+
+@media (max-width: 991.98px) {
+  .admin-customer-latest-heading {
+    align-items: center;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 575.98px) {
+  .admin-customer-account-email {
+    grid-column: auto;
+  }
+
+  .admin-customer-latest-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-customer-latest-order-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .admin-customer-no-checkout-details {
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .admin-customer-no-checkout-details
+    .admin-customers-empty-icon {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
   }
 }
