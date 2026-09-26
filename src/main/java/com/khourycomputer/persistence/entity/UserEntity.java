@@ -1,5 +1,6 @@
 package com.khourycomputer.persistence.entity;
 
+import com.khourycomputer.domain.enums.UserAuthProvider;
 import com.khourycomputer.domain.enums.UserRole;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -8,7 +9,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Table("users")
 public record UserEntity(
-        @Id Long id,
+        @Id
+        Long id,
 
         @Column("first_name")
         String firstName,
@@ -24,9 +26,15 @@ public record UserEntity(
         @Column("phone_number")
         String phoneNumber,
 
-        // Put the AddressEntity fields inside the users table with address_ prefix.
-        @Embedded.Nullable(prefix = "address_") 
+        @Embedded.Nullable(prefix = "address_")
         AddressEntity address,
 
-        UserRole role
-) {}
+        UserRole role,
+
+        @Column("auth_provider")
+        UserAuthProvider authProvider,
+
+        @Column("provider_subject")
+        String providerSubject
+) {
+}
