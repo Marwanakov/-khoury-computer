@@ -2,7 +2,6 @@ package com.khourycomputer.application.service;
 
 import com.khourycomputer.application.dto.common.address.AddressRequest;
 import com.khourycomputer.application.dto.common.address.AddressResponse;
-import com.khourycomputer.application.dto.user.UpdateUserProfileRequest;
 import com.khourycomputer.application.dto.user.UserResponse;
 import com.khourycomputer.application.repository.UserRepository;
 import com.khourycomputer.domain.enums.UserRole;
@@ -98,43 +97,6 @@ public class UserApplicationService {
 
                 return toResponse(
                                 userRepository.save(newCustomer));
-        }
-
-        // User story: customer edits profile information so his data stays correct.
-        @Transactional
-        public UserResponse updateUserProfile(
-                        Long userId,
-                        UpdateUserProfileRequest request) {
-                User existingUser = userRepository.findById(userId)
-                                .orElseThrow(() -> new IllegalArgumentException(
-                                                "User not found."));
-
-                String newEmail = normalizeEmail(request.email());
-
-                userRepository.findByEmail(newEmail)
-                                .filter(userWithSameEmail -> !userWithSameEmail.getId().equals(userId))
-                                .ifPresent(userWithSameEmail -> {
-                                        throw new IllegalArgumentException(
-                                                        "Email already exists.");
-                                });
-
-                PalestinianPhoneNumber phoneNumber = PalestinianPhoneNumber.fromParts(
-                                request.phoneCountryCode(),
-                                request.phoneNumber());
-
-                User updatedUser = new User(
-                                existingUser.getId(),
-                                request.firstName(),
-                                request.lastName(),
-                                newEmail,
-                                existingUser.getPasswordHash(),
-                                phoneNumber.getInternationalNumber(),
-                                toAddress(request.address()),
-                                existingUser.getRole());
-
-                User savedUser = userRepository.save(updatedUser);
-
-                return toResponse(savedUser);
         }
 
         // User story: customer can view his personal information.

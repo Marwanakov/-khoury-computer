@@ -18,6 +18,8 @@ import com.khourycomputer.domain.model.Order;
 import com.khourycomputer.domain.model.OrderItem;
 import com.khourycomputer.domain.model.Product;
 import com.khourycomputer.domain.model.User;
+import com.khourycomputer.application.dto.order.SubmitOrderRequest;
+import com.khourycomputer.domain.model.PalestinianPhoneNumber;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,39 +61,45 @@ public class OrderApplicationService {
         // User story: customer submits an order request so the store can contact him
         // and confirm it.
         @Transactional
-        public SubmitOrderResponse submitOrder(Long userId) {
-                User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new IllegalArgumentException(
-                                                "User not found."));
+        public SubmitOrderResponse submitOrder(
+                        Long userId,
+                        SubmitOrderRequest request) {
+                {
+                        User user = userRepository.findById(userId)
+                                        .orElseThrow(() -> new IllegalArgumentException(
+                                                        "User not found."));
 
-                Cart cart = cartRepository.findByUserId(userId)
-                                .orElseThrow(() -> new IllegalArgumentException(
-                                                "Cart not found."));
+                        Cart cart = cartRepository.findByUserId(userId)
+                                        .orElseThrow(() -> new IllegalArgumentException(
+                                                        "Cart not found."));
 
-                if (cart.isEmpty()) {
-                        throw new IllegalArgumentException(
-                                        "Cannot submit an empty cart.");
+                        if (cart.isEmpty()) {
+                                throw new IllegalArgumentException(
+                                                "Cannot submit an empty cart.");
+                        }
+
+                        List<OrderItem> validatedOrderItems = createValidatedOrderItems(cart);
+
+                        CustomerInfo customerInfo = createCustomerInfoSnapshot(user, request);
+
+                        Order order = new Order(
+                                        null,
+                                        user.getId(),
+                                        customerInfo,
+                                        validatedOrderItems,
+                                        OrderStatus.PENDING,
+                                        LocalDateTime.now(),
+                                        null);
+
+                        Order savedOrder = orderRepository.save(order);
+
+                        clearCart(cart);
+
+                        return new SubmitOrderResponse(
+                                        toResponse(savedOrder),
+                                        "Your order request was submitted successfully. "
+                                                        + "The store will contact you soon to confirm it.");
                 }
-
-                List<OrderItem> validatedOrderItems = createValidatedOrderItems(cart);
-
-                Order order = new Order(
-                                null,
-                                user.getId(),
-                                createCustomerInfoSnapshot(user),
-                                validatedOrderItems,
-                                OrderStatus.PENDING,
-                                LocalDateTime.now(),
-                                null);
-
-                Order savedOrder = orderRepository.save(order);
-
-                clearCart(cart);
-
-                return new SubmitOrderResponse(
-                                toResponse(savedOrder),
-                                "Your order request was submitted successfully. "
-                                                + "The store will contact you soon to confirm it.");
         }
 
         @Transactional(readOnly = true)
@@ -230,12 +238,34 @@ public class OrderApplicationService {
                 return toResponse(orderRepository.save(order));
         }
 
-        private CustomerInfo createCustomerInfoSnapshot(User user) {
+        private CustomerInfo createCustomerInfoSnapshot(
+                        User user,
+                        SubmitOrderRequest request) {
+
+                if (request == null) {
+                        throw new IllegalArgumentException(
+                                        "Checkout information cannot be empty.");
+                }
+
+                if (request.deliveryAddress() == null) {
+                        throw new IllegalArgumentException(
+                                        "Delivery address cannot be empty.");
+                }
+
+                PalestinianPhoneNumber phoneNumber = PalestinianPhoneNumber.fromParts(
+                                request.phoneCountryCode(),
+                                request.phoneNumber());
+
+                Address deliveryAddress = new Address(
+                                request.deliveryAddress().city(),
+                                request.deliveryAddress().street(),
+                                request.deliveryAddress().details());
+
                 return new CustomerInfo(
                                 user.getFullName(),
                                 user.getEmail(),
-                                user.getPhoneNumber(),
-                                user.getAddress());
+                                phoneNumber.getInternationalNumber(),
+                                deliveryAddress);
         }
 
         private void clearCart(Cart cart) {

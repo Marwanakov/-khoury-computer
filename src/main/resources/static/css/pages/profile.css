@@ -1,13 +1,4 @@
 /* =========================
-   Profile Pages
-========================= */
-
-@import url("./profile/shared.css");
-@import url("./profile/overview.css");
-@import url("./profile/edit.css");
-
-
-/* =========================
    Profile Page
 ========================= */
 
@@ -25,12 +16,12 @@
 
 .profile-label {
   display: inline-block;
+  margin-bottom: 0.75rem;
   color: #2563eb;
   font-size: 0.82rem;
   font-weight: 900;
-  text-transform: uppercase;
   letter-spacing: 0.09em;
-  margin-bottom: 0.75rem;
+  text-transform: uppercase;
 }
 
 .profile-title {
@@ -56,56 +47,50 @@
 ========================= */
 
 .profile-card {
-  position: relative;
+  padding: 2rem;
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 1.5rem;
-  padding: 2rem;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
 }
 
 .profile-card-header {
   display: flex;
-  min-height: 58px;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 2rem;
-  padding-right: 175px;
-}
-
-.profile-card-actions {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-}
-
-.profile-card-actions .btn {
-  min-width: 145px;
 }
 
 .profile-customer-name {
+  margin-bottom: 0;
   color: #0f172a;
   font-size: 1.8rem;
   font-weight: 950;
-  margin-bottom: 0;
 }
 
 .profile-section-label {
   display: block;
+  margin-bottom: 0.35rem;
   color: #64748b;
   font-size: 0.78rem;
   font-weight: 900;
-  text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 0.35rem;
+  text-transform: uppercase;
 }
 
-.profile-section-title {
-  color: #0f172a;
-  font-size: 1.4rem;
-  font-weight: 950;
-  margin-bottom: 0;
+.profile-google-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  color: #166534;
+  font-size: 0.78rem;
+  font-weight: 900;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 /* =========================
@@ -114,15 +99,16 @@
 
 .profile-information-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
 .profile-information-item {
+  min-width: 0;
+  padding: 1.1rem;
   background-color: #f8fafc;
   border: 1px solid #e5e7eb;
   border-radius: 1rem;
-  padding: 1.1rem;
 }
 
 .profile-information-item strong {
@@ -137,20 +123,80 @@
   grid-column: 1 / -1;
 }
 
-.profile-empty-value {
-  color: #94a3b8;
-  font-size: 0.95rem;
-  font-style: italic;
+/* =========================
+   Delivery Note
+========================= */
+
+.profile-delivery-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 1rem;
 }
 
-.profile-divider {
-  margin: 2rem 0;
-  border-color: #e5e7eb;
-  opacity: 1;
+.profile-delivery-note-icon {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 900;
+  background-color: #2563eb;
+  border-radius: 50%;
+}
+
+.profile-delivery-note h3 {
+  margin-bottom: 0.35rem;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.profile-delivery-note p {
+  margin-bottom: 0;
+  color: #475569;
+  font-size: 0.88rem;
+  line-height: 1.6;
 }
 
 /* =========================
-   Responsive
+   Profile Actions
+========================= */
+
+.profile-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.profile-card-actions .btn {
+  min-width: 145px;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 991.98px) {
+  .profile-hero {
+    padding: 1.75rem 0;
+  }
+
+  .profile-card {
+    border-radius: 1.3rem;
+  }
+}
+
+/* =========================
+   Mobile
 ========================= */
 
 @media (max-width: 767.98px) {
@@ -159,10 +205,13 @@
   }
 
   .profile-card-header {
-    min-height: 0;
+    flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 2rem;
-    padding-right: 0;
+    gap: 1rem;
+  }
+
+  .profile-google-badge {
+    align-self: flex-start;
   }
 
   .profile-information-grid {
@@ -173,148 +222,16 @@
     grid-column: auto;
   }
 
+  .profile-delivery-note {
+    padding: 1rem;
+  }
+
   .profile-card-actions {
-    position: static;
-    margin-top: 1.5rem;
+    flex-direction: column;
   }
 
   .profile-card-actions .btn {
     width: 100%;
-  }
-}
-
-/* =========================
-   Edit Profile Page
-========================= */
-
-.profile-back-link {
-  color: #475569;
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-decoration: none;
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.profile-back-link:hover {
-  color: #2563eb;
-  transform: translateX(-3px);
-}
-
-.profile-edit-card {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 1.5rem;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-}
-
-.profile-edit-heading {
-  margin-bottom: 1.5rem;
-}
-
-.profile-edit-heading h2 {
-  color: #0f172a;
-  font-size: 1.35rem;
-  font-weight: 950;
-  margin-bottom: 0.4rem;
-}
-
-.profile-edit-heading p {
-  max-width: 720px;
-  color: #64748b;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  margin-bottom: 0;
-}
-
-.profile-edit-card .form-label {
-  color: #334155;
-  font-size: 0.9rem;
-  font-weight: 800;
-}
-
-.profile-edit-card .form-control {
-  min-height: 48px;
-  border-color: #cbd5e1;
-  border-radius: 0.8rem;
-  padding: 0.75rem 0.9rem;
-}
-
-.profile-edit-card textarea.form-control {
-  min-height: 110px;
-  resize: vertical;
-}
-
-.profile-edit-card .form-control:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12);
-}
-
-.profile-edit-card .form-control.is-invalid {
-  border-color: #dc3545;
-}
-
-.profile-edit-card .form-control.is-invalid:focus {
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.12);
-}
-
-.profile-edit-card .invalid-feedback {
-  font-size: 0.84rem;
-  font-weight: 700;
-}
-
-.profile-edit-card .form-text {
-  color: #64748b;
-  font-size: 0.82rem;
-  line-height: 1.5;
-}
-
-.profile-edit-card .profile-form-note {
-  margin-top: 0.45rem;
-  color: #64748b;
-  font-size: 0.78rem;
-  font-style: italic;
-  font-weight: 900;
-  line-height: 1.5;
-}
-
-.profile-edit-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 2rem;
-}
-
-.profile-edit-actions .btn {
-  min-width: 145px;
-}
-
-/* =========================
-   Edit Profile Responsive
-========================= */
-
-@media (max-width: 767px) {
-  .profile-edit-card {
-    padding: 1.35rem;
-  }
-
-  .profile-edit-actions {
-    flex-direction: column-reverse;
-  }
-
-  .profile-edit-actions .btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 991.98px) {
-  .profile-hero {
-    padding: 1.75rem 0;
   }
 }
 
@@ -331,5 +248,18 @@
   .profile-subtitle {
     font-size: 0.88rem;
     line-height: 1.55;
+  }
+
+  .profile-card {
+    padding: 1.15rem;
+    border-radius: 1.1rem;
+  }
+
+  .profile-customer-name {
+    font-size: 1.55rem;
+  }
+
+  .profile-delivery-note {
+    gap: 0.75rem;
   }
 }
