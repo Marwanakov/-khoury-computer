@@ -1,6 +1,7 @@
 package com.khourycomputer.persistence.repository;
 
 import com.khourycomputer.application.repository.UserRepository;
+import com.khourycomputer.domain.enums.UserAuthProvider;
 import com.khourycomputer.domain.model.User;
 import com.khourycomputer.persistence.mapper.UserMapper;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return StreamSupport.stream(springDataUserRepository.findAll().spliterator(), false)
+        return StreamSupport.stream(
+                        springDataUserRepository
+                                .findAll()
+                                .spliterator(),
+                        false
+                )
                 .map(userMapper::toDomain)
                 .toList();
     }
@@ -43,6 +49,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByAuthProviderAndProviderSubject(
+            UserAuthProvider authProvider,
+            String providerSubject
+    ) {
+        return springDataUserRepository
+                .findByAuthProviderAndProviderSubject(
+                        authProvider,
+                        providerSubject
+                )
+                .map(userMapper::toDomain);
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return springDataUserRepository.existsById(id);
     }
@@ -55,7 +74,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         return userMapper.toDomain(
-                springDataUserRepository.save(userMapper.toEntity(user))
+                springDataUserRepository.save(
+                        userMapper.toEntity(user)
+                )
         );
     }
 

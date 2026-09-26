@@ -1,112 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head('Sign In', '/css/pages/auth.css')}"
+  ></head>
 
-<head th:replace="~{fragments/head :: head('Sign In', '/css/pages/auth.css')}"></head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<body>
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<main class="auth-page">
-
-    <section class="auth-section">
+    <main class="auth-page">
+      <section class="auth-section">
         <div class="container">
+          <div class="auth-card auth-login-card">
+            <div class="auth-heading">
+              <span class="auth-label">Secure account access</span>
 
-            <div class="auth-card auth-login-card">
+              <h1>Continue with Google</h1>
 
-                <div class="auth-heading">
-                    <span class="auth-label">Welcome back</span>
-
-                    <h1>Sign In</h1>
-
-                    <p>
-                        Sign in to manage your cart, submit order requests,
-                        and review your order history.
-                    </p>
-                </div>
-
-                <!-- Successful registration -->
-                <div th:if="${successMessage}"
-                     class="alert alert-success border-0 mb-4"
-                     th:text="${successMessage}">
-                    Registration completed successfully.
-                </div>
-
-                <div th:if="${infoMessage}"
-                    class="alert alert-info border-0 mb-4"
-                    th:text="${infoMessage}">
-                    Sign in or create an account to continue.
-                </div>
-
-                <!-- Invalid login -->
-                <div th:if="${param.error}"
-                    class="alert alert-danger border-0 mb-4">
-                    Invalid email or password.
-                </div>
-
-                <!-- Successful logout -->
-                <div th:if="${param.logout}"
-                    class="alert alert-success border-0 mb-4">
-                    You have been signed out successfully.
-                </div>
-
-                <div th:if="${param.emailChanged}"
-                    class="alert alert-success border-0 mb-4">
-                    Your profile was updated successfully.
-                    Sign in again using your new email address.
-                </div>
-
-                <form th:action="@{/login}" method="post">
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">
-                            Email
-                        </label>
-
-                        <input id="email"
-                               type="email"
-                               name="username"
-                               class="form-control"
-                               placeholder="customer@example.com"
-                               autocomplete="email"
-                               required
-                               autofocus>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">
-                            Password
-                        </label>
-
-                        <input id="password"
-                               type="password"
-                               name="password"
-                               class="form-control"
-                               autocomplete="current-password"
-                               required>
-                    </div>
-
-                    <button type="submit"
-                            class="btn btn-khoury w-100 mt-2">
-                        Sign In
-                    </button>
-
-                </form>
-
-                <p class="auth-switch-text">
-                    Don’t have an account?
-                    <a th:href="@{/register}">Create an account</a>
-                </p>
-
+              <p>
+                Use your Google account to sign in securely.
+              </p>
             </div>
 
+            <div
+              th:if="${param.oauthError}"
+              class="alert alert-danger border-0 mb-4"
+            >
+              Google sign-in could not be completed. Please try again.
+            </div>
+
+            <div
+              th:if="${param.logout}"
+              class="alert alert-success border-0 mb-4"
+            >
+              You have been signed out successfully.
+            </div>
+
+            <a
+              class="google-sign-in-button"
+              th:href="@{/oauth2/authorization/google}"
+            >
+              <svg
+                class="google-sign-in-logo"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill="#4285F4"
+                  d="M21.805 10.023H12v3.955h5.627c-.242 1.272-.971 2.35-2.068 3.075v2.557h3.354c1.963-1.807 3.092-4.47 3.092-7.633 0-.736-.066-1.445-.2-1.954z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 22c2.7 0 4.964-.895 6.618-2.418l-3.354-2.557c-.93.623-2.118.991-3.264.991-2.607 0-4.815-1.762-5.605-4.13H2.927v2.638A9.999 9.999 0 0 0 12 22z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M6.395 13.886A6.014 6.014 0 0 1 6.082 12c0-.655.113-1.291.313-1.886V7.476H2.927A9.996 9.996 0 0 0 2 12c0 1.614.386 3.141.927 4.524l3.468-2.638z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.984c1.468 0 2.786.505 3.823 1.495l2.864-2.864C16.96 3.005 14.7 2 12 2a9.999 9.999 0 0 0-9.073 5.476l3.468 2.638C7.185 7.746 9.393 5.984 12 5.984z"
+                />
+              </svg>
+
+              <span>Continue with Google</span>
+            </a>
+          </div>
         </div>
-    </section>
+      </section>
+    </main>
 
-</main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script th:replace="~{fragments/footer :: bootstrapScript}"></script>
-
-</body>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
 </html>

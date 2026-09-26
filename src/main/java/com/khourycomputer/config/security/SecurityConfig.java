@@ -7,6 +7,7 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
@@ -14,19 +15,22 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain securityFilterChain(
                         HttpSecurity http,
-                        PendingCartAuthenticationSuccessHandler successHandler) throws Exception {
+                        PendingCartAuthenticationSuccessHandler successHandler,
+                        GoogleOidcUserService googleOidcUserService) throws Exception {
 
                 XorCsrfTokenRequestAttributeHandler csrfRequestHandler = new XorCsrfTokenRequestAttributeHandler();
 
                 csrfRequestHandler.setCsrfRequestAttributeName(null);
 
                 return http
-
                                 .csrf(csrf -> csrf
-                                                .csrfTokenRequestHandler(csrfRequestHandler))
+                                                .csrfTokenRequestHandler(
+                                                                csrfRequestHandler))
+
                                 .authorizeHttpRequests(auth -> auth
 
-                                                // Public pages and resources
+                                                // Public pages, authentication routes,
+                                                // and static resources.
                                                 .requestMatchers(
                                                                 "/",
                                                                 "/products/**",
@@ -34,63 +38,69 @@ public class SecurityConfig {
                                                                 "/new-arrivals",
                                                                 "/best-sellers",
                                                                 "/contact",
-                                                                "/register",
                                                                 "/login",
+                                                                "/oauth2/**",
+                                                                "/login/oauth2/**",
                                                                 "/access-denied",
                                                                 "/error",
                                                                 "/favicon.ico",
                                                                 "/css/**",
                                                                 "/js/**",
                                                                 "/images/**",
-                                                                "/uploads/**")
+                                                                "/uploads/**",
+                                                                "/oauth2/**",
+                                                                "/login/oauth2/**")
                                                 .permitAll()
 
-                                                // Admin area
+                                                // Admin area.
                                                 .requestMatchers("/admin/**")
                                                 .hasRole("ADMIN")
 
-                                                // Guests may begin the pending-cart login flow.
+                                                // Guests may start the pending-cart flow.
                                                 // Customers may add products normally.
                                                 // Admins are denied.
-                                                .requestMatchers(HttpMethod.POST, "/cart/items")
+                                                .requestMatchers(
+                                                                HttpMethod.POST,
+                                                                "/cart/items")
                                                 .access((authentication, context) -> {
-
                                                         boolean isAnonymous = authentication.get()
                                                                         .getAuthorities()
                                                                         .stream()
-                                                                        .anyMatch(authority -> authority.getAuthority()
-                                                                                        .equals("ROLE_ANONYMOUS"));
+                                                                        .anyMatch(authority -> authority
+                                                                                        .getAuthority()
+                                                                                        .equals(
+                                                                                                        "ROLE_ANONYMOUS"));
 
                                                         boolean isCustomer = authentication.get()
                                                                         .getAuthorities()
                                                                         .stream()
-                                                                        .anyMatch(authority -> authority.getAuthority()
-                                                                                        .equals("ROLE_CUSTOMER"));
+                                                                        .anyMatch(authority -> authority
+                                                                                        .getAuthority()
+                                                                                        .equals(
+                                                                                                        "ROLE_CUSTOMER"));
 
                                                         return new AuthorizationDecision(
                                                                         isAnonymous || isCustomer);
                                                 })
 
-                                                // Customer-only account pages
+                                                // Customer-only pages.
                                                 .requestMatchers(
                                                                 "/cart/**",
                                                                 "/orders/**",
                                                                 "/profile/**")
                                                 .hasRole("CUSTOMER")
 
-                                                // Safe default for future routes
                                                 .anyRequest()
                                                 .authenticated())
 
-                                // Spring Security handles POST /login
-                                .formLogin(formLogin -> formLogin
+                                // Google authentication is used for customers.
+                                .oauth2Login(oauth2Login -> oauth2Login
                                                 .loginPage("/login")
-                                                .loginProcessingUrl("/login")
+                                                .userInfoEndpoint(userInfo -> userInfo
+                                                                .oidcUserService(googleOidcUserService))
                                                 .successHandler(successHandler)
-                                                .failureUrl("/login?error")
-                                                .permitAll())
+                                                .failureUrl("/login?oauthError"))
 
-                                // Spring Security handles POST /logout
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
                                                 .logoutSuccessUrl("/login?logout")
@@ -98,12 +108,12 @@ public class SecurityConfig {
                                                 .deleteCookies("JSESSIONID")
                                                 .permitAll())
 
-                                // Show a clean page when an authenticated user
-                                // does not have permission to access a route.
                                 .exceptionHandling(exceptionHandling -> exceptionHandling
+                                                .authenticationEntryPoint(
+                                                                new LoginUrlAuthenticationEntryPoint(
+                                                                                "/login"))
                                                 .accessDeniedPage("/access-denied"))
 
-                                // Disable browser HTTP Basic authentication.
                                 .httpBasic(httpBasic -> httpBasic.disable())
 
                                 .build();

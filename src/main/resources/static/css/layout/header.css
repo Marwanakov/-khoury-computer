@@ -3,8 +3,7 @@
 ========================= */
 
 .site-header {
-  /* position: sticky;
-  top: 0; */
+  position: relative;
   z-index: 1000;
 }
 
@@ -97,46 +96,79 @@
   flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.55rem;
+}
+
+.header-authenticated-action {
+  margin: 0;
+}
+
+.header-action-link,
+.header-logout-button {
+  display: inline-flex;
+  width: auto;
+  min-width: 0;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 0.85rem;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .header-action-link {
-  color: #111827;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
+  color: #1d4ed8;
+  background-color: #ffffff;
+  border: 1px solid #93c5fd;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 .header-action-link:hover,
 .header-action-link:focus {
-  color: #2563eb;
-}
-
-.header-user-label {
-  color: #64748b;
-  font-size: 0.78rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.header-user-label strong {
-  color: #0f172a;
-  font-weight: 800;
+  color: #ffffff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+  transform: translateY(-1px);
 }
 
 .header-logout-button {
-  padding: 0;
-  color: #111827;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
+  color: #991b1b;
+  background-color: #fff1f2;
+  border: 1px solid #fecaca;
+  box-shadow: 0 4px 12px rgba(127, 29, 29, 0.06);
 }
 
 .header-logout-button:hover,
 .header-logout-button:focus {
-  color: #2563eb;
+  color: #ffffff;
+  background-color: #dc2626;
+  border-color: #dc2626;
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.18);
+  transform: translateY(-1px);
+}
+
+.header-action-link:focus-visible,
+.header-logout-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 3px;
+}
+
+.header-sign-in {
+  min-width: 145px;
 }
 
 /* =========================
@@ -189,7 +221,7 @@
 }
 
 /* =========================
-   Category Dropdown
+   Navigation Dropdowns
 ========================= */
 
 .category-dropdown {
@@ -211,7 +243,8 @@
   transition: transform 0.2s ease;
 }
 
-.category-dropdown-button[aria-expanded="true"] .category-dropdown-arrow {
+.category-dropdown-button[aria-expanded="true"]
+.category-dropdown-arrow {
   transform: rotate(180deg);
 }
 
@@ -255,12 +288,14 @@
 
 @media (max-width: 1199.98px) {
   .header-actions {
-    gap: 0.75rem;
+    gap: 0.45rem;
   }
 
   .header-action-link,
   .header-logout-button {
-    font-size: 0.9rem;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    font-size: 0.84rem;
   }
 
   .category-nav-scroll {
@@ -277,11 +312,6 @@
 ========================= */
 
 @media (max-width: 991.98px) {
-  /*
-   * The complete mobile header is fairly tall, so it should
-   * scroll away instead of covering most of the phone screen.
-   */
-
   .site-header > .container {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
@@ -295,12 +325,6 @@
     justify-content: flex-start;
   }
 
-  .search-input {
-    min-width: 0;
-  }
-
-  /* Account buttons */
-
   .header-actions {
     display: grid;
     width: 100%;
@@ -309,57 +333,62 @@
   }
 
   .header-actions > .header-action-link,
-  .header-actions > a.btn,
   .header-actions > form .header-logout-button {
-    display: inline-flex;
     width: 100%;
-    min-width: 0;
     min-height: 44px;
-    align-items: center;
-    justify-content: center;
     padding: 0.65rem 0.8rem;
     font-size: 0.88rem;
-    font-weight: 800;
-    line-height: 1.2;
-    text-align: center;
     border-radius: 0.8rem;
-  }
-
-  .header-actions > .header-action-link {
-    color: #1d4ed8;
-    background-color: #ffffff;
-    border: 1px solid #93c5fd;
-  }
-
-  .header-actions > .header-action-link:hover,
-  .header-actions > .header-action-link:focus {
-    color: #ffffff;
-    background-color: #2563eb;
-    border-color: #2563eb;
-  }
-
-  .header-actions > a.btn {
-    border-radius: 0.8rem;
+    transform: none;
   }
 
   .header-actions > form {
     width: 100%;
   }
 
-  .header-actions > form .header-logout-button {
-    color: #991b1b;
-    background-color: #fff1f2;
-    border: 1px solid #fecaca;
-  }
+  /* The single guest Sign In button fills the row. */
 
-  .header-actions > form .header-logout-button:hover,
-  .header-actions > form .header-logout-button:focus {
+  .header-actions > .header-sign-in {
+    width: 100%;
+    min-width: 0;
+    grid-column: 1 / -1;
     color: #ffffff;
-    background-color: #dc2626;
-    border-color: #dc2626;
+    background-color: #2563eb;
+    border-color: #2563eb;
   }
 
-  /* Always-visible, single-line mobile navigation */
+  .header-actions > .header-sign-in:hover,
+  .header-actions > .header-sign-in:focus,
+  .header-actions > .header-sign-in:active {
+    color: #1d4ed8;
+    background-color: #ffffff;
+    border-color: #93c5fd;
+  }
+
+  /* Customer and admin actions remain on one row. */
+
+  .header-actions:has(.header-customer-action) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .header-actions:has(.header-admin-action) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .header-actions:has(.header-customer-action)
+  .header-action-link,
+  .header-actions:has(.header-customer-action)
+  .header-logout-button,
+  .header-actions:has(.header-admin-action)
+  .header-action-link,
+  .header-actions:has(.header-admin-action)
+  .header-logout-button {
+    padding-right: 0.45rem;
+    padding-left: 0.45rem;
+    font-size: 0.78rem;
+  }
+
+  /* Always-visible mobile store navigation. */
 
   .category-nav,
   .category-nav .container {
@@ -367,9 +396,7 @@
   }
 
   .category-nav-scroll {
-    display: flex;
     flex-wrap: nowrap;
-    align-items: center;
     justify-content: space-between;
     gap: clamp(0.45rem, 1.4vw, 1.25rem);
     overflow: visible;
@@ -382,7 +409,6 @@
     padding: 0.9rem 0;
     color: #111827;
     font-size: clamp(0.72rem, 1.75vw, 0.88rem);
-    font-weight: 600;
     background-color: transparent;
     border: 0;
     border-radius: 0;
@@ -394,38 +420,12 @@
     background-color: transparent;
   }
 
-  .category-nav-link::after {
-    display: block;
-  }
-
   .category-dropdown {
-    position: relative;
     flex: 0 1 auto;
   }
 
   .category-dropdown-menu {
     z-index: 1100;
-  }
-
-  /* Logged-in customer actions use one row */
-
-  .header-actions:has(.header-customer-action) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  /* Logged-in admin actions */
-
-  .header-actions:has(.header-admin-action) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .header-actions:has(.header-customer-action) .header-action-link,
-  .header-actions:has(.header-customer-action) .header-logout-button,
-  .header-actions:has(.header-admin-action) .header-action-link,
-  .header-actions:has(.header-admin-action) .header-logout-button {
-    padding-right: 0.45rem;
-    padding-left: 0.45rem;
-    font-size: 0.78rem;
   }
 }
 
@@ -451,8 +451,26 @@
     gap: 0.55rem;
   }
 
+  .header-actions:has(.header-customer-action),
+  .header-actions:has(.header-admin-action) {
+    gap: 0.35rem;
+  }
+
+  .header-actions:has(.header-customer-action)
+  .header-action-link,
+  .header-actions:has(.header-customer-action)
+  .header-logout-button,
+  .header-actions:has(.header-admin-action)
+  .header-action-link,
+  .header-actions:has(.header-admin-action)
+  .header-logout-button {
+    min-height: 42px;
+    padding-right: 0.2rem;
+    padding-left: 0.2rem;
+    font-size: 0.68rem;
+  }
+
   .category-nav-scroll {
-    justify-content: space-between;
     gap: clamp(0.35rem, 2vw, 0.75rem);
   }
 
@@ -470,20 +488,21 @@
     min-width: 210px;
     max-width: calc(100vw - 2rem);
   }
+}
 
-  .header-actions:has(.header-customer-action),
-  .header-actions:has(.header-admin-action) {
-    gap: 0.35rem;
+/* Desktop guest Sign In uses the same reversed colors as mobile. */
+@media (min-width: 992px) {
+  .header-actions > .header-sign-in {
+    color: #ffffff;
+    background-color: #2563eb;
+    border-color: #2563eb;
   }
 
-  .header-actions:has(.header-customer-action) .header-action-link,
-  .header-actions:has(.header-customer-action) .header-logout-button,
-  .header-actions:has(.header-admin-action) .header-action-link,
-  .header-actions:has(.header-admin-action) .header-logout-button {
-    min-height: 42px;
-    padding-right: 0.2rem;
-    padding-left: 0.2rem;
-    font-size: 0.68rem;
-    white-space: nowrap;
+  .header-actions > .header-sign-in:hover,
+  .header-actions > .header-sign-in:focus,
+  .header-actions > .header-sign-in:active {
+    color: #1d4ed8;
+    background-color: #ffffff;
+    border-color: #93c5fd;
   }
 }

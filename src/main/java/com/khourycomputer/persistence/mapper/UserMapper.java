@@ -26,7 +26,9 @@ public class UserMapper {
                 userEntity.passwordHash(),
                 userEntity.phoneNumber(),
                 addressMapper.toDomain(userEntity.address()),
-                userEntity.role()
+                userEntity.role(),
+                userEntity.authProvider(),
+                userEntity.providerSubject()
         );
     }
 
@@ -43,7 +45,9 @@ public class UserMapper {
                 user.getPasswordHash(),
                 user.getPhoneNumber(),
                 addressMapper.toEntity(user.getAddress()),
-                user.getRole()
+                user.getRole(),
+                user.getAuthProvider(),
+                user.getProviderSubject()
         );
     }
 }

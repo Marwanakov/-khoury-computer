@@ -1,7 +1,7 @@
 <!--
-Guest: Sign In and Register
+Guest: Sign In
 CUSTOMER: My Profile, My Orders, Cart, and Logout
-ADMIN: Admin Dashboard and Logout
+ADMIN: Admin Dashboard, Admin Overview, and Logout
 -->
 
 <!doctype html>
@@ -51,18 +51,10 @@ ADMIN: Admin Dashboard and Logout
               <!-- Guest navigation -->
               <a
                 sec:authorize="isAnonymous()"
-                class="header-action-link"
+                class="header-action-link header-sign-in"
                 th:href="@{/login}"
               >
                 Sign In
-              </a>
-
-              <a
-                sec:authorize="isAnonymous()"
-                class="btn btn-primary btn-sm px-3"
-                th:href="@{/register}"
-              >
-                Register
               </a>
 
               <!-- Customer navigation -->
