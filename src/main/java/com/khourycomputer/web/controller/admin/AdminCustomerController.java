@@ -37,34 +37,58 @@ public class AdminCustomerController {
     public String showCustomersPage(
             @RequestParam(required = false) String keyword,
             Model model) {
+
         List<UserResponse> allCustomers = userApplicationService.listUsers()
                 .stream()
                 .filter(user -> user.role() == UserRole.CUSTOMER)
                 .toList();
 
-        List<OrderResponse> customerOrders = orderApplicationService.listOrders()
-                .stream()
-                .filter(order -> allCustomers.stream()
-                        .anyMatch(customer -> customer.id().equals(
-                                order.userId())))
-                .toList();
-
-        Map<Long, Long> orderCountByCustomerId = customerOrders.stream()
-                .collect(Collectors.groupingBy(
-                        OrderResponse::userId,
-                        Collectors.counting()));
-
-        Set<Long> customersWithOrders = customerOrders.stream()
-                .map(OrderResponse::userId)
+        Set<Long> customerIds = allCustomers.stream()
+                .map(UserResponse::id)
                 .collect(Collectors.toSet());
 
-        List<UserResponse> filteredCustomers = allCustomers.stream()
-                .filter(customer -> matchesKeyword(customer, keyword))
-                .sorted(
-                        Comparator.comparing(
-                                UserResponse::fullName,
-                                String.CASE_INSENSITIVE_ORDER))
-                .toList();
+        List<OrderResponse> customerOrders =
+                orderApplicationService.listOrders()
+                        .stream()
+                        .filter(order -> customerIds.contains(
+                                order.userId()))
+                        .toList();
+
+        Map<Long, Long> orderCountByCustomerId =
+                customerOrders.stream()
+                        .collect(Collectors.groupingBy(
+                                OrderResponse::userId,
+                                Collectors.counting()));
+
+        Map<Long, OrderResponse> latestOrderByCustomerId =
+                customerOrders.stream()
+                        .sorted(
+                                Comparator.comparing(
+                                        OrderResponse::createdAt)
+                                        .reversed())
+                        .collect(Collectors.toMap(
+                                OrderResponse::userId,
+                                order -> order,
+                                (latestOrder, ignoredOrder) ->
+                                        latestOrder));
+
+        Set<Long> customersWithOrders =
+                customerOrders.stream()
+                        .map(OrderResponse::userId)
+                        .collect(Collectors.toSet());
+
+        List<UserResponse> filteredCustomers =
+                allCustomers.stream()
+                        .filter(customer -> matchesKeyword(
+                                customer,
+                                latestOrderByCustomerId.get(
+                                        customer.id()),
+                                keyword))
+                        .sorted(
+                                Comparator.comparing(
+                                        UserResponse::fullName,
+                                        String.CASE_INSENSITIVE_ORDER))
+                        .toList();
 
         model.addAttribute(
                 "customers",
@@ -73,6 +97,10 @@ public class AdminCustomerController {
         model.addAttribute(
                 "orderCountByCustomerId",
                 orderCountByCustomerId);
+
+        model.addAttribute(
+                "latestOrderByCustomerId",
+                latestOrderByCustomerId);
 
         model.addAttribute(
                 "totalCustomerCount",
@@ -95,38 +123,65 @@ public class AdminCustomerController {
     public String showCustomerDetailsPage(
             @PathVariable Long customerId,
             Model model) {
-        UserResponse customer = userApplicationService.getCustomerById(customerId);
+        UserResponse customer =
+                userApplicationService.getCustomerById(customerId);
 
-        List<OrderResponse> orders = orderApplicationService
-                .listOrdersByUserId(customerId)
-                .stream()
-                .sorted(
-                        Comparator.comparing(
-                                OrderResponse::createdAt).reversed())
-                .toList();
+        List<OrderResponse> orders =
+                orderApplicationService
+                        .listOrdersByUserId(customerId)
+                        .stream()
+                        .sorted(
+                                Comparator.comparing(
+                                        OrderResponse::createdAt)
+                                        .reversed())
+                        .toList();
 
-        BigDecimal totalOrderValue = orders.stream()
-                .filter(order -> order.status() != OrderStatus.CANCELLED)
-                .map(OrderResponse::totalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalOrderValue =
+                orders.stream()
+                        .filter(order ->
+                                order.status()
+                                        != OrderStatus.CANCELLED)
+                        .map(OrderResponse::totalPrice)
+                        .reduce(
+                                BigDecimal.ZERO,
+                                BigDecimal::add);
 
         model.addAttribute("customer", customer);
         model.addAttribute("orders", orders);
 
+        model.addAttribute(
+                "latestOrder",
+                orders.isEmpty() ? null : orders.getFirst());
+
         model.addAttribute("totalOrderCount", orders.size());
+
         model.addAttribute(
                 "pendingOrderCount",
-                countOrdersByStatus(orders, OrderStatus.PENDING));
+                countOrdersByStatus(
+                        orders,
+                        OrderStatus.PENDING));
+
         model.addAttribute(
                 "confirmedOrderCount",
-                countOrdersByStatus(orders, OrderStatus.CONFIRMED));
+                countOrdersByStatus(
+                        orders,
+                        OrderStatus.CONFIRMED));
+
         model.addAttribute(
                 "completedOrderCount",
-                countOrdersByStatus(orders, OrderStatus.COMPLETED));
+                countOrdersByStatus(
+                        orders,
+                        OrderStatus.COMPLETED));
+
         model.addAttribute(
                 "cancelledOrderCount",
-                countOrdersByStatus(orders, OrderStatus.CANCELLED));
-        model.addAttribute("totalOrderValue", totalOrderValue);
+                countOrdersByStatus(
+                        orders,
+                        OrderStatus.CANCELLED));
+
+        model.addAttribute(
+                "totalOrderValue",
+                totalOrderValue);
 
         return "admin/customer-details";
     }
@@ -141,12 +196,22 @@ public class AdminCustomerController {
 
     private boolean matchesKeyword(
             UserResponse customer,
+            OrderResponse latestOrder,
             String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return true;
         }
 
-        String searchText = keyword.trim().toLowerCase(Locale.ROOT);
+        String searchText =
+                keyword.trim().toLowerCase(Locale.ROOT);
+
+        String phoneNumber = latestOrder == null
+                ? null
+                : latestOrder.customerPhoneNumber();
+
+        String city = latestOrder == null
+                ? null
+                : latestOrder.deliveryAddress().city();
 
         return customer.id().toString().contains(searchText)
                 || containsIgnoreCase(
@@ -156,10 +221,10 @@ public class AdminCustomerController {
                         customer.email(),
                         searchText)
                 || containsIgnoreCase(
-                        customer.phoneNumber(),
+                        phoneNumber,
                         searchText)
                 || containsIgnoreCase(
-                        customer.address().city(),
+                        city,
                         searchText);
     }
 
