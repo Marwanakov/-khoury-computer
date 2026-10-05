@@ -3,21 +3,12 @@
   <head th:fragment="head(pageTitle, pageCss)">
     <meta charset="UTF-8" />
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title th:text="${pageTitle} + ' | Khoury Computer'">
-      Khoury Computer
-    </title>
+    <title th:text="${pageTitle} + ' | Khoury Computer'">Khoury Computer</title>
 
     <!-- Website icons -->
-    <link
-      rel="icon"
-      type="image/x-icon"
-      th:href="@{/favicon.ico}"
-    />
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}" />
 
     <link
       rel="icon"
@@ -47,5 +38,32 @@
 
     <!-- Page-specific styles -->
     <link rel="stylesheet" th:href="@{${pageCss}}" />
+
+    <!-- Google Analytics -->
+    <script>
+      const analyticsExcludedPaths = ["/admin", "/login"];
+
+      const shouldTrack = !analyticsExcludedPaths.some((path) =>
+        window.location.pathname.startsWith(path),
+      );
+
+      if (shouldTrack) {
+        window.dataLayer = window.dataLayer || [];
+
+        window.gtag = function () {
+          dataLayer.push(arguments);
+        };
+
+        gtag("js", new Date());
+        gtag("config", "G-2VB3WKKRT1");
+
+        const analyticsScript = document.createElement("script");
+        analyticsScript.async = true;
+        analyticsScript.src =
+          "https://www.googletagmanager.com/gtag/js?id=G-2VB3WKKRT1";
+
+        document.head.appendChild(analyticsScript);
+      }
+    </script>
   </head>
 </html>
