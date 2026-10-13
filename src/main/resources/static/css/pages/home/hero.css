@@ -3,93 +3,374 @@
 ========================= */
 
 .home-hero {
-    padding: 5rem 0 2.5rem;
-    background:
-        radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 34%),
-        linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+  padding: 5rem 0 2.5rem;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(37, 99, 235, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
 }
 
 .hero-title {
-    font-size: clamp(2.4rem, 5vw, 4.5rem);
-    line-height: 1.02;
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    color: #0f172a;
+  color: #0f172a;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
 }
 
 .hero-text {
-    max-width: 620px;
-    color: #64748b;
-    font-size: 1.1rem;
-    line-height: 1.7;
+  max-width: 620px;
+  color: #64748b;
+  font-size: 1.1rem;
+  line-height: 1.7;
 }
+
 
 /* =========================
    Hero Visual
 ========================= */
 
 .hero-visual-card {
-    position: relative;
-    min-height: 440px;
-    overflow: hidden;
-    background-color: #0f172a;
-    border: 1px solid rgba(37, 99, 235, 0.24);
-    border-radius: 2rem;
-    box-shadow:
-        0 32px 75px rgba(15, 23, 42, 0.2),
-        0 10px 30px rgba(37, 99, 235, 0.12);
-    isolation: isolate;
+  position: relative;
+  min-height: 440px;
+  overflow: hidden;
+  background-color: #0f172a;
+  border: 1px solid rgba(37, 99, 235, 0.24);
+  border-radius: 2rem;
+  box-shadow:
+    0 32px 75px rgba(15, 23, 42, 0.2),
+    0 10px 30px rgba(37, 99, 235, 0.12);
+  isolation: isolate;
+}
+
+.hero-carousel-slides,
+.hero-carousel-slide,
+.hero-carousel-link,
+.hero-carousel-static,
+.hero-carousel-slide picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-carousel-slide {
+  z-index: 1;
+}
+
+.hero-carousel-slide[hidden] {
+  display: none;
+}
+
+.hero-carousel-slide:not([hidden]) {
+  animation: hero-slide-reveal 0.5s ease;
+}
+
+.hero-carousel-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-carousel-link:focus-visible {
+  outline: 4px solid rgba(255, 255, 255, 0.95);
+  outline-offset: -8px;
+  border-radius: inherit;
 }
 
 .hero-visual-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.7s ease;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.7s ease;
 }
 
-.hero-visual-card:hover .hero-visual-image {
-    transform: scale(1.035);
+.hero-carousel:hover
+.hero-carousel-slide:not([hidden])
+.hero-visual-image {
+  transform: scale(1.035);
 }
 
 .hero-visual-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background:
-        linear-gradient(
-            180deg,
-            rgba(15, 23, 42, 0.03) 35%,
-            rgba(15, 23, 42, 0.72) 100%
-        ),
-        linear-gradient(
-            90deg,
-            rgba(37, 99, 235, 0.08),
-            transparent 48%
-        );
-    pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.03) 35%,
+      rgba(15, 23, 42, 0.58) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.08),
+      transparent 48%
+    );
+  pointer-events: none;
 }
 
+
 /* =========================
-   Responsive
+   Carousel Navigation
+========================= */
+
+.hero-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1;
+  background-color: rgba(15, 23, 42, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);
+  backdrop-filter: blur(8px);
+  transform: translateY(-50%);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hero-carousel-arrow:hover {
+  color: #ffffff;
+  background-color: rgba(37, 99, 235, 0.9);
+  border-color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-carousel-arrow:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.hero-carousel-previous {
+  left: 1rem;
+}
+
+.hero-carousel-next {
+  right: 1rem;
+}
+
+.hero-carousel-previous:hover {
+  transform: translate(-2px, -50%);
+}
+
+.hero-carousel-next:hover {
+  transform: translate(2px, -50%);
+}
+
+
+/* =========================
+   Carousel Indicators
+========================= */
+
+.hero-carousel-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  background-color: rgba(15, 23, 42, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  transform: translateX(-50%);
+}
+
+.hero-carousel-dot {
+  display: block;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 0;
+  border-radius: 999px;
+  transition:
+    width 0.25s ease,
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hero-carousel-dot:hover {
+  background-color: rgba(255, 255, 255, 0.82);
+  transform: scale(1.12);
+}
+
+.hero-carousel-dot.is-active {
+  width: 26px;
+  background-color: #ffffff;
+}
+
+.hero-carousel-dot:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+
+/* =========================
+   Animation
+========================= */
+
+@keyframes hero-slide-reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* =========================
+   Tablet
 ========================= */
 
 @media (max-width: 991.98px) {
-    .hero-visual-card {
-        min-height: 430px;
-    }
+  .home-hero {
+    padding-top: 3.75rem;
+  }
+
+  .hero-visual-card {
+    min-height: 430px;
+  }
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 575.98px) {
+  .home-hero {
+    padding: 3rem 0 1.5rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.35rem, 12vw, 3.35rem);
+  }
+
+  .hero-text {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .hero-visual-card {
+    min-height: 350px;
+    border-radius: 1.5rem;
+  }
+
+  .hero-carousel-arrow {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+
+  .hero-carousel-previous {
+    left: 0.65rem;
+  }
+
+  .hero-carousel-next {
+    right: 0.65rem;
+  }
+
+  .hero-carousel-dots {
+    bottom: 0.75rem;
+  }
+}
+
+
+/* =========================
+   Reduced Motion
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel-slide:not([hidden]) {
+    animation: none;
+  }
+
+  .hero-visual-image,
+  .hero-carousel-arrow,
+  .hero-carousel-dot {
+    transition: none;
+  }
+
+  .hero-carousel:hover
+  .hero-carousel-slide:not([hidden])
+  .hero-visual-image {
+    transform: none;
+  }
+}
+
+/* Ensure carousel controls remain above clickable slides */
+
+.hero-carousel > .hero-carousel-arrow {
+  position: absolute !important;
+  top: 50% !important;
+  z-index: 20 !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 46px !important;
+  height: 46px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  color: #ffffff !important;
+  font-size: 1.35rem !important;
+  background-color: rgba(15, 23, 42, 0.82) !important;
+  border: 2px solid rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50% !important;
+  cursor: pointer;
+  transform: translateY(-50%) !important;
+}
+
+.hero-carousel > .hero-carousel-previous {
+  left: 1rem !important;
+}
+
+.hero-carousel > .hero-carousel-next {
+  right: 1rem !important;
+}
+
+.hero-carousel > .hero-carousel-dots {
+  z-index: 20 !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 @media (max-width: 575.98px) {
-    .home-hero {
-        padding: 3rem 0 1.5rem;
-    }
+  .hero-carousel > .hero-carousel-arrow {
+    width: 42px !important;
+    height: 42px !important;
+  }
 
-    .hero-visual-card {
-        min-height: 350px;
-        border-radius: 1.5rem;
-    }
+  .hero-carousel > .hero-carousel-previous {
+    left: 0.65rem !important;
+  }
+
+  .hero-carousel > .hero-carousel-next {
+    right: 0.65rem !important;
+  }
 }

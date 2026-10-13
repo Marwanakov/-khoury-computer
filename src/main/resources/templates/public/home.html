@@ -37,7 +37,135 @@
             </div>
 
             <div class="col-lg-6">
-              <div class="hero-visual-card">
+              <!-- Managed carousel -->
+              <div
+                th:if="${heroSlides != null
+      and !#lists.isEmpty(heroSlides)}"
+                class="hero-visual-card hero-carousel"
+                data-hero-carousel
+                aria-roledescription="carousel"
+                aria-label="Featured promotions"
+              >
+                <div class="hero-carousel-slides">
+                  <div
+                    class="hero-carousel-slide"
+                    th:each="slide, slideIteration : ${heroSlides}"
+                    th:attr="
+          data-hero-slide='',
+          aria-label=|Promotion ${slideIteration.count}
+            of ${heroSlides.size()}|
+        "
+                    th:hidden="${!slideIteration.first}"
+                    aria-roledescription="slide"
+                  >
+                    <a
+                      th:if="${slide.hasTarget()}"
+                      class="hero-carousel-link"
+                      th:href="${slide.targetUrl()}"
+                      th:aria-label="${slide.altText()}"
+                    >
+                      <picture>
+                        <source
+                          media="(max-width: 575.98px)"
+                          th:srcset="${slide.mobileImageUrl()}"
+                        />
+
+                        <img
+                          class="hero-visual-image"
+                          th:src="${slide.desktopImageUrl()}"
+                          th:alt="${slide.altText()}"
+                          th:attr="
+                loading=${slideIteration.first
+                  ? 'eager'
+                  : 'lazy'},
+                fetchpriority=${slideIteration.first
+                  ? 'high'
+                  : 'auto'}
+              "
+                          decoding="async"
+                        />
+                      </picture>
+
+                      <div class="hero-visual-overlay"></div>
+                    </a>
+
+                    <div
+                      th:unless="${slide.hasTarget()}"
+                      class="hero-carousel-static"
+                    >
+                      <picture>
+                        <source
+                          media="(max-width: 575.98px)"
+                          th:srcset="${slide.mobileImageUrl()}"
+                        />
+
+                        <img
+                          class="hero-visual-image"
+                          th:src="${slide.desktopImageUrl()}"
+                          th:alt="${slide.altText()}"
+                          th:attr="
+                loading=${slideIteration.first
+                  ? 'eager'
+                  : 'lazy'},
+                fetchpriority=${slideIteration.first
+                  ? 'high'
+                  : 'auto'}
+              "
+                          decoding="async"
+                        />
+                      </picture>
+
+                      <div class="hero-visual-overlay"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="hero-carousel-arrow hero-carousel-previous"
+                  data-hero-previous
+                  aria-label="Show previous promotion"
+                >
+                  <span aria-hidden="true">&larr;</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="hero-carousel-arrow hero-carousel-next"
+                  data-hero-next
+                  aria-label="Show next promotion"
+                >
+                  <span aria-hidden="true">&rarr;</span>
+                </button>
+
+                <div
+                  class="hero-carousel-dots"
+                  aria-label="Choose a promotion"
+                >
+                  <button
+                    th:each="slide, slideIteration : ${heroSlides}"
+                    type="button"
+                    class="hero-carousel-dot"
+                    th:classappend="${slideIteration.first}
+          ? ' is-active'
+          : ''"
+                    th:attr="
+          data-hero-dot=${slideIteration.index},
+          aria-label=|Show promotion ${slideIteration.count}|,
+          aria-current=${slideIteration.first
+            ? 'true'
+            : 'false'}
+        "
+                  ></button>
+                </div>
+              </div>
+
+              <!-- Built-in fallback -->
+              <div
+                th:if="${heroSlides == null
+      or #lists.isEmpty(heroSlides)}"
+                class="hero-visual-card"
+              >
                 <img
                   class="hero-visual-image"
                   th:src="@{/images/home/computer-shop-hero.webp}"
@@ -358,6 +486,7 @@
 
     <div th:replace="~{fragments/footer :: footer}"></div>
     <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
+    <script th:src="@{/js/home-hero-carousel.js}" defer></script>
     <script th:src="@{/js/home-brands.js}" defer></script>
   </body>
 </html>

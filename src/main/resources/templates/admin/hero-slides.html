@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head(
+      'Hero Slides',
+      '/css/pages/admin-hero-slides.css'
+    )}"
+  ></head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="admin-hero-page">
+      <section class="admin-hero-header">
+        <div class="container">
+          <a class="admin-hero-back-link" th:href="@{/admin}">
+            &larr; Admin Dashboard
+          </a>
+
+          <div class="admin-hero-header-row">
+            <div>
+              <span class="admin-hero-label">Homepage management</span>
+
+              <h1>Hero Slides</h1>
+
+              <p>
+                Manage the desktop and mobile images displayed in the homepage
+                carousel.
+              </p>
+            </div>
+
+            <a
+              class="btn btn-khoury"
+              th:href="@{/admin/hero-slides/new}"
+            >
+              Add Hero Slide
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-hero-content">
+        <div class="container">
+          <div
+            th:if="${successMessage}"
+            class="alert alert-success border-0 shadow-sm mb-4"
+            th:text="${successMessage}"
+          >
+            Success
+          </div>
+
+          <div
+            th:if="${errorMessage}"
+            class="alert alert-danger border-0 shadow-sm mb-4"
+            th:text="${errorMessage}"
+          >
+            Error
+          </div>
+
+          <div class="admin-hero-summary-grid">
+            <div class="admin-hero-summary-card">
+              <span>Total slides</span>
+              <strong th:text="${totalSlideCount}">0</strong>
+            </div>
+
+            <div class="admin-hero-summary-card is-active">
+              <span>Active</span>
+              <strong th:text="${activeSlideCount}">0</strong>
+            </div>
+
+            <div class="admin-hero-summary-card is-inactive">
+              <span>Inactive</span>
+              <strong th:text="${inactiveSlideCount}">0</strong>
+            </div>
+          </div>
+
+          <div
+            th:if="${#lists.isEmpty(slides)}"
+            class="admin-hero-empty"
+          >
+            <div class="admin-hero-empty-icon">+</div>
+
+            <h2>No managed hero slides yet</h2>
+
+            <p>
+              The homepage will continue using its built-in fallback image
+              until you create and activate a slide.
+            </p>
+
+            <a
+              class="btn btn-khoury"
+              th:href="@{/admin/hero-slides/new}"
+            >
+              Create First Slide
+            </a>
+          </div>
+
+          <div
+            th:if="${!#lists.isEmpty(slides)}"
+            class="admin-hero-slide-list"
+          >
+            <article
+              class="admin-hero-slide-card"
+              th:each="slide : ${slides}"
+            >
+              <div class="admin-hero-slide-images">
+                <div>
+                  <span>Desktop</span>
+
+                  <img
+                    th:src="${slide.desktopImageUrl()}"
+                    th:alt="${slide.altText()}"
+                  />
+                </div>
+
+                <div>
+                  <span>Mobile</span>
+
+                  <img
+                    th:src="${slide.mobileImageUrl()}"
+                    th:alt="${slide.altText()}"
+                  />
+                </div>
+              </div>
+
+              <div class="admin-hero-slide-information">
+                <div class="admin-hero-slide-heading">
+                  <div>
+                    <span
+                      class="admin-hero-status"
+                      th:classappend="${slide.active()}
+                        ? ' is-active'
+                        : ' is-inactive'"
+                      th:text="${slide.active()}
+                        ? 'Active'
+                        : 'Inactive'"
+                    >
+                      Active
+                    </span>
+
+                    <h2>
+                      Slide #<span th:text="${slide.id()}">1</span>
+                    </h2>
+                  </div>
+
+                  <span class="admin-hero-order">
+                    Order
+                    <strong th:text="${slide.displayOrder()}">0</strong>
+                  </span>
+                </div>
+
+                <p
+                  class="admin-hero-alt-text"
+                  th:text="${slide.altText()}"
+                >
+                  Hero image description
+                </p>
+
+                <div class="admin-hero-destination">
+                  <span>Click destination</span>
+
+                  <strong
+                    th:if="${slide.linkType().name() == 'NONE'}"
+                  >
+                    No link
+                  </strong>
+
+                  <strong
+                    th:if="${slide.linkType().name() == 'PRODUCT'}"
+                    th:text="${#strings.isEmpty(slide.linkedProductName())}
+                      ? 'Linked product unavailable'
+                      : slide.linkedProductName()"
+                  >
+                    Product
+                  </strong>
+
+                  <strong
+                    th:if="${slide.linkType().name() != 'NONE'
+                      and slide.linkType().name() != 'PRODUCT'}"
+                    th:text="${#strings.replace(
+                      slide.linkType().name(),
+                      '_',
+                      ' '
+                    )}"
+                  >
+                    PAGE
+                  </strong>
+                </div>
+
+                <div class="admin-hero-slide-actions">
+                  <a
+                    class="btn btn-outline-primary"
+                    th:href="@{/admin/hero-slides/{id}/edit(
+                      id=${slide.id()}
+                    )}"
+                  >
+                    Edit Slide
+                  </a>
+
+                  <form
+                    th:action="@{/admin/hero-slides/{id}/delete(
+                      id=${slide.id()}
+                    )}"
+                    method="post"
+                    onsubmit="return confirm(
+                      'Delete this hero slide and both of its images?'
+                    );"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-outline-danger"
+                    >
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+  </body>
+</html>
