@@ -3,7 +3,8 @@ package com.khourycomputer.application.port.storage;
 public enum ImageStorageFolder {
 
     CATEGORIES("categories"),
-    PRODUCTS("products");
+    PRODUCTS("products"),
+    HERO_SLIDES("hero-slides");
 
     private final String directoryName;
 

@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/head :: head(
+      ${editing} ? 'Edit Hero Slide' : 'Add Hero Slide',
+      '/css/pages/admin-hero-slides.css'
+    )}"
+  ></head>
+
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="admin-hero-page">
+      <section class="admin-hero-header">
+        <div class="container">
+          <a class="admin-hero-back-link" th:href="@{/admin/hero-slides}">
+            &larr; Manage Hero Slides
+          </a>
+
+          <span class="admin-hero-label">Homepage management</span>
+
+          <h1 th:text="${editing} ? 'Edit Hero Slide' : 'Add Hero Slide'">
+            Add Hero Slide
+          </h1>
+
+          <p>
+            Upload separate images for desktop and mobile, then choose where
+            visitors should go when they select the slide.
+          </p>
+        </div>
+      </section>
+
+      <section class="admin-hero-content">
+        <div class="container">
+          <div class="admin-hero-form-card">
+            <form
+              th:action="${editing}
+                ? @{/admin/hero-slides/{id}(id=${slide.id()})}
+                : @{/admin/hero-slides}"
+              th:object="${heroSlideForm}"
+              method="post"
+              enctype="multipart/form-data"
+              novalidate
+              data-hero-slide-form
+            >
+              <div
+                th:if="${#fields.hasGlobalErrors()}"
+                class="alert alert-danger border-0 mb-4"
+              >
+                <p
+                  th:each="error : ${#fields.globalErrors()}"
+                  th:text="${error}"
+                  class="mb-0"
+                >
+                  Hero slide could not be saved.
+                </p>
+              </div>
+
+              <div class="admin-hero-form-section">
+                <div class="admin-hero-form-heading">
+                  <span>Responsive images</span>
+                  <h2>Desktop and mobile artwork</h2>
+
+                  <p>
+                    Both versions have equal importance and are required when
+                    creating a slide.
+                  </p>
+                </div>
+
+                <div class="admin-hero-upload-grid">
+                  <div class="admin-hero-upload-field">
+                    <label for="desktopImage" class="form-label">
+                      Desktop/tablet image
+                    </label>
+
+                    <div class="admin-hero-current-image" th:if="${editing}">
+                      <img
+                        th:src="${slide.desktopImageUrl()}"
+                        th:alt="${slide.altText()}"
+                        data-desktop-preview
+                      />
+
+                      <span>Current desktop image</span>
+                    </div>
+
+                    <div
+                      class="admin-hero-current-image is-empty"
+                      th:unless="${editing}"
+                    >
+                      <img src="" alt="" data-desktop-preview hidden />
+
+                      <span data-desktop-placeholder> Desktop preview </span>
+                    </div>
+
+                    <input
+                      id="desktopImage"
+                      type="file"
+                      class="form-control"
+                      th:field="*{desktopImage}"
+                      th:errorclass="is-invalid"
+                      accept="image/jpeg,image/png,image/webp"
+                      data-desktop-input
+                    />
+
+                    <div class="invalid-feedback" th:errors="*{desktopImage}">
+                      Desktop image error
+                    </div>
+
+                    <div class="form-text">
+                      Recommended composition: approximately 1600 × 1000. JPG,
+                      PNG, or WebP; maximum 5 MB.
+                    </div>
+                  </div>
+
+                  <div class="admin-hero-upload-field">
+                    <label for="mobileImage" class="form-label">
+                      Mobile image
+                    </label>
+
+                    <div
+                      class="admin-hero-current-image is-mobile"
+                      th:if="${editing}"
+                    >
+                      <img
+                        th:src="${slide.mobileImageUrl()}"
+                        th:alt="${slide.altText()}"
+                        data-mobile-preview
+                      />
+
+                      <span>Current mobile image</span>
+                    </div>
+
+                    <div
+                      class="admin-hero-current-image is-mobile is-empty"
+                      th:unless="${editing}"
+                    >
+                      <img src="" alt="" data-mobile-preview hidden />
+
+                      <span data-mobile-placeholder> Mobile preview </span>
+                    </div>
+
+                    <input
+                      id="mobileImage"
+                      type="file"
+                      class="form-control"
+                      th:field="*{mobileImage}"
+                      th:errorclass="is-invalid"
+                      accept="image/jpeg,image/png,image/webp"
+                      data-mobile-input
+                    />
+
+                    <div class="invalid-feedback" th:errors="*{mobileImage}">
+                      Mobile image error
+                    </div>
+
+                    <div class="form-text">
+                      Recommended composition: approximately 1080 × 1350. JPG,
+                      PNG, or WebP; maximum 5 MB.
+                    </div>
+                  </div>
+                </div>
+
+                <p th:if="${editing}" class="admin-hero-edit-image-note">
+                  Leave an image field empty to keep its current image.
+                </p>
+              </div>
+
+              <hr />
+
+              <div class="admin-hero-form-section">
+                <div class="admin-hero-form-heading">
+                  <span>Accessibility</span>
+                  <h2>Image description</h2>
+                </div>
+
+                <label for="altText" class="form-label">
+                  Alternative text
+                </label>
+
+                <input
+                  id="altText"
+                  type="text"
+                  class="form-control"
+                  th:field="*{altText}"
+                  th:errorclass="is-invalid"
+                  maxlength="160"
+                  placeholder="Describe the promotion or products shown"
+                />
+
+                <div class="invalid-feedback" th:errors="*{altText}">
+                  Description error
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="admin-hero-form-section">
+                <div class="admin-hero-form-heading">
+                  <span>Click behavior</span>
+                  <h2>Slide destination</h2>
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="linkType" class="form-label">
+                      Destination type
+                    </label>
+
+                    <select
+                      id="linkType"
+                      class="form-select"
+                      th:field="*{linkType}"
+                      th:errorclass="is-invalid"
+                      data-link-type
+                    >
+                      <option
+                        th:each="type : ${linkTypes}"
+                        th:value="${type}"
+                        th:text="${#strings.replace(
+          type.name(),
+          '_',
+          ' '
+        )}"
+                      >
+                        NONE
+                      </option>
+                    </select>
+
+                    <div class="invalid-feedback" th:errors="*{linkType}">
+                      Link type error
+                    </div>
+                  </div>
+
+                  <div class="col-md-6" data-product-destination>
+                    <label for="linkedProductId" class="form-label">
+                      Product
+                    </label>
+
+                    <select
+                      id="linkedProductId"
+                      class="form-select"
+                      th:field="*{linkedProductId}"
+                    >
+                      <option value="">Select a product</option>
+
+                      <option
+                        th:each="product : ${products}"
+                        th:value="${product.id()}"
+                        th:text="|#${product.id()} — ${product.name()}|"
+                      >
+                        Product
+                      </option>
+                    </select>
+
+                    <div class="form-text">
+                      Visitors will open this product’s details page.
+                    </div>
+                  </div>
+
+                  <div class="col-md-6" data-category-destination>
+                    <label for="linkedCategoryId" class="form-label">
+                      Category
+                    </label>
+
+                    <select
+                      id="linkedCategoryId"
+                      class="form-select"
+                      th:field="*{linkedCategoryId}"
+                    >
+                      <option value="">Select a category</option>
+
+                      <option
+                        th:each="category : ${categories}"
+                        th:value="${category.id()}"
+                        th:text="${category.name()}"
+                      >
+                        Category
+                      </option>
+                    </select>
+
+                    <div class="form-text">
+                      Visitors will see products filtered to this category.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="admin-hero-form-section">
+                <div class="admin-hero-form-heading">
+                  <span>Display settings</span>
+                  <h2>Visibility and order</h2>
+                </div>
+
+                <div class="row g-3 align-items-end">
+                  <div class="col-md-6">
+                    <label for="displayOrder" class="form-label">
+                      Display order
+                    </label>
+
+                    <input
+                      id="displayOrder"
+                      type="number"
+                      class="form-control"
+                      th:field="*{displayOrder}"
+                      th:errorclass="is-invalid"
+                      min="0"
+                      step="1"
+                    />
+
+                    <div class="invalid-feedback" th:errors="*{displayOrder}">
+                      Display order error
+                    </div>
+
+                    <div class="form-text">Lower numbers appear first.</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div
+                      class="form-check form-switch admin-hero-active-switch"
+                    >
+                      <input
+                        id="active"
+                        type="checkbox"
+                        class="form-check-input"
+                        th:field="*{active}"
+                      />
+
+                      <label for="active" class="form-check-label">
+                        Display this slide on the homepage
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-hero-form-actions">
+                <a
+                  class="btn btn-outline-secondary"
+                  th:href="@{/admin/hero-slides}"
+                >
+                  Cancel
+                </a>
+
+                <button type="submit" class="btn btn-khoury">
+                  <span th:text="${editing} ? 'Save Changes' : 'Create Slide'">
+                    Create Slide
+                  </span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
+    <script th:src="@{/js/admin-hero-slides.js}" defer></script>
+  </body>
+</html>
