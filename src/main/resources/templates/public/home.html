@@ -138,10 +138,7 @@
                   <span aria-hidden="true">&rarr;</span>
                 </button>
 
-                <div
-                  class="hero-carousel-dots"
-                  aria-label="Choose a promotion"
-                >
+                <div class="hero-carousel-dots" aria-label="Choose a promotion">
                   <button
                     th:each="slide, slideIteration : ${heroSlides}"
                     type="button"
@@ -182,119 +179,210 @@
         </div>
       </section>
 
-      <!-- Store Collections -->
-      <section class="home-collections-section">
+      <!-- Homepage Product Collections -->
+      <section
+        class="home-product-collections"
+        th:if="${!#lists.isEmpty(homeDeals)
+    or !#lists.isEmpty(homeNewArrivals)
+    or !#lists.isEmpty(homeBestSellers)}"
+      >
         <div class="container">
-          <div class="home-collections-heading">
-            <span>Discover more</span>
+          <!-- Deals -->
+          <section
+            id="homeDeals"
+            class="home-product-collection home-deals-collection"
+            th:if="${!#lists.isEmpty(homeDeals)}"
+            data-product-rail
+            aria-labelledby="homeDealsTitle"
+          >
+            <div class="home-product-collection-heading">
+              <div>
+                <span>Limited-time savings</span>
 
-            <h2 class="section-title mb-2">Explore the store</h2>
+                <h2 id="homeDealsTitle">Deals &amp; Offers</h2>
 
-            <p>
-              Find current offers and specially selected product collections.
-            </p>
-          </div>
-
-          <div class="home-collections-grid">
-            <!-- Deals -->
-            <a
-              class="home-collection-card home-collection-card-deals"
-              th:href="@{/deals}"
-              aria-label="View current deals"
-            >
-              <div class="home-collection-card-media">
-                <img
-                  th:src="@{/images/home/deals-banner.webp}"
-                  alt="Current deals and special offers"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <div class="home-collection-card-overlay"></div>
-
-                <span class="home-deals-image-badge" aria-hidden="true">
-                  DEALS
-                </span>
+                <p>
+                  Save on specially selected products while these offers last.
+                </p>
               </div>
 
-              <div class="home-collection-card-content">
-                <div>
-                  <span>Limited-time savings</span>
-                  <h3>Deals &amp; Offers</h3>
+              <a
+                class="btn btn-outline-primary rounded-pill px-4"
+                th:href="@{/deals}"
+              >
+                View All Deals
+              </a>
+            </div>
+
+            <div class="home-product-rail-shell">
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-previous"
+                data-product-rail-previous
+                aria-label="Show previous deals"
+              >
+                <span aria-hidden="true">&larr;</span>
+              </button>
+
+              <div
+                class="home-product-rail-viewport"
+                data-product-rail-viewport
+                tabindex="0"
+                aria-label="Deals and offers"
+              >
+                <div class="home-product-rail-track">
+                  <th:block th:each="card : ${homeDeals}">
+                    <a
+                      th:replace="~{fragments/home-product-card
+      :: productCard(
+        card=${card},
+        returnTo='home-deals'
+      )}"
+                    ></a>
+                  </th:block>
                 </div>
-
-                <span class="home-collection-arrow" aria-hidden="true">
-                  &rarr;
-                </span>
-              </div>
-            </a>
-
-            <!-- New Arrivals -->
-            <a
-              class="home-collection-card home-collection-card-new"
-              th:href="@{/new-arrivals}"
-              aria-label="View new arrivals"
-            >
-              <div class="home-collection-card-media">
-                <img
-                  th:src="@{/images/home/new-arrivals-banner.webp}"
-                  alt="Latest computers and technology products"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <div class="home-collection-card-overlay"></div>
-
-                <span class="home-new-arrival-image-badge" aria-hidden="true">
-                  NEW
-                </span>
               </div>
 
-              <div class="home-collection-card-content">
-                <div>
-                  <span>Recently selected</span>
-                  <h3>New Arrivals</h3>
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-next"
+                data-product-rail-next
+                aria-label="Show next deals"
+              >
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- New Arrivals -->
+          <section
+            id="homeNewArrivals"
+            class="home-product-collection home-new-collection"
+            th:if="${!#lists.isEmpty(homeNewArrivals)}"
+            data-product-rail
+            aria-labelledby="homeNewArrivalsTitle"
+          >
+            <div class="home-product-collection-heading">
+              <div>
+                <span>Recently selected</span>
+
+                <h2 id="homeNewArrivalsTitle">New Arrivals</h2>
+
+                <p>Discover the newest technology added to our catalog.</p>
+              </div>
+
+              <a
+                class="btn btn-outline-primary rounded-pill px-4"
+                th:href="@{/new-arrivals}"
+              >
+                View All New Arrivals
+              </a>
+            </div>
+
+            <div class="home-product-rail-shell">
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-previous"
+                data-product-rail-previous
+                aria-label="Show previous new arrivals"
+              >
+                <span aria-hidden="true">&larr;</span>
+              </button>
+
+              <div
+                class="home-product-rail-viewport"
+                data-product-rail-viewport
+                tabindex="0"
+                aria-label="New arrivals"
+              >
+                <div class="home-product-rail-track">
+                  <th:block th:each="card : ${homeNewArrivals}">
+                    <a
+                      th:replace="~{fragments/home-product-card
+                  :: productCard(
+                    card=${card},
+                    returnTo='home-new-arrivals'
+                  )}"
+                    ></a>
+                  </th:block>
                 </div>
-
-                <span class="home-collection-arrow" aria-hidden="true">
-                  &rarr;
-                </span>
-              </div>
-            </a>
-
-            <!-- Best Sellers -->
-            <a
-              class="home-collection-card home-collection-card-best-sellers"
-              th:href="@{/best-sellers}"
-              aria-label="View best selling products"
-            >
-              <div class="home-collection-card-media">
-                <img
-                  th:src="@{/images/home/best-sellers-banner.webp}"
-                  alt="Popular and best selling technology products"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <div class="home-collection-card-overlay"></div>
-
-                <span class="home-best-seller-image-badge" aria-hidden="true">
-                  BEST SELLER
-                </span>
               </div>
 
-              <div class="home-collection-card-content">
-                <div>
-                  <span>Customer favorites</span>
-                  <h3>Best Sellers</h3>
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-next"
+                data-product-rail-next
+                aria-label="Show next new arrivals"
+              >
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Best Sellers -->
+          <section
+            id="homeBestSellers"
+            class="home-product-collection home-best-collection"
+            th:if="${!#lists.isEmpty(homeBestSellers)}"
+            data-product-rail
+            aria-labelledby="homeBestSellersTitle"
+          >
+            <div class="home-product-collection-heading">
+              <div>
+                <span>Customer favorites</span>
+
+                <h2 id="homeBestSellersTitle">Best Sellers</h2>
+
+                <p>Explore popular products selected by our customers.</p>
+              </div>
+
+              <a
+                class="btn btn-outline-primary rounded-pill px-4"
+                th:href="@{/best-sellers}"
+              >
+                View All Best Sellers
+              </a>
+            </div>
+
+            <div class="home-product-rail-shell">
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-previous"
+                data-product-rail-previous
+                aria-label="Show previous best sellers"
+              >
+                <span aria-hidden="true">&larr;</span>
+              </button>
+
+              <div
+                class="home-product-rail-viewport"
+                data-product-rail-viewport
+                tabindex="0"
+                aria-label="Best sellers"
+              >
+                <div class="home-product-rail-track">
+                  <th:block th:each="card : ${homeBestSellers}">
+                    <a
+                      th:replace="~{fragments/home-product-card
+                  :: productCard(
+                    card=${card},
+                    returnTo='home-best-sellers'
+                  )}"
+                    ></a>
+                  </th:block>
                 </div>
-
-                <span class="home-collection-arrow" aria-hidden="true">
-                  &rarr;
-                </span>
               </div>
-            </a>
-          </div>
+
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-next"
+                data-product-rail-next
+                aria-label="Show next best sellers"
+              >
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -487,6 +575,7 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
     <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
     <script th:src="@{/js/home-hero-carousel.js}" defer></script>
+    <script th:src="@{/js/home-product-rails.js}" defer></script>
     <script th:src="@{/js/home-brands.js}" defer></script>
   </body>
 </html>
