@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <body>
+
+    
+
+
+    <!-- Standard product card -->
+    <a
+      th:fragment="productCard(card, returnTo)"
+      class="home-product-card"
+      th:classappend="|${card.hasActiveDeal()
+        ? ' home-product-card-has-deal'
+        : ''}${card.product().newArrival()
+        ? ' home-product-card-is-new'
+        : ''}${card.product().bestSeller()
+        ? ' home-product-card-is-best-seller'
+        : ''}|"
+      th:href="@{/products/{id}(
+        id=${card.product().id()},
+        returnTo=${returnTo}
+      )}"
+      th:aria-label="|View ${card.product().name()}|"
+    >
+      <div class="home-product-card-media">
+        <img
+          th:if="${card.product().imageUrl() != null
+            and !card.product().imageUrl().isBlank()}"
+          th:src="${card.product().imageUrl()}"
+          th:alt="${card.product().name()}"
+          loading="lazy"
+          decoding="async"
+        />
+
+        <img
+          th:if="${card.product().imageUrl() == null
+            or card.product().imageUrl().isBlank()}"
+          th:src="@{/images/products/product-fallback.webp}"
+          th:alt="|Default image for ${card.product().name()}|"
+          loading="lazy"
+          decoding="async"
+        />
+
+        <span
+          th:if="${card.product().newArrival()}"
+          class="home-product-badge home-product-badge-new"
+        >
+          NEW
+        </span>
+
+        <span
+          th:if="${card.product().bestSeller()}"
+          class="home-product-badge home-product-badge-best"
+        >
+          BEST SELLER
+        </span>
+
+        <span
+          th:if="${card.hasActiveDeal()}"
+          class="home-product-badge home-product-badge-deal"
+        >
+          <strong
+            th:text="${card.activeDeal().discountPercentage()}"
+          >
+            10
+          </strong>% OFF
+        </span>
+      </div>
+
+      <div class="home-product-card-body">
+        <span
+          class="home-product-card-label"
+          th:text="${card.product().brand()}"
+        >
+          Brand
+        </span>
+
+        <h3 th:text="${card.product().name()}">
+          Product name
+        </h3>
+
+        <span
+          class="home-product-availability"
+          th:classappend="${card.product()
+            .availabilityStatus()
+            .name() == 'AVAILABLE'}
+            ? ' is-available'
+            : (${card.product()
+                .availabilityStatus()
+                .name() == 'LOW_STOCK'}
+              ? ' is-low-stock'
+              : ' is-sold-out')"
+          th:text="${card.product()
+            .availabilityStatus()
+            .displayName}"
+        >
+          Available
+        </span>
+
+        <div
+          th:unless="${card.hasActiveDeal()}"
+          class="home-product-regular-price"
+        >
+          <strong>
+            <span>₪</span>
+
+            <span
+              th:text="${#numbers.formatDecimal(
+                card.product().price(),
+                0,
+                0
+              )}"
+            >
+              0
+            </span>
+          </strong>
+        </div>
+
+        <div
+          th:if="${card.hasActiveDeal()}"
+          class="home-product-deal-prices"
+        >
+          <strong>
+            <span>₪</span>
+
+            <span
+              th:text="${#numbers.formatDecimal(
+                card.activeDeal().dealPrice(),
+                0,
+                0
+              )}"
+            >
+              0
+            </span>
+          </strong>
+
+          <span>
+            <span>₪</span>
+
+            <span
+              th:text="${#numbers.formatDecimal(
+                card.activeDeal().regularPrice(),
+                0,
+                0
+              )}"
+            >
+              0
+            </span>
+          </span>
+        </div>
+
+        <span class="home-product-card-action">
+          View product
+          <span aria-hidden="true">&rarr;</span>
+        </span>
+      </div>
+    </a>
+
+  </body>
+</html>

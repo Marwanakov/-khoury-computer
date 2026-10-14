@@ -20,6 +20,46 @@
           </div>
 
           <div class="mb-4">
+            <!-- Return to the Deals section on the homepage -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'home-deals'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/#homeDeals}"
+            >
+              &larr; Return to Home
+            </a>
+
+            <!-- Return to the New Arrivals section on the homepage -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'home-new-arrivals'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/#homeNewArrivals}"
+            >
+              &larr; Return to Home
+            </a>
+
+            <!-- Return to the Best Sellers section on the homepage -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'home-best-sellers'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/#homeBestSellers}"
+            >
+              &larr; Return to Home
+            </a>
+
+            <!-- Compatibility with older homepage product links -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'home'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/}"
+            >
+              &larr; Return to Home
+            </a>
+
             <!-- Return to Deals -->
             <a
               th:if="${param.returnTo != null
@@ -76,12 +116,12 @@
             <!-- Return to Order Confirmation -->
             <a
               th:if="${param.returnTo != null
-    and param.returnTo[0] == 'confirmation'
-    and param.orderId != null}"
+      and param.returnTo[0] == 'confirmation'
+      and param.orderId != null}"
               class="product-back-link d-inline-block"
               th:href="@{/orders/confirmation/{id}(
-    id=${param.orderId[0]}
-  )}"
+      id=${param.orderId[0]}
+    )}"
             >
               &larr; Back to Order Confirmation
             </a>
@@ -89,12 +129,12 @@
             <!-- Return to the previously viewed product -->
             <a
               th:if="${param.returnTo != null
-    and param.returnTo[0] == 'product'
-    and param.sourceProductId != null}"
+      and param.returnTo[0] == 'product'
+      and param.sourceProductId != null}"
               class="product-back-link d-inline-block"
               th:href="@{/products/{id}(
-    id=${param.sourceProductId[0]}
-  )}"
+      id=${param.sourceProductId[0]}
+    )}"
             >
               &larr; Back to Previous Product
             </a>
@@ -103,7 +143,11 @@
             <a
               th:unless="${param.returnTo != null
       and (
-        param.returnTo[0] == 'deals'
+        param.returnTo[0] == 'home-deals'
+        or param.returnTo[0] == 'home-new-arrivals'
+        or param.returnTo[0] == 'home-best-sellers'
+        or param.returnTo[0] == 'home'
+        or param.returnTo[0] == 'deals'
         or param.returnTo[0] == 'new-arrivals'
         or param.returnTo[0] == 'best-sellers'
         or param.returnTo[0] == 'cart'
@@ -115,7 +159,6 @@
           param.returnTo[0] == 'confirmation'
           and param.orderId != null
         )
-
         or (
           param.returnTo[0] == 'product'
           and param.sourceProductId != null
@@ -452,6 +495,7 @@
                 <details
                   th:if="${!product.specificationItems().isEmpty()}"
                   class="product-specifications mt-4"
+                  open
                 >
                   <summary class="product-specifications-summary">
                     <span>
