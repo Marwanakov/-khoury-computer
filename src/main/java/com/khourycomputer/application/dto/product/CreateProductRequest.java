@@ -13,6 +13,7 @@ public record CreateProductRequest(
         Long categoryId,
         Set<String> tags,
         boolean newArrival,
-        boolean bestSeller
+        boolean bestSeller,
+        boolean featured
 ) {
 }

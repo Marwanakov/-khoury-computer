@@ -76,7 +76,12 @@ public class HomeController {
                         .toList();
 
         List<ProductResponse> allProducts =
-                productApplicationService.listProducts();
+                productApplicationService
+                        .listProducts();
+
+        List<ProductResponse> featuredProducts =
+                productApplicationService
+                        .listFeaturedProducts();
 
         List<ProductDealResponse> activeDeals =
                 productDealApplicationService
@@ -164,7 +169,23 @@ public class HomeController {
                         )
                         .toList();
 
-        model.addAttribute("categories", categories);
+        List<ProductCardViewModel> homeFeaturedProducts =
+                featuredProducts.stream()
+                        .limit(MAXIMUM_COLLECTION_PRODUCTS)
+                        .map(product ->
+                                new ProductCardViewModel(
+                                        product,
+                                        activeDealsByProductId.get(
+                                                product.id()
+                                        )
+                                )
+                        )
+                        .toList();
+
+        model.addAttribute(
+                "categories",
+                categories
+        );
 
         model.addAttribute(
                 "brands",
@@ -173,10 +194,14 @@ public class HomeController {
 
         model.addAttribute(
                 "heroSlides",
-                heroSlideApplicationService.listActiveSlides()
+                heroSlideApplicationService
+                        .listActiveSlides()
         );
 
-        model.addAttribute("homeDeals", homeDeals);
+        model.addAttribute(
+                "homeDeals",
+                homeDeals
+        );
 
         model.addAttribute(
                 "homeNewArrivals",
@@ -186,6 +211,11 @@ public class HomeController {
         model.addAttribute(
                 "homeBestSellers",
                 homeBestSellers
+        );
+
+        model.addAttribute(
+                "homeFeaturedProducts",
+                homeFeaturedProducts
         );
 
         return "public/home";

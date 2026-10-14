@@ -49,8 +49,12 @@ public record ProductEntity(
         boolean bestSeller,
 
         @Column("best_seller_marked_at")
-        LocalDateTime bestSellerMarkedAt
+        LocalDateTime bestSellerMarkedAt,
 
-        
+        @Column("is_featured")
+        boolean featured,
+
+        @Column("featured_marked_at")
+        LocalDateTime featuredMarkedAt
 ) {
 }

@@ -105,6 +105,15 @@ public class AdminProductController {
                                         .toList();
                 }
 
+                if ("FEATURED".equals(selectedCollection)) {
+                        products = products.stream()
+                                        .filter(ProductResponse::featured)
+                                        .sorted(
+                                                        Comparator.comparing(
+                                                                        ProductResponse::featuredMarkedAt).reversed())
+                                        .toList();
+                }
+
                 List<CategoryResponse> categories = categoryApplicationService.listCategories();
 
                 Map<Long, CategoryResponse> categoriesById = categories.stream()
@@ -133,6 +142,10 @@ public class AdminProductController {
                                 .filter(ProductResponse::bestSeller)
                                 .count();
 
+                long featuredCount = allProducts.stream()
+                                .filter(ProductResponse::featured)
+                                .count();
+
                 model.addAttribute("products", products);
                 model.addAttribute("categories", categories);
                 model.addAttribute("categoriesById", categoriesById);
@@ -148,6 +161,7 @@ public class AdminProductController {
                 model.addAttribute("soldOutCount", soldOutCount);
                 model.addAttribute("newArrivalCount", newArrivalCount);
                 model.addAttribute("bestSellerCount", bestSellerCount);
+                model.addAttribute("featuredCount", featuredCount);
 
                 model.addAttribute("keyword", keyword);
                 model.addAttribute(
@@ -380,22 +394,26 @@ public class AdminProductController {
                                 form.getCategoryId(),
                                 parseTags(form.getTags()),
                                 form.isNewArrival(),
-                                form.isBestSeller());
+                                form.isBestSeller(),
+                                form.isFeatured());
         }
 
         private UpdateProductRequest toUpdateProductRequest(
                         AdminProductForm form) {
                 return new UpdateProductRequest(
                                 form.getName().trim(),
-                                normalizeOptionalText(form.getDescription()),
-                                normalizeOptionalText(form.getSpecifications()),
+                                normalizeOptionalText(
+                                                form.getDescription()),
+                                normalizeOptionalText(
+                                                form.getSpecifications()),
                                 form.getPrice(),
                                 form.getBrand().trim(),
                                 form.getStockQuantity(),
                                 form.getCategoryId(),
                                 parseTags(form.getTags()),
                                 form.isNewArrival(),
-                                form.isBestSeller());
+                                form.isBestSeller(),
+                                form.isFeatured());
         }
 
         private AdminProductForm toAdminProductForm(
@@ -412,6 +430,7 @@ public class AdminProductController {
                 form.setTags(String.join(", ", product.tags()));
                 form.setNewArrival(product.newArrival());
                 form.setBestSeller(product.bestSeller());
+                form.setFeatured(product.featured());
 
                 return form;
         }
@@ -465,6 +484,10 @@ public class AdminProductController {
 
                 if ("BEST_SELLERS".equalsIgnoreCase(collection)) {
                         return "BEST_SELLERS";
+                }
+
+                if ("FEATURED".equalsIgnoreCase(collection)) {
+                        return "FEATURED";
                 }
 
                 return "";

@@ -60,6 +60,11 @@
   color: #d97706;
 }
 
+.home-featured-collection
+.home-product-collection-heading > div > span {
+  color: #0891b2;
+}
+
 .home-product-collection-heading h2 {
   margin-bottom: 0.4rem;
   color: #0f172a;
@@ -401,6 +406,15 @@
 
 .home-best-collection .home-product-card {
   border-top: 3px solid rgba(245, 158, 11, 0.8);
+}
+
+.home-featured-collection .home-product-card {
+  border-top: 3px solid rgba(8, 145, 178, 0.78);
+}
+
+.home-featured-collection .home-product-card:hover {
+  border-color: rgba(8, 145, 178, 0.5);
+  border-top-color: #0891b2;
 }
 
 /* =========================

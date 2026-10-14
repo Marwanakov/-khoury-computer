@@ -316,7 +316,7 @@
 
                 <p>
                   Highlight this product in selected storefront collections. A
-                  product may belong to both collections at the same time.
+                  product may belong to multiple collections at the same time.
                 </p>
               </div>
 
@@ -364,6 +364,30 @@
                     Enable this for products that sell especially well in the
                     physical store. The product will appear in the Best Sellers
                     collection and display a gold BEST SELLER badge.
+                  </p>
+                </div>
+
+                <!-- Featured Product -->
+                <div class="admin-promotion-option admin-promotion-featured">
+                  <div class="form-check form-switch">
+                    <input
+                      id="featured"
+                      type="checkbox"
+                      class="form-check-input"
+                      role="switch"
+                      th:field="*{featured}"
+                    />
+
+                    <label for="featured" class="form-check-label fw-bold">
+                      Feature this product on the homepage
+                    </label>
+                  </div>
+
+                  <p>
+                    Enable this for important products you want customers to
+                    discover on the homepage. Featured placement does not add a
+                    public badge and does not replace New Arrival, Best Seller,
+                    or active deal pricing.
                   </p>
                 </div>
               </div>

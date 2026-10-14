@@ -184,7 +184,8 @@
         class="home-product-collections"
         th:if="${!#lists.isEmpty(homeDeals)
     or !#lists.isEmpty(homeNewArrivals)
-    or !#lists.isEmpty(homeBestSellers)}"
+    or !#lists.isEmpty(homeBestSellers)
+    or !#lists.isEmpty(homeFeaturedProducts)}"
       >
         <div class="container">
           <!-- Deals -->
@@ -378,6 +379,67 @@
                 class="home-product-rail-arrow home-product-rail-next"
                 data-product-rail-next
                 aria-label="Show next best sellers"
+              >
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Featured Products -->
+          <section
+            id="homeFeaturedProducts"
+            class="home-product-collection home-featured-collection"
+            th:if="${!#lists.isEmpty(homeFeaturedProducts)}"
+            data-product-rail
+            aria-labelledby="homeFeaturedProductsTitle"
+          >
+            <div class="home-product-collection-heading">
+              <div>
+                <span>Recommended by Khoury Computer</span>
+
+                <h2 id="homeFeaturedProductsTitle">Featured Products</h2>
+
+                <p>
+                  Explore products specially selected by our team for the
+                  homepage.
+                </p>
+              </div>
+            </div>
+
+            <div class="home-product-rail-shell">
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-previous"
+                data-product-rail-previous
+                aria-label="Show previous featured products"
+              >
+                <span aria-hidden="true">&larr;</span>
+              </button>
+
+              <div
+                class="home-product-rail-viewport"
+                data-product-rail-viewport
+                tabindex="0"
+                aria-label="Featured products"
+              >
+                <div class="home-product-rail-track">
+                  <th:block th:each="card : ${homeFeaturedProducts}">
+                    <a
+                      th:replace="~{fragments/home-product-card
+              :: productCard(
+                card=${card},
+                returnTo='home-featured-products'
+              )}"
+                    ></a>
+                  </th:block>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="home-product-rail-arrow home-product-rail-next"
+                data-product-rail-next
+                aria-label="Show next featured products"
               >
                 <span aria-hidden="true">&rarr;</span>
               </button>
