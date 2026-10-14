@@ -3,10 +3,10 @@ package com.khourycomputer.application.dto.product;
 import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.time.LocalDateTime;
 
 public record ProductResponse(
         Long id,
@@ -23,14 +23,21 @@ public record ProductResponse(
         boolean newArrival,
         LocalDateTime newArrivalMarkedAt,
         boolean bestSeller,
-        LocalDateTime bestSellerMarkedAt) {
+        LocalDateTime bestSellerMarkedAt,
+        boolean featured,
+        LocalDateTime featuredMarkedAt
+) {
 
-    public List<ProductSpecificationResponse> specificationItems() {
-        if (specifications == null || specifications.isBlank()) {
+    public List<ProductSpecificationResponse>
+            specificationItems() {
+        if (specifications == null
+                || specifications.isBlank()) {
             return List.of();
         }
 
-        return Arrays.stream(specifications.split("\\R"))
+        return Arrays.stream(
+                        specifications.split("\\R")
+                )
                 .map(String::trim)
                 .filter(line -> !line.isBlank())
                 .map(ProductResponse::parseSpecification)
@@ -38,8 +45,8 @@ public record ProductResponse(
                 .toList();
     }
 
-    private static ProductSpecificationResponse parseSpecification(
-            String line) {
+    private static ProductSpecificationResponse
+            parseSpecification(String line) {
         int separatorIndex = line.indexOf(':');
 
         if (separatorIndex <= 0
@@ -59,6 +66,9 @@ public record ProductResponse(
             return null;
         }
 
-        return new ProductSpecificationResponse(label, value);
+        return new ProductSpecificationResponse(
+                label,
+                value
+        );
     }
 }

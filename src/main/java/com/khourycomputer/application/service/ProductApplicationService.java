@@ -86,6 +86,10 @@ public class ProductApplicationService {
                 request.bestSeller(),
                 request.bestSeller()
                         ? currentTime
+                        : null,
+                request.featured(),
+                request.featured()
+                        ? currentTime
                         : null);
 
         Product savedProduct = productRepository.save(product);
@@ -133,6 +137,10 @@ public class ProductApplicationService {
                 existingProduct,
                 request.bestSeller());
 
+        LocalDateTime featuredMarkedAt = determineFeaturedMarkedAt(
+                existingProduct,
+                request.featured());
+
         Product updatedProduct = new Product(
                 existingProduct.getId(),
                 request.name(),
@@ -148,7 +156,9 @@ public class ProductApplicationService {
                 request.newArrival(),
                 newArrivalMarkedAt,
                 request.bestSeller(),
-                bestSellerMarkedAt);
+                bestSellerMarkedAt,
+                request.featured(),
+                featuredMarkedAt);
 
         Product savedProduct = productRepository.save(updatedProduct);
 
@@ -342,7 +352,9 @@ public class ProductApplicationService {
                 product.isNewArrival(),
                 product.getNewArrivalMarkedAt(),
                 product.isBestSeller(),
-                product.getBestSellerMarkedAt());
+                product.getBestSellerMarkedAt(),
+                product.isFeatured(),
+                product.getFeaturedMarkedAt());
     }
 
     private boolean matchesKeyword(Product product, String keyword) {
@@ -634,6 +646,18 @@ public class ProductApplicationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductResponse> listFeaturedProducts() {
+        return productRepository.findAll()
+                .stream()
+                .filter(Product::isFeatured)
+                .sorted(
+                        Comparator.comparing(
+                                Product::getFeaturedMarkedAt).reversed())
+                .map(this::toResponse)
+                .toList();
+    }
+
     private LocalDateTime determineBestSellerMarkedAt(
             Product existingProduct,
             boolean bestSeller) {
@@ -643,6 +667,20 @@ public class ProductApplicationService {
 
         if (existingProduct.isBestSeller()) {
             return existingProduct.getBestSellerMarkedAt();
+        }
+
+        return LocalDateTime.now();
+    }
+
+    private LocalDateTime determineFeaturedMarkedAt(
+            Product existingProduct,
+            boolean featured) {
+        if (!featured) {
+            return null;
+        }
+
+        if (existingProduct.isFeatured()) {
+            return existingProduct.getFeaturedMarkedAt();
         }
 
         return LocalDateTime.now();

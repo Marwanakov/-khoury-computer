@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 @Component
 public class ProductMapper {
 
-    public Product toDomain(ProductEntity productEntity) {
+    public Product toDomain(
+            ProductEntity productEntity
+    ) {
         if (productEntity == null) {
             return null;
         }
@@ -31,7 +33,9 @@ public class ProductMapper {
                 productEntity.newArrival(),
                 productEntity.newArrivalMarkedAt(),
                 productEntity.bestSeller(),
-                productEntity.bestSellerMarkedAt()
+                productEntity.bestSellerMarkedAt(),
+                productEntity.featured(),
+                productEntity.featuredMarkedAt()
         );
     }
 
@@ -55,7 +59,9 @@ public class ProductMapper {
                 product.isNewArrival(),
                 product.getNewArrivalMarkedAt(),
                 product.isBestSeller(),
-                product.getBestSellerMarkedAt()
+                product.getBestSellerMarkedAt(),
+                product.isFeatured(),
+                product.getFeaturedMarkedAt()
         );
     }
 

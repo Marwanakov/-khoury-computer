@@ -50,6 +50,8 @@ public class AdminProductForm {
 
     private boolean bestSeller;
 
+    private boolean featured;
+
     public String getName() {
         return name;
     }
@@ -144,5 +146,13 @@ public class AdminProductForm {
 
     public void setBestSeller(boolean bestSeller) {
         this.bestSeller = bestSeller;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 }

@@ -75,6 +75,11 @@
               <strong th:text="${bestSellerCount}">0</strong>
             </div>
 
+            <div class="admin-summary-card summary-featured">
+              <span>Featured</span>
+              <strong th:text="${featuredCount}">0</strong>
+            </div>
+
             <div class="admin-summary-card summary-available">
               <span>Available</span>
               <strong th:text="${availableCount}">0</strong>
@@ -188,6 +193,13 @@
                     th:selected="${selectedCollection == 'BEST_SELLERS'}"
                   >
                     Best sellers only
+                  </option>
+
+                  <option
+                    value="FEATURED"
+                    th:selected="${selectedCollection == 'FEATURED'}"
+                  >
+                    Featured only
                   </option>
                 </select>
               </div>
@@ -314,6 +326,13 @@
                                 class="admin-best-seller-badge"
                               >
                                 BEST SELLER
+                              </span>
+
+                              <span
+                                th:if="${product.featured()}"
+                                class="admin-featured-badge"
+                              >
+                                FEATURED
                               </span>
 
                               <span

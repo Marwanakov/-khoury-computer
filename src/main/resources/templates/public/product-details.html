@@ -50,6 +50,16 @@
               &larr; Return to Home
             </a>
 
+            <!-- Return to the Featured Products section on the homepage -->
+            <a
+              th:if="${param.returnTo != null
+      and param.returnTo[0] == 'home-featured-products'}"
+              class="product-back-link d-inline-block"
+              th:href="@{/#homeFeaturedProducts}"
+            >
+              &larr; Return to Home
+            </a>
+
             <!-- Compatibility with older homepage product links -->
             <a
               th:if="${param.returnTo != null
@@ -146,6 +156,7 @@
         param.returnTo[0] == 'home-deals'
         or param.returnTo[0] == 'home-new-arrivals'
         or param.returnTo[0] == 'home-best-sellers'
+        or param.returnTo[0] == 'home-featured-products'
         or param.returnTo[0] == 'home'
         or param.returnTo[0] == 'deals'
         or param.returnTo[0] == 'new-arrivals'
