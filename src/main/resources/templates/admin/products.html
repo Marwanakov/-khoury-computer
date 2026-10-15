@@ -30,7 +30,14 @@
 
             <a
               class="btn btn-khoury admin-add-product-button"
-              th:href="@{/admin/products/new}"
+              th:href="@{/admin/products/new(
+    returnKeyword=${keyword},
+    returnCategoryId=${selectedCategoryId},
+    returnStatus=${selectedStatus},
+    returnMinPrice=${minPrice},
+    returnMaxPrice=${maxPrice},
+    returnCollection=${selectedCollection}
+  )}"
             >
               Add Product
             </a>
@@ -419,8 +426,14 @@
                         <a
                           class="btn btn-sm btn-outline-primary"
                           th:href="@{/admin/products/{id}/edit(
-                                            id=${product.id()}
-                                        )}"
+    id=${product.id()},
+    returnKeyword=${keyword},
+    returnCategoryId=${selectedCategoryId},
+    returnStatus=${selectedStatus},
+    returnMinPrice=${minPrice},
+    returnMaxPrice=${maxPrice},
+    returnCollection=${selectedCollection}
+  )}"
                         >
                           Edit
                         </a>

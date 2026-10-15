@@ -11,7 +11,7 @@
     <main class="admin-product-form-page">
       <section class="admin-product-form-header">
         <div class="container">
-          <a class="admin-back-link" th:href="@{/admin/products}">
+          <a class="admin-back-link" th:href="${returnToProductsUrl}">
             ← Manage Products
           </a>
 
@@ -470,7 +470,10 @@
 
             <!-- Actions -->
             <div class="admin-form-actions">
-              <a class="btn btn-outline-secondary" th:href="@{/admin/products}">
+              <a
+                class="btn btn-outline-secondary"
+                th:href="${returnToProductsUrl}"
+              >
                 Cancel
               </a>
 

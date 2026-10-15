@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -181,14 +182,28 @@ public class AdminProductController {
         }
 
         @GetMapping("/admin/products/new")
-        public String showCreateProductPage(Model model) {
+        public String showCreateProductPage(
+                        @RequestParam(name = "returnKeyword", required = false) String keyword,
+                        @RequestParam(name = "returnCategoryId", required = false) Long categoryId,
+                        @RequestParam(name = "returnStatus", required = false) ProductAvailabilityStatus status,
+                        @RequestParam(name = "returnMinPrice", required = false) BigDecimal minPrice,
+                        @RequestParam(name = "returnMaxPrice", required = false) BigDecimal maxPrice,
+                        @RequestParam(name = "returnCollection", required = false) String collection,
+                        Model model) {
                 if (!model.containsAttribute("productForm")) {
                         model.addAttribute(
                                         "productForm",
                                         new AdminProductForm());
                 }
 
-                prepareCreateForm(model);
+                prepareCreateForm(
+                                model,
+                                keyword,
+                                categoryId,
+                                status,
+                                minPrice,
+                                maxPrice,
+                                collection);
 
                 return "admin/product-form";
         }
@@ -197,10 +212,24 @@ public class AdminProductController {
         public String createProduct(
                         @Valid @ModelAttribute("productForm") AdminProductForm productForm,
                         BindingResult bindingResult,
+                        @RequestParam(name = "returnKeyword", required = false) String keyword,
+                        @RequestParam(name = "returnCategoryId", required = false) Long categoryId,
+                        @RequestParam(name = "returnStatus", required = false) ProductAvailabilityStatus status,
+                        @RequestParam(name = "returnMinPrice", required = false) BigDecimal minPrice,
+                        @RequestParam(name = "returnMaxPrice", required = false) BigDecimal maxPrice,
+                        @RequestParam(name = "returnCollection", required = false) String collection,
                         Model model,
                         RedirectAttributes redirectAttributes) {
                 if (bindingResult.hasErrors()) {
-                        prepareCreateForm(model);
+                        prepareCreateForm(
+                                        model,
+                                        keyword,
+                                        categoryId,
+                                        status,
+                                        minPrice,
+                                        maxPrice,
+                                        collection);
+
                         return "admin/product-form";
                 }
 
@@ -217,7 +246,14 @@ public class AdminProductController {
                                                         + createdProduct.name()
                                                         + "\" was created successfully.");
 
-                        return "redirect:/admin/products";
+                        return "redirect:"
+                                        + buildProductListUrl(
+                                                        keyword,
+                                                        categoryId,
+                                                        status,
+                                                        minPrice,
+                                                        maxPrice,
+                                                        collection);
 
                 } catch (InvalidImageException exception) {
                         bindingResult.rejectValue(
@@ -225,7 +261,14 @@ public class AdminProductController {
                                         "product.image.invalid",
                                         exception.getMessage());
 
-                        prepareCreateForm(model);
+                        prepareCreateForm(
+                                        model,
+                                        keyword,
+                                        categoryId,
+                                        status,
+                                        minPrice,
+                                        maxPrice,
+                                        collection);
 
                         return "admin/product-form";
 
@@ -234,7 +277,14 @@ public class AdminProductController {
                                         "product.creation.failed",
                                         exception.getMessage());
 
-                        prepareCreateForm(model);
+                        prepareCreateForm(
+                                        model,
+                                        keyword,
+                                        categoryId,
+                                        status,
+                                        minPrice,
+                                        maxPrice,
+                                        collection);
 
                         return "admin/product-form";
                 }
@@ -251,9 +301,20 @@ public class AdminProductController {
         @GetMapping("/admin/products/{productId}/edit")
         public String showEditProductPage(
                         @PathVariable Long productId,
+                        @RequestParam(name = "returnKeyword", required = false) String keyword,
+
+                        @RequestParam(name = "returnCategoryId", required = false) Long categoryId,
+
+                        @RequestParam(name = "returnStatus", required = false) ProductAvailabilityStatus status,
+
+                        @RequestParam(name = "returnMinPrice", required = false) BigDecimal minPrice,
+
+                        @RequestParam(name = "returnMaxPrice", required = false) BigDecimal maxPrice,
+
+                        @RequestParam(name = "returnCollection", required = false) String collection,
                         Model model) {
-                ProductResponse product = productApplicationService.getProductById(
-                                productId);
+                ProductResponse product = productApplicationService
+                                .getProductById(productId);
 
                 if (!model.containsAttribute("productForm")) {
                         model.addAttribute(
@@ -261,7 +322,15 @@ public class AdminProductController {
                                         toAdminProductForm(product));
                 }
 
-                prepareEditForm(model, product);
+                prepareEditForm(
+                                model,
+                                product,
+                                keyword,
+                                categoryId,
+                                status,
+                                minPrice,
+                                maxPrice,
+                                collection);
 
                 return "admin/product-form";
         }
@@ -271,15 +340,32 @@ public class AdminProductController {
                         @PathVariable Long productId,
                         @Valid @ModelAttribute("productForm") AdminProductForm productForm,
                         BindingResult bindingResult,
+                        @RequestParam(name = "returnKeyword", required = false) String keyword,
+
+                        @RequestParam(name = "returnCategoryId", required = false) Long categoryId,
+
+                        @RequestParam(name = "returnStatus", required = false) ProductAvailabilityStatus status,
+
+                        @RequestParam(name = "returnMinPrice", required = false) BigDecimal minPrice,
+
+                        @RequestParam(name = "returnMaxPrice", required = false) BigDecimal maxPrice,
+
+                        @RequestParam(name = "returnCollection", required = false) String collection,
                         Model model,
                         RedirectAttributes redirectAttributes) {
-                ProductResponse existingProduct = productApplicationService.getProductById(
-                                productId);
+                ProductResponse existingProduct = productApplicationService
+                                .getProductById(productId);
 
                 if (bindingResult.hasErrors()) {
                         prepareEditForm(
                                         model,
-                                        existingProduct);
+                                        existingProduct,
+                                        keyword,
+                                        categoryId,
+                                        status,
+                                        minPrice,
+                                        maxPrice,
+                                        collection);
 
                         return "admin/product-form";
                 }
@@ -299,7 +385,14 @@ public class AdminProductController {
                                                         + updatedProduct.name()
                                                         + "\" was updated successfully.");
 
-                        return "redirect:/admin/products";
+                        return "redirect:"
+                                        + buildProductListUrl(
+                                                        keyword,
+                                                        categoryId,
+                                                        status,
+                                                        minPrice,
+                                                        maxPrice,
+                                                        collection);
 
                 } catch (InvalidImageException exception) {
                         bindingResult.rejectValue(
@@ -309,7 +402,13 @@ public class AdminProductController {
 
                         prepareEditForm(
                                         model,
-                                        existingProduct);
+                                        existingProduct,
+                                        keyword,
+                                        categoryId,
+                                        status,
+                                        minPrice,
+                                        maxPrice,
+                                        collection);
 
                         return "admin/product-form";
 
@@ -320,13 +419,26 @@ public class AdminProductController {
 
                         prepareEditForm(
                                         model,
-                                        existingProduct);
+                                        existingProduct,
+                                        keyword,
+                                        categoryId,
+                                        status,
+                                        minPrice,
+                                        maxPrice,
+                                        collection);
 
                         return "admin/product-form";
                 }
         }
 
-        private void prepareCreateForm(Model model) {
+        private void prepareCreateForm(
+                        Model model,
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
                 addFormOptions(model);
 
                 model.addAttribute(
@@ -335,7 +447,8 @@ public class AdminProductController {
 
                 model.addAttribute(
                                 "formDescription",
-                                "Create a new product for the Khoury Computer catalog.");
+                                "Create a new product for the "
+                                                + "Khoury Computer catalog.");
 
                 model.addAttribute(
                                 "submitLabel",
@@ -343,7 +456,23 @@ public class AdminProductController {
 
                 model.addAttribute(
                                 "formAction",
-                                "/admin/products");
+                                buildProductCreateUrl(
+                                                keyword,
+                                                categoryId,
+                                                status,
+                                                minPrice,
+                                                maxPrice,
+                                                collection));
+
+                model.addAttribute(
+                                "returnToProductsUrl",
+                                buildProductListUrl(
+                                                keyword,
+                                                categoryId,
+                                                status,
+                                                minPrice,
+                                                maxPrice,
+                                                collection));
 
                 model.addAttribute(
                                 "currentImageUrl",
@@ -352,8 +481,22 @@ public class AdminProductController {
 
         private void prepareEditForm(
                         Model model,
-                        ProductResponse product) {
+                        ProductResponse product,
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
                 addFormOptions(model);
+
+                String returnToProductsUrl = buildProductListUrl(
+                                keyword,
+                                categoryId,
+                                status,
+                                minPrice,
+                                maxPrice,
+                                collection);
 
                 model.addAttribute(
                                 "formTitle",
@@ -361,7 +504,8 @@ public class AdminProductController {
 
                 model.addAttribute(
                                 "formDescription",
-                                "Update the product information, inventory, and storefront image.");
+                                "Update the product information, "
+                                                + "inventory, and storefront image.");
 
                 model.addAttribute(
                                 "submitLabel",
@@ -369,7 +513,18 @@ public class AdminProductController {
 
                 model.addAttribute(
                                 "formAction",
-                                "/admin/products/" + product.id());
+                                buildProductUpdateUrl(
+                                                product.id(),
+                                                keyword,
+                                                categoryId,
+                                                status,
+                                                minPrice,
+                                                maxPrice,
+                                                collection));
+
+                model.addAttribute(
+                                "returnToProductsUrl",
+                                returnToProductsUrl);
 
                 model.addAttribute(
                                 "currentImageUrl",
@@ -470,6 +625,176 @@ public class AdminProductController {
                 return value == null
                                 ? ""
                                 : value.trim();
+        }
+
+        private String buildProductListUrl(
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
+                UriComponentsBuilder builder = UriComponentsBuilder.fromPath(
+                                "/admin/products");
+
+                addProductFilterParameters(
+                                builder,
+                                keyword,
+                                categoryId,
+                                status,
+                                minPrice,
+                                maxPrice,
+                                collection);
+
+                return builder
+                                .build()
+                                .encode()
+                                .toUriString();
+        }
+
+        private String buildProductUpdateUrl(
+                        Long productId,
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
+                UriComponentsBuilder builder = UriComponentsBuilder.fromPath(
+                                "/admin/products/{productId}");
+
+                addReturnFilterParameters(
+                                builder,
+                                keyword,
+                                categoryId,
+                                status,
+                                minPrice,
+                                maxPrice,
+                                collection);
+
+                return builder
+                                .buildAndExpand(productId)
+                                .encode()
+                                .toUriString();
+        }
+
+        private String buildProductCreateUrl(
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
+                UriComponentsBuilder builder = UriComponentsBuilder.fromPath(
+                                "/admin/products");
+
+                addReturnFilterParameters(
+                                builder,
+                                keyword,
+                                categoryId,
+                                status,
+                                minPrice,
+                                maxPrice,
+                                collection);
+
+                return builder
+                                .build()
+                                .encode()
+                                .toUriString();
+        }
+
+        private void addProductFilterParameters(
+                        UriComponentsBuilder builder,
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
+                if (keyword != null && !keyword.isBlank()) {
+                        builder.queryParam(
+                                        "keyword",
+                                        keyword.trim());
+                }
+
+                if (categoryId != null) {
+                        builder.queryParam(
+                                        "categoryId",
+                                        categoryId);
+                }
+
+                if (status != null) {
+                        builder.queryParam(
+                                        "status",
+                                        status);
+                }
+
+                if (minPrice != null) {
+                        builder.queryParam(
+                                        "minPrice",
+                                        minPrice);
+                }
+
+                if (maxPrice != null) {
+                        builder.queryParam(
+                                        "maxPrice",
+                                        maxPrice);
+                }
+
+                String normalizedCollection = normalizeAdminCollection(collection);
+
+                if (!normalizedCollection.isBlank()) {
+                        builder.queryParam(
+                                        "collection",
+                                        normalizedCollection);
+                }
+        }
+
+        private void addReturnFilterParameters(
+                        UriComponentsBuilder builder,
+                        String keyword,
+                        Long categoryId,
+                        ProductAvailabilityStatus status,
+                        BigDecimal minPrice,
+                        BigDecimal maxPrice,
+                        String collection) {
+                if (keyword != null && !keyword.isBlank()) {
+                        builder.queryParam(
+                                        "returnKeyword",
+                                        keyword.trim());
+                }
+
+                if (categoryId != null) {
+                        builder.queryParam(
+                                        "returnCategoryId",
+                                        categoryId);
+                }
+
+                if (status != null) {
+                        builder.queryParam(
+                                        "returnStatus",
+                                        status);
+                }
+
+                if (minPrice != null) {
+                        builder.queryParam(
+                                        "returnMinPrice",
+                                        minPrice);
+                }
+
+                if (maxPrice != null) {
+                        builder.queryParam(
+                                        "returnMaxPrice",
+                                        maxPrice);
+                }
+
+                String normalizedCollection = normalizeAdminCollection(collection);
+
+                if (!normalizedCollection.isBlank()) {
+                        builder.queryParam(
+                                        "returnCollection",
+                                        normalizedCollection);
+                }
         }
 
         private String normalizeAdminCollection(
