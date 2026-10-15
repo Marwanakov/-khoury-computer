@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Product {
 
-    private static final int LOW_STOCK_LIMIT = 5;
+    private static final int LOW_STOCK_LIMIT = 3;
 
     private Long id;
     private String name;

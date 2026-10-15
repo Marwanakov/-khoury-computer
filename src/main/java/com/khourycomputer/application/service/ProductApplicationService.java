@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductApplicationService {
 
-    private static final int LOW_STOCK_LIMIT = 5;
+    private static final int LOW_STOCK_LIMIT = 3;
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
