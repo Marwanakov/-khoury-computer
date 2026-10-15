@@ -28,7 +28,6 @@
   line-height: 1.7;
 }
 
-
 /* =========================
    Hero Visual
 ========================= */
@@ -91,9 +90,7 @@
   transition: transform 0.7s ease;
 }
 
-.hero-carousel:hover
-.hero-carousel-slide:not([hidden])
-.hero-visual-image {
+.hero-carousel:hover .hero-carousel-slide:not([hidden]) .hero-visual-image {
   transform: scale(1.035);
 }
 
@@ -107,102 +104,118 @@
       rgba(15, 23, 42, 0.03) 35%,
       rgba(15, 23, 42, 0.58) 100%
     ),
-    linear-gradient(
-      90deg,
-      rgba(37, 99, 235, 0.08),
-      transparent 48%
-    );
+    linear-gradient(90deg, rgba(37, 99, 235, 0.08), transparent 48%);
   pointer-events: none;
 }
 
+/* =========================
+   Carousel Controls
+========================= */
+
+.hero-carousel-controls {
+  position: absolute;
+  bottom: 0.9rem;
+  left: 50%;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.45rem;
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.76),
+    rgba(15, 23, 42, 0.52)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: translateX(-50%);
+}
 
 /* =========================
-   Carousel Navigation
+   Carousel Arrows
 ========================= */
 
 .hero-carousel-arrow {
-  position: absolute;
-  top: 50%;
-  z-index: 3;
+  position: static;
   display: inline-flex;
-  width: 46px;
-  height: 46px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   align-items: center;
   justify-content: center;
   padding: 0;
-  color: #ffffff;
-  font-size: 1.35rem;
-  font-weight: 900;
-  line-height: 1;
-  background-color: rgba(15, 23, 42, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.88);
+  background-color: transparent;
+  border: 0;
   border-radius: 50%;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);
-  backdrop-filter: blur(8px);
-  transform: translateY(-50%);
+  cursor: pointer;
   transition:
+    color 0.2s ease,
     background-color 0.2s ease,
-    border-color 0.2s ease,
     transform 0.2s ease;
+}
+
+.hero-carousel-arrow span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+.hero-carousel-previous span {
+  transform: rotate(-135deg);
+}
+
+.hero-carousel-next span {
+  transform: rotate(45deg);
 }
 
 .hero-carousel-arrow:hover {
   color: #ffffff;
   background-color: rgba(37, 99, 235, 0.9);
-  border-color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-carousel-arrow:active {
+  transform: scale(0.9);
 }
 
 .hero-carousel-arrow:focus-visible {
-  outline: 3px solid #ffffff;
-  outline-offset: 3px;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
-
-.hero-carousel-previous {
-  left: 1rem;
-}
-
-.hero-carousel-next {
-  right: 1rem;
-}
-
-.hero-carousel-previous:hover {
-  transform: translate(-2px, -50%);
-}
-
-.hero-carousel-next:hover {
-  transform: translate(2px, -50%);
-}
-
 
 /* =========================
    Carousel Indicators
 ========================= */
 
 .hero-carousel-dots {
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  z-index: 3;
+  position: static;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.65rem;
-  background-color: rgba(15, 23, 42, 0.58);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
-  transform: translateX(-50%);
+  gap: 0.4rem;
+  padding: 0.25rem 0.35rem;
+  background: transparent;
+  border: 0;
+  transform: none;
 }
 
 .hero-carousel-dot {
   display: block;
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   padding: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.48);
   border: 0;
   border-radius: 999px;
+  cursor: pointer;
   transition:
     width 0.25s ease,
     background-color 0.25s ease,
@@ -210,12 +223,12 @@
 }
 
 .hero-carousel-dot:hover {
-  background-color: rgba(255, 255, 255, 0.82);
-  transform: scale(1.12);
+  background-color: rgba(255, 255, 255, 0.85);
+  transform: scale(1.15);
 }
 
 .hero-carousel-dot.is-active {
-  width: 26px;
+  width: 24px;
   background-color: #ffffff;
 }
 
@@ -223,7 +236,6 @@
   outline: 2px solid #ffffff;
   outline-offset: 3px;
 }
-
 
 /* =========================
    Animation
@@ -241,7 +253,6 @@
   }
 }
 
-
 /* =========================
    Tablet
 ========================= */
@@ -255,7 +266,6 @@
     min-height: 430px;
   }
 }
-
 
 /* =========================
    Mobile
@@ -280,25 +290,36 @@
     border-radius: 1.5rem;
   }
 
+  .hero-carousel-controls {
+    bottom: 0.65rem;
+    padding: 0.3rem 0.4rem;
+  }
+
   .hero-carousel-arrow {
-    width: 42px;
-    height: 42px;
-    font-size: 1.15rem;
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
   }
 
-  .hero-carousel-previous {
-    left: 0.65rem;
-  }
-
-  .hero-carousel-next {
-    right: 0.65rem;
+  .hero-carousel-arrow span {
+    width: 7px;
+    height: 7px;
   }
 
   .hero-carousel-dots {
-    bottom: 0.75rem;
+    gap: 0.35rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  .hero-carousel-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .hero-carousel-dot.is-active {
+    width: 21px;
   }
 }
-
 
 /* =========================
    Reduced Motion
@@ -315,62 +336,7 @@
     transition: none;
   }
 
-  .hero-carousel:hover
-  .hero-carousel-slide:not([hidden])
-  .hero-visual-image {
+  .hero-carousel:hover .hero-carousel-slide:not([hidden]) .hero-visual-image {
     transform: none;
-  }
-}
-
-/* Ensure carousel controls remain above clickable slides */
-
-.hero-carousel > .hero-carousel-arrow {
-  position: absolute !important;
-  top: 50% !important;
-  z-index: 20 !important;
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  width: 46px !important;
-  height: 46px !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  color: #ffffff !important;
-  font-size: 1.35rem !important;
-  background-color: rgba(15, 23, 42, 0.82) !important;
-  border: 2px solid rgba(255, 255, 255, 0.9) !important;
-  border-radius: 50% !important;
-  cursor: pointer;
-  transform: translateY(-50%) !important;
-}
-
-.hero-carousel > .hero-carousel-previous {
-  left: 1rem !important;
-}
-
-.hero-carousel > .hero-carousel-next {
-  right: 1rem !important;
-}
-
-.hero-carousel > .hero-carousel-dots {
-  z-index: 20 !important;
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-@media (max-width: 575.98px) {
-  .hero-carousel > .hero-carousel-arrow {
-    width: 42px !important;
-    height: 42px !important;
-  }
-
-  .hero-carousel > .hero-carousel-previous {
-    left: 0.65rem !important;
-  }
-
-  .hero-carousel > .hero-carousel-next {
-    right: 0.65rem !important;
   }
 }

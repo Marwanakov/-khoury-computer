@@ -120,40 +120,51 @@
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  class="hero-carousel-arrow hero-carousel-previous"
-                  data-hero-previous
-                  aria-label="Show previous promotion"
+                <!-- Combined carousel controls -->
+                <div
+                  class="hero-carousel-controls"
+                  role="group"
+                  aria-label="Promotion carousel controls"
                 >
-                  <span aria-hidden="true">&larr;</span>
-                </button>
-
-                <button
-                  type="button"
-                  class="hero-carousel-arrow hero-carousel-next"
-                  data-hero-next
-                  aria-label="Show next promotion"
-                >
-                  <span aria-hidden="true">&rarr;</span>
-                </button>
-
-                <div class="hero-carousel-dots" aria-label="Choose a promotion">
                   <button
-                    th:each="slide, slideIteration : ${heroSlides}"
                     type="button"
-                    class="hero-carousel-dot"
-                    th:classappend="${slideIteration.first}
-          ? ' is-active'
-          : ''"
-                    th:attr="
-          data-hero-dot=${slideIteration.index},
-          aria-label=|Show promotion ${slideIteration.count}|,
-          aria-current=${slideIteration.first
-            ? 'true'
-            : 'false'}
-        "
-                  ></button>
+                    class="hero-carousel-arrow hero-carousel-previous"
+                    data-hero-previous
+                    aria-label="Show previous promotion"
+                  >
+                    <span aria-hidden="true"></span>
+                  </button>
+
+                  <div
+                    class="hero-carousel-dots"
+                    role="group"
+                    aria-label="Choose a promotion"
+                  >
+                    <button
+                      th:each="slide, slideIteration : ${heroSlides}"
+                      type="button"
+                      class="hero-carousel-dot"
+                      th:classappend="${slideIteration.first}
+        ? ' is-active'
+        : ''"
+                      th:attr="
+        data-hero-dot=${slideIteration.index},
+        aria-label=|Show promotion ${slideIteration.count}|,
+        aria-current=${slideIteration.first
+          ? 'true'
+          : 'false'}
+      "
+                    ></button>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="hero-carousel-arrow hero-carousel-next"
+                    data-hero-next
+                    aria-label="Show next promotion"
+                  >
+                    <span aria-hidden="true"></span>
+                  </button>
                 </div>
               </div>
 
