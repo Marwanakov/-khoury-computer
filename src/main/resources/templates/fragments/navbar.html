@@ -124,7 +124,7 @@ ADMIN: Admin Dashboard, Admin Overview, and Logout
             <a class="category-nav-link" th:href="@{/products}"> Products </a>
 
             <!-- Categories dropdown -->
-            <div class="dropdown category-dropdown">
+            <div class="dropdown category-dropdown" data-hover-dropdown>
               <button
                 class="category-nav-link category-dropdown-button"
                 type="button"
@@ -154,11 +154,35 @@ ADMIN: Admin Dashboard, Admin Overview, and Logout
 
                 <li th:each="category : ${navigationCategories}">
                   <a
-                    class="dropdown-item category-dropdown-item"
+                    class="dropdown-item category-dropdown-item category-dropdown-item-with-image"
                     th:href="@{/products(categoryId=${category.id()})}"
-                    th:text="${category.name()}"
                   >
-                    Category
+                    <span class="category-dropdown-thumbnail">
+                      <img
+                        th:if="${category.imageUrl() != null
+          and !#strings.isEmpty(category.imageUrl())}"
+                        th:src="${category.imageUrl()}"
+                        th:alt="|${category.name()} category|"
+                        loading="lazy"
+                        decoding="async"
+                      />
+
+                      <img
+                        th:if="${category.imageUrl() == null
+          or #strings.isEmpty(category.imageUrl())}"
+                        th:src="@{/images/categories/category-fallback.webp}"
+                        th:alt="|Default image for ${category.name()} category|"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+
+                    <span
+                      class="category-dropdown-name"
+                      th:text="${category.name()}"
+                    >
+                      Category
+                    </span>
                   </a>
                 </li>
 
@@ -171,7 +195,7 @@ ADMIN: Admin Dashboard, Admin Overview, and Logout
             </div>
 
             <!-- Collections dropdown -->
-            <div class="dropdown category-dropdown">
+            <div class="dropdown category-dropdown" data-hover-dropdown>
               <button
                 class="category-nav-link category-dropdown-button"
                 type="button"
@@ -190,28 +214,61 @@ ADMIN: Admin Dashboard, Admin Overview, and Logout
               >
                 <li>
                   <a
-                    class="dropdown-item category-dropdown-item"
+                    class="dropdown-item category-dropdown-item category-dropdown-item-with-image"
                     th:href="@{/deals}"
                   >
-                    Deals
+                    <span
+                      class="category-dropdown-thumbnail collection-dropdown-thumbnail"
+                    >
+                      <img
+                        th:src="@{/images/home/deals-banner.webp}"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+
+                    <span class="category-dropdown-name"> Deals </span>
                   </a>
                 </li>
 
                 <li>
                   <a
-                    class="dropdown-item category-dropdown-item"
+                    class="dropdown-item category-dropdown-item category-dropdown-item-with-image"
                     th:href="@{/new-arrivals}"
                   >
-                    New Arrivals
+                    <span
+                      class="category-dropdown-thumbnail collection-dropdown-thumbnail"
+                    >
+                      <img
+                        th:src="@{/images/home/new-arrivals-banner.webp}"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+
+                    <span class="category-dropdown-name"> New Arrivals </span>
                   </a>
                 </li>
 
                 <li>
                   <a
-                    class="dropdown-item category-dropdown-item"
+                    class="dropdown-item category-dropdown-item category-dropdown-item-with-image"
                     th:href="@{/best-sellers}"
                   >
-                    Best Sellers
+                    <span
+                      class="category-dropdown-thumbnail collection-dropdown-thumbnail"
+                    >
+                      <img
+                        th:src="@{/images/home/best-sellers-banner.webp}"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+
+                    <span class="category-dropdown-name"> Best Sellers </span>
                   </a>
                 </li>
               </ul>
@@ -221,6 +278,8 @@ ADMIN: Admin Dashboard, Admin Overview, and Logout
           </div>
         </div>
       </nav>
+
+      <script th:src="@{/js/navbar-dropdowns.js}" defer></script>
     </header>
   </body>
 </html>
