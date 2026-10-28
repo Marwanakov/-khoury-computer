@@ -8,6 +8,7 @@ import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
 import com.khourycomputer.application.dto.recommendation.ProductRecommendationResponse;
 import com.khourycomputer.application.service.ProductRecommendationService;
 import com.khourycomputer.web.viewmodel.product.ProductRecommendationSectionFactory;
+import com.khourycomputer.application.service.ProductImageApplicationService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,13 +35,15 @@ public class PublicProductController {
         private final ProductDealApplicationService productDealApplicationService;
         private final ProductRecommendationService productRecommendationService;
         private final ProductRecommendationSectionFactory productRecommendationSectionFactory;
+        private final ProductImageApplicationService productImageApplicationService;
 
         public PublicProductController(
                         ProductApplicationService productApplicationService,
                         CategoryApplicationService categoryApplicationService,
                         ProductDealApplicationService productDealApplicationService,
                         ProductRecommendationService productRecommendationService,
-                        ProductRecommendationSectionFactory productRecommendationSectionFactory) {
+                        ProductRecommendationSectionFactory productRecommendationSectionFactory,
+                        ProductImageApplicationService productImageApplicationService) {
                 this.productApplicationService = productApplicationService;
 
                 this.categoryApplicationService = categoryApplicationService;
@@ -50,6 +53,8 @@ public class PublicProductController {
                 this.productRecommendationService = productRecommendationService;
 
                 this.productRecommendationSectionFactory = productRecommendationSectionFactory;
+
+                this.productImageApplicationService = productImageApplicationService;
         }
 
         @GetMapping("/products")
@@ -171,6 +176,9 @@ public class PublicProductController {
                 List<ProductRecommendationResponse> recommendations = productRecommendationService
                                 .recommendAlternatives(productId);
 
+                var productImages = productImageApplicationService.listProductImages(
+                                productId);
+
                 model.addAttribute(
                                 "product",
                                 product);
@@ -187,6 +195,10 @@ public class PublicProductController {
                                 "recommendationSections",
                                 productRecommendationSectionFactory
                                                 .createSections(recommendations));
+
+                model.addAttribute(
+                                "productImages",
+                                productImages);
 
                 return "public/product-details";
         }

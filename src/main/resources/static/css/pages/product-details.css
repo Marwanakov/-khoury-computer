@@ -3,6 +3,7 @@
 ========================= */
 
 @import url("./product-details/overview.css");
+@import url("./product-details/gallery.css");
 @import url("./product-details/purchasing.css");
 @import url("./product-details/specifications.css");
 @import url("./product-details/recommendations.css");

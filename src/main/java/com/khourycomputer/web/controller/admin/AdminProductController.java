@@ -10,6 +10,9 @@ import com.khourycomputer.application.service.CategoryApplicationService;
 import com.khourycomputer.application.service.ProductApplicationService;
 import com.khourycomputer.domain.enums.ProductAvailabilityStatus;
 import com.khourycomputer.web.viewmodel.admin.AdminProductForm;
+import com.khourycomputer.application.service.ProductImageApplicationService;
+import com.khourycomputer.application.dto.product.ProductImageResponse;
+import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,16 +44,20 @@ public class AdminProductController {
         private final ProductApplicationService productApplicationService;
         private final CategoryApplicationService categoryApplicationService;
         private final ProductDealApplicationService productDealApplicationService;
+        private final ProductImageApplicationService productImageApplicationService;
 
         public AdminProductController(
                         ProductApplicationService productApplicationService,
                         CategoryApplicationService categoryApplicationService,
-                        ProductDealApplicationService productDealApplicationService) {
+                        ProductDealApplicationService productDealApplicationService,
+                        ProductImageApplicationService productImageApplicationService) {
                 this.productApplicationService = productApplicationService;
 
                 this.categoryApplicationService = categoryApplicationService;
 
                 this.productDealApplicationService = productDealApplicationService;
+
+                this.productImageApplicationService = productImageApplicationService;
         }
 
         @GetMapping("/admin/products")
@@ -234,11 +241,13 @@ public class AdminProductController {
                 }
 
                 try {
-                        ImageUpload imageUpload = toImageUpload(productForm.getImage());
+                        List<ImageUpload> imageUploads = toImageUploads(
+                                        productForm.getAdditionalImages());
 
-                        ProductResponse createdProduct = productApplicationService.createProduct(
+                        ProductResponse createdProduct = productApplicationService.createProductWithImages(
                                         toCreateProductRequest(productForm),
-                                        imageUpload);
+                                        imageUploads,
+                                        productForm.getPrimaryImageIndex());
 
                         redirectAttributes.addFlashAttribute(
                                         "successMessage",
@@ -257,8 +266,8 @@ public class AdminProductController {
 
                 } catch (InvalidImageException exception) {
                         bindingResult.rejectValue(
-                                        "image",
-                                        "product.image.invalid",
+                                        "additionalImages",
+                                        "product.images.invalid",
                                         exception.getMessage());
 
                         prepareCreateForm(
@@ -371,13 +380,14 @@ public class AdminProductController {
                 }
 
                 try {
-                        ImageUpload imageUpload = toImageUpload(productForm.getImage());
+                        List<ImageUpload> imageUploads = toImageUploads(
+                                        productForm.getAdditionalImages());
 
-                        ProductResponse updatedProduct = productApplicationService.updateProduct(
+                        ProductResponse updatedProduct = productApplicationService.updateProductWithImages(
                                         productId,
                                         toUpdateProductRequest(productForm),
-                                        imageUpload,
-                                        productForm.isRemoveImage());
+                                        imageUploads,
+                                        productForm.getPrimaryImageIndex());
 
                         redirectAttributes.addFlashAttribute(
                                         "successMessage",
@@ -396,8 +406,8 @@ public class AdminProductController {
 
                 } catch (InvalidImageException exception) {
                         bindingResult.rejectValue(
-                                        "image",
-                                        "product.image.invalid",
+                                        "additionalImages",
+                                        "product.images.invalid",
                                         exception.getMessage());
 
                         prepareEditForm(
@@ -429,6 +439,26 @@ public class AdminProductController {
 
                         return "admin/product-form";
                 }
+        }
+
+        @PostMapping("/admin/products/{productId}/images/{imageId}/primary")
+        @ResponseBody
+        public List<ProductImageResponse> makeProductImagePrimary(
+                        @PathVariable Long productId,
+                        @PathVariable Long imageId) {
+                return productImageApplicationService.setPrimaryImage(
+                                productId,
+                                imageId);
+        }
+
+        @PostMapping("/admin/products/{productId}/images/{imageId}/delete")
+        @ResponseBody
+        public List<ProductImageResponse> deleteProductImage(
+                        @PathVariable Long productId,
+                        @PathVariable Long imageId) {
+                return productImageApplicationService.deleteImage(
+                                productId,
+                                imageId);
         }
 
         private void prepareCreateForm(
@@ -477,6 +507,18 @@ public class AdminProductController {
                 model.addAttribute(
                                 "currentImageUrl",
                                 "");
+
+                model.addAttribute(
+                                "productImages",
+                                List.of());
+
+                model.addAttribute(
+                                "maximumProductImages",
+                                8);
+
+                model.addAttribute(
+                                "remainingProductImageSlots",
+                                8);
         }
 
         private void prepareEditForm(
@@ -529,6 +571,32 @@ public class AdminProductController {
                 model.addAttribute(
                                 "currentImageUrl",
                                 product.imageUrl());
+
+                var productImages = productImageApplicationService.listProductImages(
+                                product.id());
+
+                model.addAttribute(
+                                "productImages",
+                                productImages);
+
+                model.addAttribute(
+                                "maximumProductImages",
+                                8);
+
+                model.addAttribute(
+                                "remainingProductImageSlots",
+                                Math.max(0, 8 - productImages.size()));
+
+                model.addAttribute("productId", product.id());
+                model.addAttribute("returnKeyword", keyword);
+                model.addAttribute("returnCategoryId", categoryId);
+                model.addAttribute("returnStatus", status);
+                model.addAttribute("returnMinPrice", minPrice);
+                model.addAttribute("returnMaxPrice", maxPrice);
+                model.addAttribute(
+                                "returnCollection",
+                                normalizeAdminCollection(collection));
+
         }
 
         private void addFormOptions(Model model) {
@@ -606,6 +674,18 @@ public class AdminProductController {
                                         "The selected image could not be read.",
                                         exception);
                 }
+        }
+
+        private List<ImageUpload> toImageUploads(
+                        List<MultipartFile> multipartFiles) {
+                if (multipartFiles == null) {
+                        return List.of();
+                }
+
+                return multipartFiles.stream()
+                                .filter(file -> file != null && !file.isEmpty())
+                                .map(this::toImageUpload)
+                                .toList();
         }
 
         private Set<String> parseTags(String tags) {
@@ -817,4 +897,5 @@ public class AdminProductController {
 
                 return "";
         }
+
 }
