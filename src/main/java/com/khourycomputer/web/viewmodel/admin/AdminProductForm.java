@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -37,6 +38,10 @@ public class AdminProductForm {
     private Integer stockQuantity;
 
     private MultipartFile image;
+
+    private List<MultipartFile> additionalImages = List.of();
+
+    private Integer primaryImageIndex;
 
     private boolean removeImage;
 
@@ -106,6 +111,26 @@ public class AdminProductForm {
 
     public void setImage(MultipartFile image) {
         this.image = image;
+    }
+
+    public List<MultipartFile> getAdditionalImages() {
+        return additionalImages;
+    }
+
+    public void setAdditionalImages(
+            List<MultipartFile> additionalImages) {
+        this.additionalImages = additionalImages == null
+                ? List.of()
+                : additionalImages;
+    }
+
+    public Integer getPrimaryImageIndex() {
+        return primaryImageIndex;
+    }
+
+    public void setPrimaryImageIndex(
+            Integer primaryImageIndex) {
+        this.primaryImageIndex = primaryImageIndex;
     }
 
     public boolean isRemoveImage() {

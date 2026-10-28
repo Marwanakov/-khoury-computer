@@ -211,21 +211,92 @@
           </div>
 
           <div class="row g-4 align-items-start">
-            <!-- Product image -->
+            <!-- Product image gallery -->
             <div class="col-lg-6">
-              <div class="product-details-image-card">
-                <img
-                  th:if="${!#strings.isEmpty(product.imageUrl())}"
-                  th:src="${product.imageUrl()}"
-                  th:alt="${product.name()}"
-                  class="product-details-image"
-                />
+              <div
+                th:if="${productImages != null
+      and !#lists.isEmpty(productImages)}"
+                class="product-details-image-card product-details-gallery"
+                data-product-gallery
+                aria-roledescription="carousel"
+                th:aria-label="|Images of ${product.name()}|"
+              >
+                <div
+                  class="product-details-gallery-viewport"
+                  data-product-gallery-viewport
+                  tabindex="0"
+                  th:aria-label="|Product images for ${product.name()}|"
+                >
+                  <div
+                    class="product-details-gallery-slide"
+                    th:each="productImage, imageIteration : ${productImages}"
+                    data-product-gallery-slide="true"
+                    th:aria-label="|Image ${imageIteration.count} of ${productImages.size()}|"
+                    aria-roledescription="slide"
+                  >
+                    <img
+                      class="product-details-image"
+                      th:src="${productImage.imageUrl()}"
+                      th:alt="|${product.name()} image ${imageIteration.count}|"
+                      th:attr="
+            loading=${imageIteration.first
+              ? 'eager'
+              : 'lazy'},
+            fetchpriority=${imageIteration.first
+              ? 'high'
+              : 'auto'}
+          "
+                      decoding="async"
+                    />
+                  </div>
+                </div>
 
+                <button
+                  th:if="${productImages.size() > 1}"
+                  type="button"
+                  class="product-details-gallery-arrow product-details-gallery-previous"
+                  data-product-gallery-previous
+                  aria-label="Show previous product image"
+                >
+                  <span aria-hidden="true">&lsaquo;</span>
+                </button>
+
+                <button
+                  th:if="${productImages.size() > 1}"
+                  type="button"
+                  class="product-details-gallery-arrow product-details-gallery-next"
+                  data-product-gallery-next
+                  aria-label="Show next product image"
+                >
+                  <span aria-hidden="true">&rsaquo;</span>
+                </button>
+
+                <div
+                  th:if="${productImages.size() > 1}"
+                  class="product-details-gallery-counter"
+                  aria-live="polite"
+                >
+                  <span data-product-gallery-current>1</span>
+
+                  <span aria-hidden="true">/</span>
+
+                  <span th:text="${productImages.size()}">7</span>
+                </div>
+              </div>
+
+              <!-- Fallback for products without images -->
+              <div
+                th:if="${productImages == null
+      or #lists.isEmpty(productImages)}"
+                class="product-details-image-card"
+              >
                 <img
-                  th:if="${#strings.isEmpty(product.imageUrl())}"
                   th:src="@{/images/products/product-fallback.webp}"
                   th:alt="|Default image for ${product.name()}|"
                   class="product-details-image product-details-fallback-image"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -830,5 +901,6 @@
     <div th:replace="~{fragments/footer :: bootstrapScript}"></div>
     <script th:src="@{/js/number-stepper.js}" defer></script>
     <script th:src="@{/js/product-recommendations.js}" defer></script>
+    <script th:src="@{/js/product-image-gallery.js(v=2)}"></script>
   </body>
 </html>

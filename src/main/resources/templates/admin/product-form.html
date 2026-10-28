@@ -395,75 +395,230 @@
 
             <hr class="admin-form-divider" />
 
-            <!-- Product image -->
-            <div class="admin-form-section">
+            <!-- Product images -->
+            <div
+              id="productImages"
+              class="admin-form-section admin-product-images-section"
+            >
               <div class="admin-form-section-heading">
                 <span>Presentation</span>
 
-                <h2>Product image</h2>
+                <h2>Product images</h2>
 
                 <p>
-                  Upload a clear product image from your computer. JPG, PNG, and
-                  WebP files are supported.
+                  Upload up to
+                  <strong th:text="${maximumProductImages}">8</strong>
+                  product images. The first image becomes the primary storefront
+                  image.
                 </p>
               </div>
 
-              <div class="admin-product-image-upload">
-                <div class="admin-product-image-preview">
-                  <img
-                    id="productImagePreview"
-                    th:if="${!#strings.isEmpty(currentImageUrl)}"
-                    th:src="${currentImageUrl}"
-                    alt="Current product image"
-                  />
+              <!-- Existing saved images -->
+              <div
+                th:if="${!#lists.isEmpty(productImages)}"
+                class="admin-product-gallery"
+              >
+                <div class="admin-product-gallery-heading">
+                  <div>
+                    <strong>Saved images</strong>
 
-                  <img
-                    id="productImagePreview"
-                    th:if="${#strings.isEmpty(currentImageUrl)}"
-                    th:src="@{/images/products/product-fallback.webp}"
-                    alt="Default product image"
-                  />
+                    <span>
+                      <span
+                        id="savedProductImageCount"
+                        th:text="${productImages.size()}"
+                      >
+                        1
+                      </span>
+                      of
+                      <span th:text="${maximumProductImages}">8</span>
+                      images
+                    </span>
+                  </div>
+
+                  <small>
+                    The primary image is used on product cards and search
+                    results.
+                  </small>
                 </div>
 
-                <div class="admin-product-image-controls">
+                <div
+                  class="admin-product-gallery-grid"
+                  th:attr="data-maximum-images=${maximumProductImages}"
+                >
+                  <article
+                    class="admin-product-gallery-item"
+                    th:classappend="${productImage.primary()}
+    ? ' is-primary'
+    : ''"
+                    th:each="productImage : ${productImages}"
+                    th:attr="data-product-image-id=${productImage.id()}"
+                  >
+                    <div class="admin-product-gallery-image">
+                      <!-- Clicking the image makes it primary -->
+                      <button
+                        type="button"
+                        class="admin-saved-image-primary-button"
+                        th:attr="
+        data-primary-url=@{
+          /admin/products/{productId}/images/{imageId}/primary(
+            productId=${productId},
+            imageId=${productImage.id()}
+          )
+        },
+        aria-pressed=${productImage.primary()}
+      "
+                        th:aria-label="|Make image ${
+        productImage.displayOrder() + 1
+      } primary|"
+                      >
+                        <img
+                          th:src="${productImage.imageUrl()}"
+                          th:alt="|Saved image for ${productForm.name}|"
+                          loading="lazy"
+                        />
+                      </button>
+
+                      <span
+                        th:if="${productImage.primary()}"
+                        class="admin-product-primary-badge"
+                      >
+                        Primary
+                      </span>
+
+                      <!-- Delete the saved image -->
+                      <button
+                        type="button"
+                        class="admin-saved-image-remove"
+                        th:attr="
+        data-delete-url=@{
+          /admin/products/{productId}/images/{imageId}/delete(
+            productId=${productId},
+            imageId=${productImage.id()}
+          )
+        }
+      "
+                        th:aria-label="|Remove saved image ${
+        productImage.displayOrder() + 1
+      }|"
+                      ></button>
+                    </div>
+
+                    <div class="admin-product-gallery-position">
+                      Image
+                      <span th:text="${productImage.displayOrder() + 1}">
+                        1
+                      </span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Empty gallery -->
+              <div
+                th:if="${#lists.isEmpty(productImages)}"
+                class="admin-product-gallery-empty"
+              >
+                <div
+                  class="admin-product-gallery-empty-icon"
+                  aria-hidden="true"
+                >
+                  +
+                </div>
+
+                <div>
+                  <strong>No product images uploaded yet</strong>
+
+                  <p>Select one or more images below.</p>
+                </div>
+              </div>
+
+              <!-- Upload additional images -->
+              <div class="admin-product-multiple-upload">
+                <div class="admin-product-upload-heading">
                   <div>
-                    <label for="image" class="form-label">
-                      Product image
+                    <label for="additionalImages" class="form-label">
+                      <span th:if="${#lists.isEmpty(productImages)}">
+                        Select product images
+                      </span>
+
+                      <span th:unless="${#lists.isEmpty(productImages)}">
+                        Add more images
+                      </span>
                     </label>
 
-                    <input
-                      id="image"
-                      type="file"
-                      class="form-control"
-                      th:field="*{image}"
-                      th:errorclass="is-invalid"
-                      accept="image/jpeg,image/png,image/webp"
-                    />
+                    <p>JPG, PNG, or WebP. Maximum size: 5 MB per image.</p>
+                  </div>
 
-                    <div class="invalid-feedback" th:errors="*{image}">
-                      Product image error
-                    </div>
+                  <span class="admin-product-image-slots">
+                    <strong
+                      id="remainingProductImageSlots"
+                      th:text="${remainingProductImageSlots}"
+                    >
+                      8
+                    </strong>
+                    slots remaining
+                  </span>
+                </div>
 
-                    <div class="form-text">
-                      JPG, PNG, or WebP. Maximum size: 5 MB.
-                    </div>
+                <!-- Stores which selected image should become primary -->
+                <input
+                  id="primaryImageIndex"
+                  type="hidden"
+                  th:field="*{primaryImageIndex}"
+                />
+
+                <!-- Select one or more product images -->
+                <input
+                  id="additionalImages"
+                  type="file"
+                  class="form-control"
+                  th:field="*{additionalImages}"
+                  th:errorclass="is-invalid"
+                  th:disabled="${remainingProductImageSlots == 0}"
+                  th:attr="
+  data-remaining-slots=${remainingProductImageSlots},
+  data-has-saved-images=${!#lists.isEmpty(productImages)}
+"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                />
+
+                <div class="invalid-feedback" th:errors="*{additionalImages}">
+                  Product image error
+                </div>
+
+                <div class="admin-product-primary-help">
+                  Click a selected image to make it the primary storefront
+                  image. Use the × button to remove an image before saving.
+                </div>
+
+                <div
+                  th:if="${remainingProductImageSlots == 0}"
+                  class="admin-product-image-limit-message"
+                >
+                  This product already has the maximum of
+                  <span th:text="${maximumProductImages}">8</span>
+                  images.
+                </div>
+
+                <!-- New image previews -->
+                <div
+                  id="selectedProductImages"
+                  class="admin-selected-images"
+                  hidden
+                >
+                  <div class="admin-selected-images-heading">
+                    <strong>Selected images</strong>
+
+                    <span id="selectedProductImageCount"
+                      >0 images selected</span
+                    >
                   </div>
 
                   <div
-                    th:if="${!#strings.isEmpty(currentImageUrl)}"
-                    class="form-check admin-product-remove-image"
-                  >
-                    <input
-                      id="removeImage"
-                      type="checkbox"
-                      class="form-check-input"
-                      th:field="*{removeImage}"
-                    />
-
-                    <label for="removeImage" class="form-check-label">
-                      Remove the current image
-                    </label>
-                  </div>
+                    id="selectedProductImageGrid"
+                    class="admin-selected-images-grid"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -492,43 +647,7 @@
 
     <div th:replace="~{fragments/footer :: footer}"></div>
     <script th:replace="~{fragments/footer :: bootstrapScript}"></script>
-    <script th:inline="javascript">
-      const productImageInput = document.getElementById("image");
-
-      const productImagePreview = document.getElementById(
-        "productImagePreview",
-      );
-
-      const removeImageCheckbox = document.getElementById("removeImage");
-
-      const fallbackImageUrl =
-        /*[[@{/images/products/product-fallback.webp}]]*/ "";
-
-      if (productImageInput && productImagePreview) {
-        productImageInput.addEventListener("change", function () {
-          const selectedFile = this.files[0];
-
-          if (!selectedFile) {
-            return;
-          }
-
-          productImagePreview.src = URL.createObjectURL(selectedFile);
-
-          if (removeImageCheckbox) {
-            removeImageCheckbox.checked = false;
-          }
-        });
-      }
-
-      if (removeImageCheckbox && productImagePreview) {
-        removeImageCheckbox.addEventListener("change", function () {
-          if (this.checked) {
-            productImagePreview.src = fallbackImageUrl;
-            productImageInput.value = "";
-          }
-        });
-      }
-    </script>
+    <script th:src="@{/js/admin-product-images.js}" defer></script>
     <script th:src="@{/js/number-stepper.js}"></script>
   </body>
 </html>
